@@ -1,0 +1,237 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /lessons/{lessonId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // O cliente valida para dar mensagem boa; a regra abaixo é a garantia.
+    // Com setDoc({ merge: true }), request.resource.data é o documento já mesclado,
+    // então a checagem vale tanto para a criação quanto para a edição do perfil.
+    // As listas são as de src/lib/perfil.ts. Mudou uma, muda a outra.
+
+    function estuda(d) {
+      return d.situacaoDeEstudo in ['graduacao', 'pos'];
+    }
+
+    // O núcleo obrigatório (item 34). Instituição e curso são exigidos na graduação e na pós, e
+    // não podem existir nas outras situações: sobra de um perfil anterior não fica.
+    function nucleoValido(d) {
+      return d.nome is string && d.nome.size() >= 2 && d.nome.size() <= 60
+          && d.apelido is string && d.apelido.size() >= 2 && d.apelido.size() <= 20
+          && d.telefone is string && d.telefone.size() >= 10 && d.telefone.size() <= 11
+          && d.faixaEtaria in ['18_24', '25_34', '35_44', '45_mais']
+          && d.sexo in ['feminino', 'masculino', 'nao_informado']
+          && d.cidade is string && d.cidade.size() >= 2 && d.cidade.size() <= 60
+          && d.uf in ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
+                      'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
+          && d.situacaoDeEstudo in ['ensino_medio', 'graduacao', 'pos', 'formado', 'nao_estudo']
+          && ((estuda(d)
+                && d.instituicao is string && d.instituicao.size() >= 2 && d.instituicao.size() <= 80
+                && d.curso is string && d.curso.size() >= 2 && d.curso.size() <= 80)
+              || (!estuda(d) && !('instituicao' in d) && !('curso' in d)))
+          && d.experiencia in ['iniciante', 'intermediario', 'avancado'];
+    }
+
+    // As perguntas opcionais: ausentes, ou dentro da lista.
+    function escolhaOpcional(d, campo, lista) {
+      return !(campo in d) || d[campo] in lista;
+    }
+
+    // "nenhuma" não combina com outra opção: quem a marca, marca só ela.
+    function listaOpcional(d, campo, lista) {
+      return !(campo in d)
+          || (d[campo] is list && d[campo].size() >= 1 && d[campo].size() <= lista.size() && d[campo].hasOnly(lista)
+              && (!('nenhuma' in d[campo]) || d[campo].size() == 1));
+    }
+
+    function simOuNaoOpcional(d, campo) {
+      return !(campo in d) || d[campo] is bool;
+    }
+
+    function extrasValidos(d) {
+      return escolhaOpcional(d, 'ocupacao', ['estudo', 'tecnologia', 'outra_area'])
+          && listaOpcional(d, 'engines', ['nenhuma', 'godot', 'unity', 'unreal', 'gamemaker', 'outra'])
+          && listaOpcional(d, 'linguagens', ['nenhuma', 'python', 'csharp', 'javascript', 'gdscript', 'cpp', 'outra'])
+          && escolhaOpcional(d, 'estudoDeGameDesign', ['nunca', 'sozinho', 'curso', 'faculdade'])
+          && listaOpcional(d, 'interesses', ['programacao', 'arte', 'game_design', 'audio', 'publicacao'])
+          && escolhaOpcional(d, 'objetivo', ['hobby', 'carreira', 'publicar', 'faculdade'])
+          && escolhaOpcional(d, 'tempoPorSemana', ['ate_1h', '1_a_3h', 'mais_de_3h'])
+          && escolhaOpcional(d, 'comoConheceu', ['instagram', 'amigo', 'faculdade', 'evento', 'outro'])
+          && simOuNaoOpcional(d, 'alunoDoSite')
+          && simOuNaoOpcional(d, 'aceitaContato');
+    }
+
+    function perfilValido(d) {
+      return nucleoValido(d) && extrasValidos(d);
+    }
+
+    // --- Consentimento (item 22) ---
+    // No aceite do termo, uma única transação soma 1 em piloto/contador e grava em users/{uid}
+    // a forma do pré-teste e a data. As regras abaixo conferem as duas pontas, uma olhando a
+    // outra: get() vê o documento antes da transação, getAfter() vê como ele fica depois.
+
+    function contadorDoPiloto() {
+      return /databases/$(database)/documents/piloto/contador;
+    }
+
+    // O primeiro aceite cria o contador; antes dele, o total é zero.
+    function totalAntes() {
+      return exists(contadorDoPiloto()) ? get(contadorDoPiloto()).data.total : 0;
+    }
+
+    function totalDepois() {
+      return getAfter(contadorDoPiloto()).data.total;
+    }
+
+    // A, B, A, B... A mesma conta está em formaDoParticipante() (src/lib/participante.ts).
+    // Mudou uma, muda a outra.
+    function formaDoContador(total) {
+      return total % 2 == 1 ? 'A' : 'B';
+    }
+
+    function semConsentimento(d) {
+      return !('formaPre' in d) && !('consentiuEm' in d);
+    }
+
+    // Depois de gravadas, forma e data não mudam nem somem: o contrabalanceamento do piloto
+    // depende delas. Antes do aceite, as duas estão ausentes dos dois lados e a comparação passa.
+    function consentimentoInalterado() {
+      return request.resource.data.get('formaPre', null) == resource.data.get('formaPre', null)
+          && request.resource.data.get('consentiuEm', null) == resource.data.get('consentiuEm', null);
+    }
+
+    // O aceite: o perfil ainda não tinha consentimento, a data é a do servidor, o contador subiu
+    // exatamente 1 nesta mesma transação e a forma gravada é a que o novo total dá. O participante
+    // não escolhe a própria forma, nem gravando direto, nem pulando uma posição do contador.
+    function primeiroAceite() {
+      return semConsentimento(resource.data)
+          && request.resource.data.consentiuEm == request.time
+          && totalDepois() == totalAntes() + 1
+          && request.resource.data.formaPre == formaDoContador(totalDepois());
+    }
+
+    // Quem escreve no contador está, nesta mesma transação, aceitando o termo pela primeira vez.
+    function aceitandoNestaTransacao() {
+      let perfil = /databases/$(database)/documents/users/$(request.auth.uid);
+      return exists(perfil)
+          && !('formaPre' in get(perfil).data)
+          && 'formaPre' in getAfter(perfil).data;
+    }
+
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      // O perfil nasce sem consentimento: forma e data só entram pelo aceite.
+      allow create: if request.auth != null
+                    && request.auth.uid == uid
+                    && perfilValido(request.resource.data)
+                    && semConsentimento(request.resource.data);
+      allow update: if request.auth != null
+                    && request.auth.uid == uid
+                    && perfilValido(request.resource.data)
+                    && (consentimentoInalterado() || primeiroAceite());
+    }
+
+    // Só anda de 1 em 1, e só junto com o aceite de quem escreve. Ninguém apaga.
+    match /piloto/contador {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+                    && request.resource.data.keys().hasOnly(['total'])
+                    && request.resource.data.total == 1
+                    && aceitandoNestaTransacao();
+      allow update: if request.auth != null
+                    && request.resource.data.keys().hasOnly(['total'])
+                    && request.resource.data.total == resource.data.total + 1
+                    && aceitandoNestaTransacao();
+    }
+
+    // A nota que a pessoa se dá em cada módulo, de 1 a 5, antes do primeiro diagnóstico (item 34).
+    // Um documento por pessoa, com o id dela, gravado uma vez: mudar a nota depois de estudar
+    // estragaria a comparação com o diagnóstico. Por não se repetir, a gravação tem de trazer uma
+    // nota para cada módulo: os ids abaixo são os de content/topicos.json (`idDoModulo`).
+    // Módulo novo no conteúdo muda esta lista; src/__tests__/regras-do-perfil.test.js confere.
+    function modulosDaAutoavaliacao() {
+      return ['fundamentos_de_game_design'];
+    }
+
+    function autoavaliacaoValida(d) {
+      return d.keys().hasAll(['uid', 'notas', 'respondidaEm']) && d.keys().hasOnly(['uid', 'notas', 'respondidaEm'])
+          && d.uid == request.auth.uid
+          && d.notas is map
+          && d.notas.keys().hasAll(modulosDaAutoavaliacao()) && d.notas.keys().hasOnly(modulosDaAutoavaliacao())
+          && d.notas.values().hasOnly([1, 2, 3, 4, 5])
+          && d.respondidaEm == request.time;
+    }
+
+    match /selfAssessments/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow create: if request.auth != null
+                    && request.auth.uid == uid
+                    && autoavaliacaoValida(request.resource.data);
+      allow update, delete: if false; // gravada uma vez
+    }
+
+    match /progress/{uid}/lessons/{lessonId} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    match /questions/{questionId} {
+      allow read: if request.auth != null;
+      allow write: if false; // só grava via Admin SDK (seed)
+    }
+
+    function faseValida(f) {
+      return f in ['pre', 'pratica', 'pos', 'reteste'];
+    }
+
+    match /attempts/{attemptId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.uid;
+      allow create: if request.auth != null
+                    && request.auth.uid == request.resource.data.uid
+                    && faseValida(request.resource.data.fase);
+      // Dono e fase não mudam depois de criada: a regra de answers confia neles.
+      allow update: if request.auth != null
+                    && request.auth.uid == resource.data.uid
+                    && request.resource.data.diff(resource.data).affectedKeys()
+                         .hasOnly(['respostas', 'concluida']);
+    }
+
+    function camposResposta() {
+      return ['uid', 'questionId', 'topicId', 'attemptId', 'fase', 'escolha',
+              'ordemExibida', 'correta', 'confianca', 'tempoMs', 'respondidaEm'];
+    }
+
+    // Todos os campos do evento, nenhum a mais. respondidaEm tem de ser o horário do servidor
+    // (serverTimestamp() no cliente), porque o intervalo do reteste é calculado a partir dele.
+    function respostaValida(d) {
+      return d.keys().hasAll(camposResposta()) && d.keys().hasOnly(camposResposta())
+          && d.uid == request.auth.uid
+          && d.questionId is string && d.questionId.size() > 0
+          && d.topicId is string && d.topicId.size() > 0
+          && d.attemptId is string && d.attemptId.size() > 0
+          && faseValida(d.fase)
+          && d.ordemExibida is list && d.ordemExibida.size() == 4
+          && d.escolha is string && d.escolha in d.ordemExibida
+          && d.correta is bool
+          && d.confianca is int && d.confianca >= 1 && d.confianca <= 3
+          && d.tempoMs is int && d.tempoMs >= 0
+          && d.respondidaEm == request.time;
+    }
+
+    // A tentativa citada existe, é do próprio aluno e é da mesma fase da resposta.
+    function tentativaDoAluno(d) {
+      let t = get(/databases/$(database)/documents/attempts/$(d.attemptId)).data;
+      return t.uid == request.auth.uid && t.fase == d.fase;
+    }
+
+    match /answers/{answerId} {
+      allow read: if request.auth != null && request.auth.uid == resource.data.uid;
+      allow create: if request.auth != null
+                    && respostaValida(request.resource.data)
+                    && tentativaDoAluno(request.resource.data);
+      allow update, delete: if false; // imutável — nem o dono edita depois de gravado
+    }
+  }
+}

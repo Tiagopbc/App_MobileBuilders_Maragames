@@ -1,0 +1,1612 @@
+[
+  {
+    "id": "mda_framework_01",
+    "topicId": "mda_framework",
+    "bloco": "forma_a",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "No framework MDA, qual destes itens é uma mecânica?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "A regra que dá 10 pontos por moeda coletada",
+        "correta": true,
+        "explicacao": "Mecânicas são as regras e os dados do jogo, definidos antes da partida."
+      },
+      {
+        "id": "b",
+        "texto": "A tensão que o jogador sente no chefe final",
+        "correta": false,
+        "explicacao": "Isso é estética: a resposta emocional do jogador."
+      },
+      {
+        "id": "c",
+        "texto": "Jogadores que ficam parados num ponto do mapa esperando adversários",
+        "correta": false,
+        "explicacao": "Isso é dinâmica: um comportamento que surge das regras durante a partida."
+      },
+      {
+        "id": "d",
+        "texto": "O prazer de explorar uma área nova",
+        "correta": false,
+        "explicacao": "Isso é estética (descoberta)."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_02",
+    "topicId": "mda_framework",
+    "bloco": "forma_b",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "No framework MDA, qual destes itens é uma estética?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "O limite de 3 vidas por fase",
+        "correta": false,
+        "explicacao": "Isso é mecânica: uma regra definida pelo designer."
+      },
+      {
+        "id": "b",
+        "texto": "O sentimento de desafio ao vencer uma fase difícil",
+        "correta": true,
+        "explicacao": "Estética é a resposta emocional que o jogo provoca no jogador."
+      },
+      {
+        "id": "c",
+        "texto": "A tabela de dano de cada arma",
+        "correta": false,
+        "explicacao": "Isso é mecânica: dados do jogo."
+      },
+      {
+        "id": "d",
+        "texto": "Jogadores que se aliam por um tempo para derrubar o líder",
+        "correta": false,
+        "explicacao": "Isso é dinâmica: um padrão que surge durante a partida."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_03",
+    "topicId": "mda_framework",
+    "bloco": "forma_a",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "No Banco Imobiliário, quem está ganhando compra mais propriedades, cobra mais aluguel e se distancia cada vez mais, enquanto quem está atrás fica mais pobre. No MDA, esse padrão que aparece durante a partida é:",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Uma mecânica",
+        "correta": false,
+        "explicacao": "As mecânicas são as regras de compra e aluguel. O efeito de bola de neve surge delas, mas não está escrito em nenhuma."
+      },
+      {
+        "id": "b",
+        "texto": "Uma estética",
+        "correta": false,
+        "explicacao": "A perda de tensão que ele provoca é estética; o padrão em si é dinâmica."
+      },
+      {
+        "id": "c",
+        "texto": "Uma dinâmica",
+        "correta": true,
+        "explicacao": "É comportamento que emerge das regras ao longo da partida. O artigo do MDA usa esse exemplo."
+      },
+      {
+        "id": "d",
+        "texto": "Uma estratégia de quem joga melhor",
+        "correta": false,
+        "explicacao": "Não é a escolha de um jogador só: o padrão aparece em quase toda partida, porque nasce das regras."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_04",
+    "topicId": "mda_framework",
+    "bloco": "forma_b",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "O designer coloca um cronômetro de 60 segundos em uma fase. Pelo MDA, que dinâmica e que estética isso tende a gerar?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Exploração calma do cenário, que gera descoberta",
+        "correta": false,
+        "explicacao": "Um limite de tempo empurra para o lado oposto: pressa, não calma."
+      },
+      {
+        "id": "b",
+        "texto": "O cronômetro já é a estética, porque o jogador o vê",
+        "correta": false,
+        "explicacao": "O cronômetro é mecânica. A estética é o que o jogador sente por causa dele."
+      },
+      {
+        "id": "c",
+        "texto": "Passar o tempo sem compromisso, que gera submissão",
+        "correta": false,
+        "explicacao": "Submissão é o jogo como passatempo relaxado, o contrário do que um relógio correndo provoca."
+      },
+      {
+        "id": "d",
+        "texto": "Pressão de tempo nas decisões, gerando desafio",
+        "correta": true,
+        "explicacao": "O artigo do MDA cita a pressão de tempo como dinâmica típica para produzir desafio."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_05",
+    "topicId": "mda_framework",
+    "bloco": "forma_a",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Em testes, jogadores dizem que um jogo de terror \"não dá medo\". Seguindo o MDA, qual é o caminho do designer para corrigir isso?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Reescrever a estética, já que foi ela que falhou",
+        "correta": false,
+        "explicacao": "Não há como programar uma emoção. Ela é o efeito final da cadeia."
+      },
+      {
+        "id": "b",
+        "texto": "Ajustar as mecânicas que geram as dinâmicas de tensão",
+        "correta": true,
+        "explicacao": "O designer só controla as mecânicas diretamente; muda a estética passando pelas dinâmicas."
+      },
+      {
+        "id": "c",
+        "texto": "Mudar só a trilha sonora e os gráficos, sem mexer nas regras",
+        "correta": false,
+        "explicacao": "Som e imagem reforçam a sensação, mas se as regras não criam situações de ameaça, o medo não aparece."
+      },
+      {
+        "id": "d",
+        "texto": "Acrescentar mais fases ao jogo",
+        "correta": false,
+        "explicacao": "Mais conteúdo não muda as dinâmicas que provocam tensão."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_06",
+    "topicId": "mda_framework",
+    "bloco": "forma_b",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Um designer quer que o jogo cooperativo transmita companheirismo (fellowship). Qual mudança de mecânica tem mais chance de produzir essa estética?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Ranking individual de pontos no fim da fase",
+        "correta": false,
+        "explicacao": "Ranking individual gera competição entre os próprios aliados."
+      },
+      {
+        "id": "b",
+        "texto": "Gráficos mais detalhados nos personagens do time",
+        "correta": false,
+        "explicacao": "Isso pode reforçar sensação, mas não muda como os jogadores interagem."
+      },
+      {
+        "id": "c",
+        "texto": "Só um aliado pode reviver quem caiu",
+        "correta": true,
+        "explicacao": "A regra cria a dinâmica de depender do outro, e é essa dinâmica que gera companheirismo."
+      },
+      {
+        "id": "d",
+        "texto": "Um cronômetro mais curto em cada fase do jogo",
+        "correta": false,
+        "explicacao": "Pressão de tempo gera desafio, não necessariamente cooperação."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_07",
+    "topicId": "mda_framework",
+    "bloco": "pratica",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "No MDA, o que é uma dinâmica?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "As regras e os dados definidos pelo designer",
+        "correta": false,
+        "explicacao": "Isso é mecânica."
+      },
+      {
+        "id": "b",
+        "texto": "A emoção que o jogo provoca em quem joga",
+        "correta": false,
+        "explicacao": "Isso é estética."
+      },
+      {
+        "id": "c",
+        "texto": "O enredo e os personagens que aparecem no jogo",
+        "correta": false,
+        "explicacao": "Narrativa é uma das estéticas do MDA, não a definição de dinâmica."
+      },
+      {
+        "id": "d",
+        "texto": "O comportamento que surge das regras durante a partida",
+        "correta": true,
+        "explicacao": "É a definição do artigo: comportamento em tempo de execução das mecânicas."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_08",
+    "topicId": "mda_framework",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Um jogo em que a pessoa cria e decora a própria casa e personaliza personagens, sem condição de vitória, tem como estética mais evidente:",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Expressão",
+        "correta": true,
+        "explicacao": "Expressão é o jogo como forma de se expressar, e personalização é o exemplo típico."
+      },
+      {
+        "id": "b",
+        "texto": "Desafio",
+        "correta": false,
+        "explicacao": "Sem condição de vitória e sem obstáculo central, desafio não é o foco."
+      },
+      {
+        "id": "c",
+        "texto": "Companheirismo",
+        "correta": false,
+        "explicacao": "A descrição não envolve outros jogadores."
+      },
+      {
+        "id": "d",
+        "texto": "Sensação",
+        "correta": false,
+        "explicacao": "Sensação é o prazer sensorial (imagem, som); a descrição fala de criar e personalizar."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_09",
+    "topicId": "mda_framework",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "O designer constrói um jogo em uma ordem, e o jogador o experimenta na ordem inversa. Qual sequência descreve a experiência de quem joga?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Mecânica → Dinâmica → Estética",
+        "correta": false,
+        "explicacao": "Essa é a ordem do designer. Ele parte das regras; quem joga parte do que sente."
+      },
+      {
+        "id": "b",
+        "texto": "Dinâmica → Mecânica → Estética",
+        "correta": false,
+        "explicacao": "A dinâmica surge das regras, então não vem antes delas nem é a primeira coisa percebida."
+      },
+      {
+        "id": "c",
+        "texto": "Estética → Dinâmica → Mecânica",
+        "correta": true,
+        "explicacao": "O jogador sente primeiro a emoção, depois percebe os padrões de jogo que a causam e só então entende as regras."
+      },
+      {
+        "id": "d",
+        "texto": "Mecânica → Estética → Dinâmica",
+        "correta": false,
+        "explicacao": "A estética é o resultado final da cadeia, não um passo do meio."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "mda_framework_10",
+    "topicId": "mda_framework",
+    "bloco": "pratica",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Em um jogo de corrida, quem está na frente abre cada vez mais vantagem e a disputa perde a graça no meio da partida. Qual ajuste de mecânica ataca a causa?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Dar pontos extras a quem lidera",
+        "correta": false,
+        "explicacao": "Isso amplia a vantagem, ou seja, piora o problema."
+      },
+      {
+        "id": "b",
+        "texto": "Colocar uma trilha sonora mais intensa",
+        "correta": false,
+        "explicacao": "Muda a sensação, mas não a dinâmica de bola de neve."
+      },
+      {
+        "id": "c",
+        "texto": "Fazer pistas mais longas",
+        "correta": false,
+        "explicacao": "Mais tempo de corrida tende a aumentar a distância entre os primeiros e os últimos."
+      },
+      {
+        "id": "d",
+        "texto": "Dar itens melhores a quem está atrás",
+        "correta": true,
+        "explicacao": "Cria uma realimentação que equilibra a disputa e devolve a tensão, como o artigo sugere para o Banco Imobiliário."
+      }
+    ],
+    "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
+  },
+  {
+    "id": "gdd_documento_01",
+    "topicId": "gdd_documento",
+    "bloco": "pratica",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Para que serve, principalmente, um GDD?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Para substituir a escrita do código do jogo",
+        "correta": false,
+        "explicacao": "O GDD descreve o jogo; ele não executa nada e não dispensa a programação."
+      },
+      {
+        "id": "b",
+        "texto": "Para alinhar a equipe sobre o que é o jogo",
+        "correta": true,
+        "explicacao": "O GDD alinha quem faz arte, código, som e design em torno do mesmo jogo."
+      },
+      {
+        "id": "c",
+        "texto": "Para servir de contrato de venda com a loja",
+        "correta": false,
+        "explicacao": "Lojas pedem outras coisas, como página e build. O GDD é para uso interno."
+      },
+      {
+        "id": "d",
+        "texto": "Para ser o manual que o jogador recebe",
+        "correta": false,
+        "explicacao": "O manual é voltado a quem joga. O GDD é escrito para quem desenvolve."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "gdd_documento_02",
+    "topicId": "gdd_documento",
+    "bloco": "pratica",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Qual destas frases funciona melhor como visão do jogo em uma frase?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Um jogo divertido e bonito para todas as idades",
+        "correta": false,
+        "explicacao": "É vaga: serve para qualquer jogo e não diz o que este tem de próprio."
+      },
+      {
+        "id": "b",
+        "texto": "Plataforma 2D: vinte fases com três chefes",
+        "correta": false,
+        "explicacao": "Fala de gênero e quantidade, não do que torna este jogo diferente dos outros."
+      },
+      {
+        "id": "c",
+        "texto": "O melhor jogo de plataforma que já foi feito",
+        "correta": false,
+        "explicacao": "É uma ambição, não uma descrição do jogo."
+      },
+      {
+        "id": "d",
+        "texto": "Roguelike de cozinha: cada pedido muda as regras",
+        "correta": true,
+        "explicacao": "Diz o gênero, o tema e o que torna o jogo diferente, em poucas palavras."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "gdd_documento_03",
+    "topicId": "gdd_documento",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "No playtest, a equipe descobre que uma mecânica descrita no GDD não funciona. O que fazer com o documento?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Atualizar o GDD com a mudança e o motivo dela",
+        "correta": true,
+        "explicacao": "O GDD acompanha o jogo; registrar o motivo evita repetir o erro depois."
+      },
+      {
+        "id": "b",
+        "texto": "Manter o GDD como está, porque ele é um contrato fixo",
+        "correta": false,
+        "explicacao": "Um GDD congelado deixa de descrever o jogo real e para de ser útil."
+      },
+      {
+        "id": "c",
+        "texto": "Descartar o GDD, já que ele errou",
+        "correta": false,
+        "explicacao": "O documento continua útil; só aquela parte precisa mudar."
+      },
+      {
+        "id": "d",
+        "texto": "Criar um segundo GDD paralelo só com a mudança",
+        "correta": false,
+        "explicacao": "Dois documentos competindo confundem a equipe sobre qual vale."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "gdd_documento_04",
+    "topicId": "gdd_documento",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Na primeira reunião o líder pede multiplayer, na segunda um editor de fases, na terceira um modo história. Nada sai da lista, e o lançamento vai sendo adiado. Como se chama esse problema?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Crunch",
+        "correta": false,
+        "explicacao": "Crunch são as horas extras excessivas para cumprir prazo. Pode ser consequência, mas não é o problema descrito."
+      },
+      {
+        "id": "b",
+        "texto": "Game feel",
+        "correta": false,
+        "explicacao": "Game feel é a sensação de controle e resposta ao jogar, não um problema de planejamento."
+      },
+      {
+        "id": "c",
+        "texto": "Feature creep",
+        "correta": true,
+        "explicacao": "O escopo cresce sem que nada saia, e o prazo escorrega."
+      },
+      {
+        "id": "d",
+        "texto": "Soft launch",
+        "correta": false,
+        "explicacao": "Soft launch é lançar para um público restrito antes do lançamento amplo."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "gdd_documento_05",
+    "topicId": "gdd_documento",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Uma equipe pequena tem três meses para fazer o jogo. O que o GDD precisa deixar claro primeiro?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "O essencial e o que fica para depois",
+        "correta": true,
+        "explicacao": "Com pouco tempo, separar o essencial do desejável é o que garante um jogo terminado."
+      },
+      {
+        "id": "b",
+        "texto": "A lista completa de todas as fases do jogo",
+        "correta": false,
+        "explicacao": "Detalhar todas as fases antes de testar o essencial gasta tempo em algo que pode mudar."
+      },
+      {
+        "id": "c",
+        "texto": "A história completa de cada personagem",
+        "correta": false,
+        "explicacao": "A história pode vir depois; primeiro é preciso saber o que o jogador faz."
+      },
+      {
+        "id": "d",
+        "texto": "O orçamento de marketing do lançamento",
+        "correta": false,
+        "explicacao": "Importa em algum momento, mas não define o que a equipe vai construir."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "gdd_documento_06",
+    "topicId": "gdd_documento",
+    "bloco": "pratica",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Por que muitas equipes começam com um GDD de uma página em vez de um documento de oitenta?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Porque as lojas só aceitam GDDs de uma página",
+        "correta": false,
+        "explicacao": "Lojas não pedem GDD. O formato é escolha da equipe."
+      },
+      {
+        "id": "b",
+        "texto": "Porque as engines não abrem documentos longos",
+        "correta": false,
+        "explicacao": "A engine não tem relação com o documento de design."
+      },
+      {
+        "id": "c",
+        "texto": "Porque uma página dispensa fazer o protótipo",
+        "correta": false,
+        "explicacao": "O GDD curto funciona junto com o protótipo, não no lugar dele."
+      },
+      {
+        "id": "d",
+        "texto": "Porque um texto curto é lido e mantido em dia",
+        "correta": true,
+        "explicacao": "Um documento enxuto continua sendo lido e atualizado, e o detalhe nasce do que o protótipo mostra."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "ux_ui_jogos_01",
+    "topicId": "ux_ui_jogos",
+    "bloco": "pratica",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Qual destes itens descreve a UI de um jogo?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "A sensação geral de entender e usar o jogo",
+        "correta": false,
+        "explicacao": "Isso é UX, a experiência. A UI é uma parte do que forma essa experiência."
+      },
+      {
+        "id": "b",
+        "texto": "O código que controla a física do jogo",
+        "correta": false,
+        "explicacao": "Física é sistema interno do jogo, não interface."
+      },
+      {
+        "id": "c",
+        "texto": "Menus, botões e HUD na tela",
+        "correta": true,
+        "explicacao": "UI é a interface visível com que o jogador interage."
+      },
+      {
+        "id": "d",
+        "texto": "A trilha sonora que toca no menu inicial",
+        "correta": false,
+        "explicacao": "Som pode apoiar a interface, mas a trilha sonora não é a UI."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "ux_ui_jogos_02",
+    "topicId": "ux_ui_jogos",
+    "bloco": "pratica",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Placar, tempo restante e mira desenhados sobre a imagem enquanto se joga formam o quê?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "O HUD",
+        "correta": true,
+        "explicacao": "HUD é a informação sobreposta à tela durante o jogo."
+      },
+      {
+        "id": "b",
+        "texto": "O GDD",
+        "correta": false,
+        "explicacao": "GDD é o documento de design, usado pela equipe, não algo que aparece na tela."
+      },
+      {
+        "id": "c",
+        "texto": "O menu de pausa",
+        "correta": false,
+        "explicacao": "O menu de pausa interrompe o jogo; o HUD fica visível enquanto se joga."
+      },
+      {
+        "id": "d",
+        "texto": "O tutorial",
+        "correta": false,
+        "explicacao": "O tutorial ensina a jogar; o HUD informa o estado atual da partida."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "ux_ui_jogos_03",
+    "topicId": "ux_ui_jogos",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Num jogo de tiro, a munição restante aparece num pequeno visor no próprio modelo da arma, e não num contador no canto da tela. Que tipo de interface é essa?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "HUD tradicional, sobreposta à tela",
+        "correta": false,
+        "explicacao": "Seria uma barra desenhada sobre a imagem, fora do mundo do jogo."
+      },
+      {
+        "id": "b",
+        "texto": "Menu radial",
+        "correta": false,
+        "explicacao": "Menu radial é um seletor em círculo, usado para escolher itens ou ações."
+      },
+      {
+        "id": "c",
+        "texto": "Tela de carregamento",
+        "correta": false,
+        "explicacao": "A tela de carregamento aparece entre trechos do jogo, não durante a ação."
+      },
+      {
+        "id": "d",
+        "texto": "Diegética",
+        "correta": true,
+        "explicacao": "A informação faz parte do mundo, o que preserva a imersão."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "ux_ui_jogos_04",
+    "topicId": "ux_ui_jogos",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Em testes, jogadores dizem que não sabem se acertaram o inimigo. O que está faltando?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Mais inimigos na fase",
+        "correta": false,
+        "explicacao": "Mais inimigos não resolve a dúvida sobre o acerto; pode até piorar."
+      },
+      {
+        "id": "b",
+        "texto": "Feedback visual e sonoro do golpe",
+        "correta": true,
+        "explicacao": "A resposta visível e sonora confirma que o golpe acertou."
+      },
+      {
+        "id": "c",
+        "texto": "Um tutorial mais longo no início",
+        "correta": false,
+        "explicacao": "O jogador sabe atacar; o que ele não percebe é o resultado do ataque."
+      },
+      {
+        "id": "d",
+        "texto": "Uma fonte maior no menu principal",
+        "correta": false,
+        "explicacao": "O menu não aparece durante o combate."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "ux_ui_jogos_05",
+    "topicId": "ux_ui_jogos",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Qual forma de ensinar um comando novo costuma funcionar melhor?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Uma tela com todos os comandos logo no início",
+        "correta": false,
+        "explicacao": "Muita informação de uma vez é esquecida antes de ser usada."
+      },
+      {
+        "id": "b",
+        "texto": "Um manual em PDF para ler antes de jogar",
+        "correta": false,
+        "explicacao": "Pouca gente lê, e ler não é o mesmo que praticar."
+      },
+      {
+        "id": "c",
+        "texto": "Deixar que descubra sozinho, sem nenhuma pista",
+        "correta": false,
+        "explicacao": "Sem pista, muitos jogadores travam e desistem."
+      },
+      {
+        "id": "d",
+        "texto": "Usar o comando logo, num trecho seguro",
+        "correta": true,
+        "explicacao": "Aprender e usar logo em seguida fixa o comando sem punição."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "ux_ui_jogos_06",
+    "topicId": "ux_ui_jogos",
+    "bloco": "pratica",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Um jogo de corrida mostra ao mesmo tempo velocidade, mapa, posição, tempo, combustível, pneus, clima e mensagens. Os jogadores batem mais. Qual é o problema de UX?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Faltam cores para separar as informações",
+        "correta": false,
+        "explicacao": "Mais cores não reduzem a quantidade de coisas a ler."
+      },
+      {
+        "id": "b",
+        "texto": "Informação demais disputando a atenção",
+        "correta": true,
+        "explicacao": "Cada item a mais compete com a pista; o HUD deve mostrar só o que importa naquele momento."
+      },
+      {
+        "id": "c",
+        "texto": "Faltam ainda mais informações no HUD",
+        "correta": false,
+        "explicacao": "O problema é o oposto: há informação demais."
+      },
+      {
+        "id": "d",
+        "texto": "O problema é apenas o tamanho da tela",
+        "correta": false,
+        "explicacao": "Mesmo numa tela grande, o olhar sai da pista para ler tudo isso."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "playtest_iteracao_01",
+    "topicId": "playtest_iteracao",
+    "bloco": "pratica",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Qual é o objetivo principal de um playtest?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Avaliar se o jogador é habilidoso",
+        "correta": false,
+        "explicacao": "O alvo do teste é o jogo, não a habilidade de quem joga."
+      },
+      {
+        "id": "b",
+        "texto": "Divulgar o jogo antes do lançamento",
+        "correta": false,
+        "explicacao": "Divulgação é marketing; playtest é investigação."
+      },
+      {
+        "id": "c",
+        "texto": "Testar se o computador aguenta o jogo",
+        "correta": false,
+        "explicacao": "Isso é teste de desempenho, outro tipo de teste."
+      },
+      {
+        "id": "d",
+        "texto": "Achar onde o jogo não funciona",
+        "correta": true,
+        "explicacao": "O teste revela a distância entre o jogo imaginado e o jogado."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "playtest_iteracao_02",
+    "topicId": "playtest_iteracao",
+    "bloco": "pratica",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Quando começar a fazer playtests?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Só quando o jogo estiver pronto",
+        "correta": false,
+        "explicacao": "Com o jogo pronto, corrigir um problema de base custa muito mais."
+      },
+      {
+        "id": "b",
+        "texto": "Desde cedo, com protótipos",
+        "correta": true,
+        "explicacao": "Quanto antes um problema aparece, mais barato é corrigir."
+      },
+      {
+        "id": "c",
+        "texto": "Na fase beta, perto do lançamento",
+        "correta": false,
+        "explicacao": "Perto do lançamento, mudar a base do jogo já custa caro; os testes devem começar bem antes."
+      },
+      {
+        "id": "d",
+        "texto": "Só se sobrar tempo no fim",
+        "correta": false,
+        "explicacao": "Deixar o teste para o fim costuma significar não testar."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "playtest_iteracao_03",
+    "topicId": "playtest_iteracao",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Durante o teste, o jogador fica perdido numa fase. O que o designer deve fazer?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Explicar logo como passar daquele ponto",
+        "correta": false,
+        "explicacao": "Na vida real ninguém vai estar ao lado do jogador para explicar."
+      },
+      {
+        "id": "b",
+        "texto": "Pegar o controle e mostrar o caminho",
+        "correta": false,
+        "explicacao": "Assim se perde a informação de onde e por que ele travou."
+      },
+      {
+        "id": "c",
+        "texto": "Observar e anotar, sem explicar",
+        "correta": true,
+        "explicacao": "Explicar esconde o problema que o teste existe para revelar."
+      },
+      {
+        "id": "d",
+        "texto": "Encerrar o teste e chamar outra pessoa",
+        "correta": false,
+        "explicacao": "Esse momento de dificuldade é justamente o dado mais valioso."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "playtest_iteracao_04",
+    "topicId": "playtest_iteracao",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Por que testes só com a própria equipe enganam?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Ela já sabe como o jogo funciona",
+        "correta": true,
+        "explicacao": "Quem fez o jogo preenche as lacunas sem perceber."
+      },
+      {
+        "id": "b",
+        "texto": "Porque a equipe joga mal o próprio jogo",
+        "correta": false,
+        "explicacao": "A equipe costuma jogar bem demais, e esse é o problema."
+      },
+      {
+        "id": "c",
+        "texto": "Porque a equipe não consegue instalar o jogo",
+        "correta": false,
+        "explicacao": "Instalação não tem relação com a validade do teste."
+      },
+      {
+        "id": "d",
+        "texto": "Porque a equipe esconde os resultados",
+        "correta": false,
+        "explicacao": "Não é questão de honestidade, e sim de conhecimento prévio."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "playtest_iteracao_05",
+    "topicId": "playtest_iteracao",
+    "bloco": "pratica",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Um jogador diz que a fase está fácil, mas morreu oito vezes no mesmo ponto. Em que confiar mais?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "No que ele disse, porque ele sabe o que sentiu",
+        "correta": false,
+        "explicacao": "Jogadores muitas vezes minimizam dificuldades ao falar."
+      },
+      {
+        "id": "b",
+        "texto": "No que ele fez, e investigar aquele ponto",
+        "correta": true,
+        "explicacao": "O comportamento observado costuma dizer mais do que a opinião."
+      },
+      {
+        "id": "c",
+        "texto": "Na média entre o que disse e o que fez",
+        "correta": false,
+        "explicacao": "Fala e comportamento não se somam; o comportamento aponta o problema concreto."
+      },
+      {
+        "id": "d",
+        "texto": "Em nenhum dos dois: descartar esse jogador",
+        "correta": false,
+        "explicacao": "Descartar o teste joga fora justamente o dado que mostra o problema."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "playtest_iteracao_06",
+    "topicId": "playtest_iteracao",
+    "bloco": "pratica",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Depois do teste, a lista tem 20 problemas e o tempo é curto. Como decidir o que corrigir primeiro?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Na ordem em que foram anotados",
+        "correta": false,
+        "explicacao": "A ordem da anotação não diz nada sobre a gravidade."
+      },
+      {
+        "id": "b",
+        "texto": "Sempre pelos mais fáceis de corrigir",
+        "correta": false,
+        "explicacao": "Fáceis podem ser irrelevantes, enquanto um problema grave fica de pé."
+      },
+      {
+        "id": "c",
+        "texto": "Por impacto e frequência, e testar de novo",
+        "correta": true,
+        "explicacao": "Impacto e frequência guiam a prioridade, e o novo teste confirma a correção."
+      },
+      {
+        "id": "d",
+        "texto": "Corrigir todos de uma vez antes de testar de novo",
+        "correta": false,
+        "explicacao": "Muitas mudanças juntas impedem saber qual delas resolveu, ou piorou, algo."
+      }
+    ],
+    "fonte": "Conceito básico de desenvolvimento de jogos"
+  },
+  {
+    "id": "gdd_documento_07",
+    "topicId": "gdd_documento",
+    "bloco": "forma_a",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "O que quer dizer chamar o GDD de \"documento vivo\"?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Que ele muda junto com o projeto",
+        "correta": true,
+        "explicacao": "O GDD é atualizado sempre que o jogo muda, para continuar valendo como referência da equipe."
+      },
+      {
+        "id": "b",
+        "texto": "Que todos escrevem nele ao mesmo tempo",
+        "correta": false,
+        "explicacao": "Quem edita não é o ponto. \"Vivo\" quer dizer que o conteúdo acompanha as mudanças do projeto."
+      },
+      {
+        "id": "c",
+        "texto": "Que ele tem vídeos e animações",
+        "correta": false,
+        "explicacao": "O formato não importa. O que o torna vivo é ser mantido em dia."
+      },
+      {
+        "id": "d",
+        "texto": "Que ele só vale depois de aprovado pelo cliente",
+        "correta": false,
+        "explicacao": "Aprovação não é o que define o documento. Ele serve à equipe desde o primeiro rascunho."
+      }
+    ],
+    "fonte": "Librande (2010), One-Page Designs, GDC; Fullerton (2018), Game Design Workshop, 4. ed."
+  },
+  {
+    "id": "gdd_documento_08",
+    "topicId": "gdd_documento",
+    "bloco": "forma_a",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Qual destes trechos de um GDD descreve o ciclo principal de jogo?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Jogo de ação em 2D para computador e celular, com controle opcional",
+        "correta": false,
+        "explicacao": "Isso é gênero e plataforma, que também entram no GDD, mas não descrevem o que se repete."
+      },
+      {
+        "id": "b",
+        "texto": "Entrar na sala, vencer os inimigos, pegar a recompensa e seguir",
+        "correta": true,
+        "explicacao": "O ciclo principal é o que o jogador faz repetidamente, do começo ao fim da partida."
+      },
+      {
+        "id": "c",
+        "texto": "Arte em pixel art, com paleta fria e trilha eletrônica",
+        "correta": false,
+        "explicacao": "Isso é referência de arte e som."
+      },
+      {
+        "id": "d",
+        "texto": "Dez fases no lançamento, sem modo online e sem editor de fases",
+        "correta": false,
+        "explicacao": "Isso é escopo: o que entra e o que fica de fora."
+      }
+    ],
+    "fonte": "Librande (2010), One-Page Designs, GDC; Fullerton (2018), Game Design Workshop, 4. ed."
+  },
+  {
+    "id": "gdd_documento_09",
+    "topicId": "gdd_documento",
+    "bloco": "forma_a",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "A equipe tem dois meses e uma lista de quinze funcionalidades. Qual atitude mantém o escopo sob controle?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Fazer um pouco de cada uma, para nenhuma ficar de fora do lançamento",
+        "correta": false,
+        "explicacao": "Quinze funcionalidades pela metade não fazem um jogo. Falta decidir o que é essencial."
+      },
+      {
+        "id": "b",
+        "texto": "Começar pelas mais fáceis, para a lista diminuir rápido",
+        "correta": false,
+        "explicacao": "Fácil não é o mesmo que essencial. O tempo pode acabar antes do que o jogo precisa para existir."
+      },
+      {
+        "id": "c",
+        "texto": "Marcar as essenciais e deixar as outras para depois do lançamento",
+        "correta": true,
+        "explicacao": "Separar o essencial do desejável é o que impede o projeto de crescer além do prazo."
+      },
+      {
+        "id": "d",
+        "texto": "Adiar o lançamento até caberem as quinze funcionalidades da lista",
+        "correta": false,
+        "explicacao": "É assim que o lançamento escorrega: o escopo manda no prazo, e não o contrário."
+      }
+    ],
+    "fonte": "Librande (2010), One-Page Designs, GDC; Fullerton (2018), Game Design Workshop, 4. ed."
+  },
+  {
+    "id": "gdd_documento_10",
+    "topicId": "gdd_documento",
+    "bloco": "forma_b",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Qual destes itens costuma fazer parte de um GDD?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "O código-fonte do jogo",
+        "correta": false,
+        "explicacao": "O GDD descreve o jogo. O código é outra coisa, feita a partir dele."
+      },
+      {
+        "id": "b",
+        "texto": "O contrato de trabalho da equipe",
+        "correta": false,
+        "explicacao": "Isso é documento administrativo, e não de design."
+      },
+      {
+        "id": "c",
+        "texto": "As avaliações dos jogadores na loja",
+        "correta": false,
+        "explicacao": "Elas só existem depois do lançamento. O GDD orienta a produção."
+      },
+      {
+        "id": "d",
+        "texto": "O que entra no jogo e o que fica de fora",
+        "correta": true,
+        "explicacao": "O escopo é uma das partes do GDD, ao lado da visão, das mecânicas e da progressão."
+      }
+    ],
+    "fonte": "Librande (2010), One-Page Designs, GDC; Fullerton (2018), Game Design Workshop, 4. ed."
+  },
+  {
+    "id": "gdd_documento_11",
+    "topicId": "gdd_documento",
+    "bloco": "forma_b",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Num jogo de fazenda, o jogador planta, rega, colhe, vende e compra sementes melhores, e recomeça. No GDD, isso é:",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "O ciclo principal de jogo",
+        "correta": true,
+        "explicacao": "É a sequência de ações que o jogador repete durante todo o jogo."
+      },
+      {
+        "id": "b",
+        "texto": "O escopo",
+        "correta": false,
+        "explicacao": "Escopo é a lista do que entra e do que não entra no projeto."
+      },
+      {
+        "id": "c",
+        "texto": "A visão em uma frase",
+        "correta": false,
+        "explicacao": "A visão resume a ideia do jogo. Aqui estão descritas as ações que se repetem."
+      },
+      {
+        "id": "d",
+        "texto": "As referências de arte",
+        "correta": false,
+        "explicacao": "Referências dizem com o que o jogo se parece, e não o que o jogador faz."
+      }
+    ],
+    "fonte": "Librande (2010), One-Page Designs, GDC; Fullerton (2018), Game Design Workshop, 4. ed."
+  },
+  {
+    "id": "gdd_documento_12",
+    "topicId": "gdd_documento",
+    "bloco": "forma_b",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Faltam três semanas para o lançamento e alguém propõe um modo cooperativo que não estava previsto. Qual resposta mantém o escopo sob controle?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Aceitar, porque ideia boa não se desperdiça e o jogo fica maior",
+        "correta": false,
+        "explicacao": "Aceitar cada ideia nova perto do prazo é o aumento descontrolado de escopo."
+      },
+      {
+        "id": "b",
+        "texto": "Anotar como desejável, para depois, e lançar com o essencial",
+        "correta": true,
+        "explicacao": "A ideia fica registrada, mas não entra agora: o essencial e o prazo vêm primeiro."
+      },
+      {
+        "id": "c",
+        "texto": "Aceitar e cortar os testes finais para o modo caber no prazo",
+        "correta": false,
+        "explicacao": "Além de aumentar o escopo, o jogo sairia sem teste."
+      },
+      {
+        "id": "d",
+        "texto": "Recusar e apagar a ideia do documento",
+        "correta": false,
+        "explicacao": "Não precisa apagar. O GDD pode guardar a ideia entre as desejáveis."
+      }
+    ],
+    "fonte": "Librande (2010), One-Page Designs, GDC; Fullerton (2018), Game Design Workshop, 4. ed."
+  },
+  {
+    "id": "ux_ui_jogos_07",
+    "topicId": "ux_ui_jogos",
+    "bloco": "forma_a",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "O que a UX de um jogo descreve?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "O desenho dos menus e dos botões",
+        "correta": false,
+        "explicacao": "Isso é a UI: o que aparece na tela."
+      },
+      {
+        "id": "b",
+        "texto": "A quantidade de quadros por segundo",
+        "correta": false,
+        "explicacao": "Isso é desempenho. Pode atrapalhar a experiência, mas não é o que a UX nomeia."
+      },
+      {
+        "id": "c",
+        "texto": "A experiência de entender e usar o jogo",
+        "correta": true,
+        "explicacao": "UX é saber o que fazer, perceber o que aconteceu e não se perder."
+      },
+      {
+        "id": "d",
+        "texto": "A história e os personagens",
+        "correta": false,
+        "explicacao": "Isso é narrativa."
+      }
+    ],
+    "fonte": "Fagerholt e Lorentzon (2009), Beyond the HUD; Norman (2013), The Design of Everyday Things"
+  },
+  {
+    "id": "ux_ui_jogos_08",
+    "topicId": "ux_ui_jogos",
+    "bloco": "forma_a",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Qual destes elementos é uma interface diegética?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Uma barra de vida no canto da tela, que pisca quando a vida acaba",
+        "correta": false,
+        "explicacao": "Ela está sobreposta à imagem. Só quem joga a vê, e não o personagem."
+      },
+      {
+        "id": "b",
+        "texto": "O menu de pausa, com as opções de som e de controles",
+        "correta": false,
+        "explicacao": "O menu fica fora do mundo do jogo."
+      },
+      {
+        "id": "c",
+        "texto": "A pontuação no topo da tela, em números grandes",
+        "correta": false,
+        "explicacao": "É parte do HUD comum, desenhado por cima da cena."
+      },
+      {
+        "id": "d",
+        "texto": "Um mapa de papel que o personagem abre nas mãos",
+        "correta": true,
+        "explicacao": "O mapa existe dentro do mundo do jogo: o personagem também o vê."
+      }
+    ],
+    "fonte": "Fagerholt e Lorentzon (2009), Beyond the HUD; Norman (2013), The Design of Everyday Things"
+  },
+  {
+    "id": "ux_ui_jogos_09",
+    "topicId": "ux_ui_jogos",
+    "bloco": "forma_a",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Uma fase tem uma parede que pode ser quebrada, mas no teste ninguém tenta quebrá-la. Qual ajuste segue a ideia de ensinar jogando?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Desenhar a parede rachada e pôr uma igual no começo, num ponto seguro",
+        "correta": true,
+        "explicacao": "A forma do objeto sugere o que fazer, e o jogador aprende usando, sem risco."
+      },
+      {
+        "id": "b",
+        "texto": "Abrir uma janela de texto, no início da fase, explicando todas as paredes",
+        "correta": false,
+        "explicacao": "É despejar informação de uma vez, longe do momento em que ela é usada."
+      },
+      {
+        "id": "c",
+        "texto": "Aumentar o dano do jogador, para a parede quebrar sem querer",
+        "correta": false,
+        "explicacao": "O jogador não aprende o que fez. Na parede seguinte, ele continua sem saber."
+      },
+      {
+        "id": "d",
+        "texto": "Pôr a explicação no manual, no menu de opções",
+        "correta": false,
+        "explicacao": "Quase ninguém lê, e a explicação fica longe da situação."
+      }
+    ],
+    "fonte": "Fagerholt e Lorentzon (2009), Beyond the HUD; Norman (2013), The Design of Everyday Things"
+  },
+  {
+    "id": "ux_ui_jogos_10",
+    "topicId": "ux_ui_jogos",
+    "bloco": "forma_b",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Um jogador diz: \"os menus são bonitos, mas eu nunca sei para onde ir\". Do que ele está reclamando?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Da UI: a aparência visual dos botões e dos menus",
+        "correta": false,
+        "explicacao": "A aparência ele elogiou. O problema está em se orientar."
+      },
+      {
+        "id": "b",
+        "texto": "Da UX: a experiência de entender o jogo",
+        "correta": true,
+        "explicacao": "Ele se perde. Saber o que fazer é parte da experiência de uso."
+      },
+      {
+        "id": "c",
+        "texto": "Do desempenho do jogo nos menus",
+        "correta": false,
+        "explicacao": "Ele não falou de travamentos nem de lentidão."
+      },
+      {
+        "id": "d",
+        "texto": "Da história do jogo",
+        "correta": false,
+        "explicacao": "A reclamação é sobre se localizar, e não sobre o enredo."
+      }
+    ],
+    "fonte": "Fagerholt e Lorentzon (2009), Beyond the HUD; Norman (2013), The Design of Everyday Things"
+  },
+  {
+    "id": "ux_ui_jogos_11",
+    "topicId": "ux_ui_jogos",
+    "bloco": "forma_b",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Num jogo de corrida, a velocidade aparece no painel do carro, dentro da cabine. Por que essa interface é chamada de diegética?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Porque fica sempre visível",
+        "correta": false,
+        "explicacao": "Ficar visível não é o critério. Um contador fixo no canto da tela também fica, e não é diegético."
+      },
+      {
+        "id": "b",
+        "texto": "Porque usa números em vez de ícones",
+        "correta": false,
+        "explicacao": "O formato da informação não muda o tipo de interface."
+      },
+      {
+        "id": "c",
+        "texto": "Porque existe dentro do mundo do jogo",
+        "correta": true,
+        "explicacao": "O velocímetro faz parte do carro: o piloto, no jogo, também o vê."
+      },
+      {
+        "id": "d",
+        "texto": "Porque aparece só quando o jogo está pausado",
+        "correta": false,
+        "explicacao": "Ela aparece durante a corrida, e pausar não tem relação com o termo."
+      }
+    ],
+    "fonte": "Fagerholt e Lorentzon (2009), Beyond the HUD; Norman (2013), The Design of Everyday Things"
+  },
+  {
+    "id": "ux_ui_jogos_12",
+    "topicId": "ux_ui_jogos",
+    "bloco": "forma_b",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "Um jogo abre com uma tela que lista doze comandos. No teste, os jogadores esquecem quase todos. Qual mudança segue a ideia de ensinar jogando?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Deixar a tela no ar por mais tempo antes de liberar o jogo",
+        "correta": false,
+        "explicacao": "Mais tempo olhando a lista não faz ninguém decorar doze comandos."
+      },
+      {
+        "id": "b",
+        "texto": "Dividir a lista em duas telas de seis comandos cada, mais fáceis de ler",
+        "correta": false,
+        "explicacao": "Continua sendo informação despejada antes de ser usada."
+      },
+      {
+        "id": "c",
+        "texto": "Repetir a tela inteira no começo de cada fase, como lembrete",
+        "correta": false,
+        "explicacao": "Repetir a lista não resolve: falta o jogador usar cada comando."
+      },
+      {
+        "id": "d",
+        "texto": "Mostrar um comando por vez, num trecho seguro em que ele é usado",
+        "correta": true,
+        "explicacao": "O jogador aprende fazendo, no momento em que precisa do comando."
+      }
+    ],
+    "fonte": "Fagerholt e Lorentzon (2009), Beyond the HUD; Norman (2013), The Design of Everyday Things"
+  },
+  {
+    "id": "playtest_iteracao_07",
+    "topicId": "playtest_iteracao",
+    "bloco": "forma_a",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Num playtest, o que está sendo avaliado?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "A habilidade do jogador",
+        "correta": false,
+        "explicacao": "Testa-se o jogo, e não o jogador."
+      },
+      {
+        "id": "b",
+        "texto": "A velocidade do computador",
+        "correta": false,
+        "explicacao": "Isso é teste de desempenho, que é outra coisa."
+      },
+      {
+        "id": "c",
+        "texto": "O jogo, e não a habilidade de quem joga",
+        "correta": true,
+        "explicacao": "Quando alguém trava, isso é informação sobre o jogo."
+      },
+      {
+        "id": "d",
+        "texto": "O trabalho de cada pessoa da equipe",
+        "correta": false,
+        "explicacao": "O playtest olha para a experiência de quem joga, e não para quem fez."
+      }
+    ],
+    "fonte": "Fullerton (2018), Game Design Workshop, 4. ed.; Schell (2019), The Art of Game Design, 3. ed."
+  },
+  {
+    "id": "playtest_iteracao_08",
+    "topicId": "playtest_iteracao",
+    "bloco": "forma_a",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "Por que se pede ao jogador que pense em voz alta durante o teste?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Para ele se distrair menos e prestar atenção só no jogo",
+        "correta": false,
+        "explicacao": "Não é esse o objetivo. Falar pode até dividir a atenção."
+      },
+      {
+        "id": "b",
+        "texto": "Para o teste terminar mais rápido, sem pausas para perguntas",
+        "correta": false,
+        "explicacao": "Pensar em voz alta não encurta o teste."
+      },
+      {
+        "id": "c",
+        "texto": "Para gravar a voz dele e usar depois nos diálogos do jogo",
+        "correta": false,
+        "explicacao": "A gravação serve à análise do teste."
+      },
+      {
+        "id": "d",
+        "texto": "Para saber o que ele tenta fazer e onde se confunde",
+        "correta": true,
+        "explicacao": "Só olhando a tela não dá para saber a intenção. A fala mostra o raciocínio."
+      }
+    ],
+    "fonte": "Fullerton (2018), Game Design Workshop, 4. ed.; Schell (2019), The Art of Game Design, 3. ed."
+  },
+  {
+    "id": "playtest_iteracao_09",
+    "topicId": "playtest_iteracao",
+    "bloco": "forma_a",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "No primeiro teste, oito de dez pessoas não acharam a saída da primeira sala, e uma reclamou da cor do menu. Só dá tempo de um ajuste antes do próximo teste. Qual escolher?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "A saída da sala, que trava a maioria, e testar de novo",
+        "correta": true,
+        "explicacao": "Vem primeiro o problema que mais afeta a experiência e aparece com mais jogadores."
+      },
+      {
+        "id": "b",
+        "texto": "A cor do menu, que é mais rápida de mudar e já foi apontada",
+        "correta": false,
+        "explicacao": "Rápido não é critério. Só uma pessoa notou, e isso não impede ninguém de jogar."
+      },
+      {
+        "id": "c",
+        "texto": "Nenhum: esperar mais testes para ter certeza antes de mexer",
+        "correta": false,
+        "explicacao": "Oito em dez já é sinal forte. Esperar é perder um ciclo de teste."
+      },
+      {
+        "id": "d",
+        "texto": "Os dois, cada um pela metade, para não deixar nada de fora",
+        "correta": false,
+        "explicacao": "Meio ajuste não resolve a saída, e o próximo teste mostraria o mesmo problema."
+      }
+    ],
+    "fonte": "Fullerton (2018), Game Design Workshop, 4. ed.; Schell (2019), The Art of Game Design, 3. ed."
+  },
+  {
+    "id": "playtest_iteracao_10",
+    "topicId": "playtest_iteracao",
+    "bloco": "forma_b",
+    "dificuldade": "basico",
+    "formato": "multipla_escolha",
+    "enunciado": "Um jogador não consegue passar do tutorial. Pela ideia de playtest, o que isso mostra?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Que o jogador é ruim",
+        "correta": false,
+        "explicacao": "Testa-se o jogo, e não o jogador."
+      },
+      {
+        "id": "b",
+        "texto": "Que o tutorial tem um problema a corrigir",
+        "correta": true,
+        "explicacao": "O teste existe para achar onde o jogo não funciona como se queria."
+      },
+      {
+        "id": "c",
+        "texto": "Que o teste deve ser descartado",
+        "correta": false,
+        "explicacao": "É o contrário: esse é o tipo de resultado que o teste procura."
+      },
+      {
+        "id": "d",
+        "texto": "Que o jogo está difícil na medida certa",
+        "correta": false,
+        "explicacao": "Travar no tutorial não é desafio. É o jogo deixando de ensinar."
+      }
+    ],
+    "fonte": "Fullerton (2018), Game Design Workshop, 4. ed.; Schell (2019), The Art of Game Design, 3. ed."
+  },
+  {
+    "id": "playtest_iteracao_11",
+    "topicId": "playtest_iteracao",
+    "bloco": "forma_b",
+    "dificuldade": "intermediario",
+    "formato": "multipla_escolha",
+    "enunciado": "No teste, a jogadora fica um minuto em silêncio, olhando para a tela. O que o observador pode pedir, sem atrapalhar o teste?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Que ela aperte o botão que falta para seguir em frente",
+        "correta": false,
+        "explicacao": "Ajudar esconde o problema: o jogo deveria ter mostrado o caminho sozinho."
+      },
+      {
+        "id": "b",
+        "texto": "Que ela pare o teste, porque claramente travou",
+        "correta": false,
+        "explicacao": "O ponto em que ela trava é o que mais interessa observar."
+      },
+      {
+        "id": "c",
+        "texto": "Que ela diga em voz alta o que está pensando",
+        "correta": true,
+        "explicacao": "Assim se descobre o que ela está tentando fazer, sem dar a resposta."
+      },
+      {
+        "id": "d",
+        "texto": "Que ela jogue mais rápido",
+        "correta": false,
+        "explicacao": "A pressa muda o comportamento e não explica a dúvida."
+      }
+    ],
+    "fonte": "Fullerton (2018), Game Design Workshop, 4. ed.; Schell (2019), The Art of Game Design, 3. ed."
+  },
+  {
+    "id": "playtest_iteracao_12",
+    "topicId": "playtest_iteracao",
+    "bloco": "forma_b",
+    "dificuldade": "avancado",
+    "formato": "multipla_escolha",
+    "enunciado": "A equipe corrigiu os três problemas mais graves do primeiro teste. O que o ciclo de iteração manda fazer em seguida?",
+    "alternativas": [
+      {
+        "id": "a",
+        "texto": "Lançar o jogo, já que os três problemas mais graves foram resolvidos",
+        "correta": false,
+        "explicacao": "Ninguém conferiu ainda se as correções funcionam."
+      },
+      {
+        "id": "b",
+        "texto": "Corrigir todos os outros problemas da lista antes de qualquer novo teste",
+        "correta": false,
+        "explicacao": "Sem testar, a equipe pode empilhar ajustes em cima de uma correção que não deu certo."
+      },
+      {
+        "id": "c",
+        "texto": "Voltar ao documento do jogo e recomeçar o projeto com o que aprendeu",
+        "correta": false,
+        "explicacao": "Iterar é ajustar e testar de novo, e não começar do zero."
+      },
+      {
+        "id": "d",
+        "texto": "Testar de novo, com pessoas novas, para ver se a correção funcionou",
+        "correta": true,
+        "explicacao": "O ciclo é prototipar, testar, analisar e ajustar. Depois do ajuste vem outro teste."
+      }
+    ],
+    "fonte": "Fullerton (2018), Game Design Workshop, 4. ed.; Schell (2019), The Art of Game Design, 3. ed."
+  }
+]

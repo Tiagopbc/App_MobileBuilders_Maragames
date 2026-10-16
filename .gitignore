@@ -1,0 +1,83 @@
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# pastas nativas criadas pelo prebuild (CNG)
+/ios
+/android
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.keystore
+!debug.keystore
+
+# Metro
+.metro-health-check*
+
+# debug / logs
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+pnpm-debug.log*
+*.log
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# certificates
+*.pem
+
+# local env files
+.env
+.env*.local
+.env.development
+.env.production
+!.env.example
+
+# IDEs
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.iml
+*.swp
+
+# Firebase
+serviceAccountKey.json
+*-firebase-adminsdk-*.json
+.firebase/
+firebase-debug.log
+firestore-debug.log
+database-debug.log
+ui-debug.log
+pubsub-debug.log
+
+# typescript
+*.tsbuildinfo
+
+# testing
+coverage/
+
+# misc
+*.tgz
+.cache/
+tmp/
+
+# exportação do piloto: tem a chave que liga cada código ao nome
+exportacao/
+
+# relatório para a Beast Maragames: é publicado à parte, e não pelo repositório
+relatorio/

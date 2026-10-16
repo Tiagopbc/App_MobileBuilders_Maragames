@@ -1,0 +1,114 @@
+[
+  {
+    "topicId": "mda_framework",
+    "ordem": 1,
+    "trilha": "medido",
+    "lessonOrder": 1,
+    "titulo": "Framework MDA",
+    "modulo": "Fundamentos de Game Design",
+    "cartao": [
+      {
+        "titulo": "Três camadas de um jogo",
+        "texto": "O MDA (Hunicke, LeBlanc e Zubek, 2004) divide um jogo em três camadas: Mecânica, Dinâmica e Estética. Ele serve para pensar como uma regra escrita pelo designer vira, no fim, algo que o jogador sente."
+      },
+      {
+        "titulo": "Mecânica",
+        "texto": "São as regras e os dados do jogo, definidos antes da partida: quanto custa um item, quantos pulos o personagem tem, quanto tempo dura uma rodada. É a única camada que o designer controla diretamente."
+      },
+      {
+        "titulo": "Dinâmica",
+        "texto": "É o comportamento que surge quando as mecânicas entram em ação com as escolhas dos jogadores, ao longo da partida. Ninguém escreve uma dinâmica: ela aparece. Exemplo: num jogo de tiro, se a regra dá vantagem a quem fica parado, surgem jogadores escondidos esperando os outros. Uma cadeia completa: a regra de munição limitada (mecânica) faz o jogador economizar tiros e evitar combates (dinâmica), o que gera tensão e desafio (estética)."
+      },
+      {
+        "titulo": "Estética",
+        "texto": "É a resposta emocional do jogador. O artigo lista oito tipos: Sensação (prazer de ver e ouvir), Fantasia (faz de conta), Narrativa (drama), Desafio (superar obstáculos), Companheirismo (estar com outros), Descoberta (explorar o desconhecido), Expressão (criar, personalizar, se expressar) e Submissão (jogo como passatempo relaxado)."
+      },
+      {
+        "titulo": "Duas direções",
+        "texto": "O designer constrói na ordem Mecânica → Dinâmica → Estética. O jogador percebe ao contrário: sente primeiro a emoção, depois nota os padrões da partida e só por último entende as regras. Para mudar o que o jogador sente, o designer ajusta mecânicas e observa as dinâmicas que elas geram."
+      },
+      {
+        "titulo": "Realimentação",
+        "texto": "Algumas combinações de regras criam bola de neve: quem ganha recebe recursos que o fazem ganhar mais, e a disputa perde a tensão. Esse efeito não está escrito em nenhuma regra: é uma dinâmica. Para equilibrar, o designer cria mecânicas que ajudam quem está atrás ou freiam quem lidera. Do mesmo jeito, regras que fazem um jogador precisar do outro tendem a gerar companheirismo."
+      }
+    ]
+  },
+  {
+    "topicId": "gdd_documento",
+    "ordem": 5,
+    "trilha": "diaria",
+    "lessonOrder": 6,
+    "titulo": "GDD: o documento do jogo",
+    "modulo": "Fundamentos de Game Design",
+    "cartao": [
+      {
+        "titulo": "Para que serve",
+        "texto": "O GDD (game design document) registra o que o jogo é e como ele funciona: a ideia, as regras, o conteúdo e o que fica de fora. Serve para a equipe inteira trabalhar na mesma direção. É um documento vivo, que muda junto com o projeto."
+      },
+      {
+        "titulo": "O que costuma ter",
+        "texto": "A visão do jogo em uma frase, o público e a plataforma, o ciclo principal de jogo (o que o jogador faz repetidamente), as mecânicas e os controles, a progressão, referências de arte e som e o escopo: o que entra e o que não entra."
+      },
+      {
+        "titulo": "Curto primeiro",
+        "texto": "Documento enorme ninguém lê nem atualiza. Muitas equipes começam com um GDD de uma página e acrescentam detalhe à medida que o protótipo é testado. O que o teste mostra que não funciona é corrigido no documento."
+      },
+      {
+        "titulo": "Escopo sob controle",
+        "texto": "Separe o essencial (sem isso o jogo não existe) do desejável (fica para depois). Quando cada reunião acrescenta uma funcionalidade nova e o lançamento escorrega, o nome do problema é aumento descontrolado de escopo, o feature creep."
+      }
+    ]
+  },
+  {
+    "topicId": "ux_ui_jogos",
+    "ordem": 6,
+    "trilha": "diaria",
+    "lessonOrder": 7,
+    "titulo": "UX/UI em jogos",
+    "modulo": "Fundamentos de Game Design",
+    "cartao": [
+      {
+        "titulo": "UI e UX",
+        "texto": "UI é o que aparece na tela: menus, botões e o HUD. UX é a experiência de entender e usar o jogo: saber o que fazer, perceber o que aconteceu, não se perder. Uma boa UI está a serviço de uma boa UX."
+      },
+      {
+        "titulo": "HUD",
+        "texto": "O HUD é a informação sobreposta à tela durante a partida, como vida, munição e minimapa. Mostre só o que o jogador precisa naquele momento. Uma interface diegética existe dentro do mundo do jogo: um relógio no pulso do personagem, uma luz no traje."
+      },
+      {
+        "titulo": "Feedback",
+        "texto": "Toda ação precisa de uma resposta que o jogador perceba: um brilho, um som, um número, um tremor na tela. Sem isso ele não sabe se a ação funcionou, e o jogo parece quebrado."
+      },
+      {
+        "titulo": "Ensinar jogando",
+        "texto": "Em vez de uma tela cheia de comandos no começo, apresente uma coisa por vez, numa situação segura em que o jogador já usa o que acabou de aprender. A forma dos objetos também ensina: uma parede rachada sugere que pode ser quebrada."
+      }
+    ]
+  },
+  {
+    "topicId": "playtest_iteracao",
+    "ordem": 8,
+    "trilha": "diaria",
+    "lessonOrder": 8,
+    "titulo": "Playtest e iteração",
+    "modulo": "Fundamentos de Game Design",
+    "cartao": [
+      {
+        "titulo": "O que é playtest",
+        "texto": "Playtest é observar pessoas jogando para descobrir onde o jogo não funciona como você queria. Testa-se o jogo, não o jogador. Comece cedo, até com protótipos simples, e repita ao longo do projeto."
+      },
+      {
+        "titulo": "Observe mais do que pergunta",
+        "texto": "Veja onde a pessoa trava, o que ignora, onde desiste. Não explique nem ajude durante o teste. Peça para ela pensar em voz alta. O que alguém diz e o que faz podem ser diferentes; o comportamento costuma revelar mais."
+      },
+      {
+        "titulo": "Quem testa",
+        "texto": "Quem fez o jogo já sabe demais e não enxerga o que confunde um novato. Amigos tendem a ser gentis. Inclua pessoas novas, de preferência do público que o jogo quer atingir."
+      },
+      {
+        "titulo": "Iterar",
+        "texto": "Depois do teste, liste os problemas, priorize pelos que mais afetam a experiência e aparecem com mais jogadores, ajuste e teste de novo. O ciclo é: prototipar, testar, analisar, ajustar."
+      }
+    ]
+  }
+]
