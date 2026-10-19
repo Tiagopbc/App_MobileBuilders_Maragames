@@ -169,8 +169,19 @@ export const TEXTOS = {
     todasAsLicoesConcluidas: 'Você concluiu todas as lições.',
     revisoesAgendadas: 'Revisões agendadas',
     outrasLicoes: 'Outras lições',
+    emBreve: 'Em breve',
     erroAoCarregarLicoes: 'Não foi possível carregar as lições. Confira a conexão e tente de novo.',
 } as const;
+
+/** "Game Engines · Em breve": o título de um módulo que ainda não tem questões. */
+export function moduloEmBreve(modulo: string): string {
+    return `${modulo} · Em breve`;
+}
+
+/** O que o leitor de tela diz de uma lição de módulo em breve. */
+export function licaoEmBreve(titulo: string): string {
+    return `${titulo}, em breve`;
+}
 
 /** "8 de 12". */
 export function formatarTaxa(acertos: number, total: number): string {

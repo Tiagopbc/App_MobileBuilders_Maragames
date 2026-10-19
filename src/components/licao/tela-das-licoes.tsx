@@ -6,13 +6,15 @@ import { BotaoPrincipal } from '@/components/botao-principal';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { MaxContentWidth, Spacing, type ThemeColor } from '@/constants/theme';
-import { TEXTOS, dominioEmContagem, situacaoDaLicao } from '@/constants/textos';
+import type { ModuloEmBreve } from '@/constants/em-breve';
+import { TEXTOS, dominioEmContagem, licaoEmBreve, moduloEmBreve, situacaoDaLicao } from '@/constants/textos';
 import type { EstadoDasLicoes, LicaoDoAluno } from '@/hooks/use-licoes';
 import { useTheme } from '@/hooks/use-theme';
 import type { EstadoDaLicao } from '@/lib/licao';
 
 type TelaDasLicoesProps = {
     estado: EstadoDasLicoes; // chega do `useLicoes`; quem lê e recarrega é a rota
+    emBreve: readonly ModuloEmBreve[]; // módulos ainda sem questões, mostrados depois das lições
     aoAbrir: (topicId: string) => void; // quem navega é a rota
     aoTentarDeNovo: () => void;
     aoSair: () => void;
@@ -41,8 +43,9 @@ function porModulo(licoes: readonly LicaoDoAluno[]): { modulo: string; licoes: L
 }
 
 // A lista de lições (item 30): todas, por módulo, cada uma com a situação e o domínio. Qualquer
-// uma abre, em qualquer ordem. Só desenha: os estados chegam prontos.
-export function TelaDasLicoes({ estado, aoAbrir, aoTentarDeNovo, aoSair }: TelaDasLicoesProps) {
+// uma abre, em qualquer ordem. Depois delas vêm os módulos em breve, com as lições trancadas e
+// sem abrir. Só desenha: os estados chegam prontos.
+export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair }: TelaDasLicoesProps) {
     const theme = useTheme();
 
     return (
@@ -112,6 +115,32 @@ export function TelaDasLicoes({ estado, aoAbrir, aoTentarDeNovo, aoSair }: TelaD
                                 })}
                             </View>
                         ))}
+                        {emBreve.map((grupo) => (
+                            <View key={grupo.modulo} style={styles.grupo}>
+                                <ThemedText type="smallBold" themeColor="textSecondary">
+                                    {moduloEmBreve(grupo.modulo)}
+                                </ThemedText>
+                                {grupo.licoes.map((titulo) => (
+                                    <View
+                                        key={titulo}
+                                        accessible
+                                        accessibilityLabel={licaoEmBreve(titulo)}
+                                        style={[
+                                            styles.licao,
+                                            styles.trancada,
+                                            { backgroundColor: theme.backgroundElement, borderColor: theme.borda },
+                                        ]}>
+                                        <Ionicons name="lock-closed-outline" size={24} color={theme.textSecondary} />
+                                        <View style={styles.textos}>
+                                            <ThemedText style={styles.nome}>{titulo}</ThemedText>
+                                            <ThemedText type="small" themeColor="textSecondary">
+                                                {TEXTOS.emBreve}
+                                            </ThemedText>
+                                        </View>
+                                    </View>
+                                ))}
+                            </View>
+                        ))}
                     </ScrollView>
                 )}
             </SafeAreaView>
@@ -144,4 +173,5 @@ const styles = StyleSheet.create({
     },
     textos: { flex: 1, gap: Spacing.half },
     nome: { fontSize: 17, lineHeight: 22, fontWeight: 600 },
+    trancada: { opacity: 0.6 },
 });

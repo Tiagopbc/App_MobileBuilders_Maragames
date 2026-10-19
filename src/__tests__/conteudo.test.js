@@ -63,24 +63,63 @@ describe('o conteúdo do repositório', () => {
 
 describe('a validação do seed', () => {
     const semUma = (id) => questoes.filter((q) => q.id !== id);
+    const umTopico = topicos[0].topicId;
 
     it('tópico com forma incompleta é erro: sem as três dificuldades não há antes e depois', () => {
-        const umaDaFormaB = doBloco('gdd_documento', 'forma_b')[0];
+        const umaDaFormaB = doBloco(umTopico, 'forma_b')[0];
 
         expect(validar(topicos, semUma(umaDaFormaB.id))).toEqual([
-            expect.stringContaining('gdd_documento: forma_b deve ter uma questão básica, uma intermediária e uma avançada'),
+            expect.stringContaining(`${umTopico}: forma_b deve ter uma questão básica, uma intermediária e uma avançada`),
         ]);
     });
 
-    it('tópico só com prática continua válido: é o ciclo curto', () => {
-        const soPratica = questoes.filter((q) => q.topicId !== 'gdd_documento' || q.bloco === 'pratica');
+    it('tópico da trilha diária só com prática continua válido: é o ciclo curto', () => {
+        const base = doBloco(umTopico, 'pratica')[0];
+        const curto = { ...topicos[0], topicId: 'ciclo_curto', ordem: 99, lessonOrder: 99, trilha: 'diaria' };
+        const pratica = [1, 2, 3, 4, 5].map((n) => ({ ...base, id: `ciclo_curto_0${n}`, topicId: 'ciclo_curto' }));
 
-        expect(validar(topicos, soPratica)).toEqual([]);
+        expect(validar([...topicos, curto], [...questoes, ...pratica])).toEqual([]);
     });
 
     it('tópico com uma forma só é erro', () => {
-        const semFormaB = questoes.filter((q) => q.topicId !== 'gdd_documento' || q.bloco !== 'forma_b');
+        const semFormaB = questoes.filter((q) => q.topicId !== umTopico || q.bloco !== 'forma_b');
 
-        expect(validar(topicos, semFormaB)).toEqual([expect.stringContaining('gdd_documento: forma_b')]);
+        expect(validar(topicos, semFormaB)).toEqual([expect.stringContaining(`${umTopico}: forma_b`)]);
+    });
+});
+
+// Por agora só Fundamentos de Game Design tem questões. Os outros módulos aparecem na lista de
+// lições como "em breve", só com os títulos, a partir de content/em-breve.json.
+describe('os módulos em breve', () => {
+    const emBreve = ler('em-breve.json');
+
+    it('o conteúdo com questões é só o módulo Fundamentos de Game Design, com 5 lições', () => {
+        expect(topicos.map((t) => t.modulo)).toEqual(Array(5).fill('Fundamentos de Game Design'));
+        expect(topicos.map((t) => t.titulo)).toEqual([
+            'O que é Game Design',
+            'Framework MDA',
+            'Core Loop e Diversão',
+            'Balanceamento de Jogo',
+            'Level Design',
+        ]);
+    });
+
+    it('são os outros 5 módulos, cada um com 5 lições', () => {
+        expect(emBreve.map((m) => m.modulo)).toEqual([
+            'Game Engines',
+            'Programação para Jogos',
+            'Arte & Pixel Art',
+            'Áudio & Música',
+            'Publicação & Monetização',
+        ]);
+        for (const m of emBreve) {
+            expect(m.licoes).toHaveLength(5);
+            for (const titulo of m.licoes) expect(titulo.trim()).not.toBe('');
+        }
+    });
+
+    it('nenhum módulo em breve repete um módulo que já tem questões', () => {
+        const comQuestoes = new Set(topicos.map((t) => t.modulo));
+        expect(emBreve.filter((m) => comQuestoes.has(m.modulo))).toEqual([]);
     });
 });

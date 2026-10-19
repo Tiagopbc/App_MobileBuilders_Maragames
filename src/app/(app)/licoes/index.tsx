@@ -2,6 +2,7 @@ import { Redirect, useFocusEffect, useRouter } from 'expo-router';
 import { useCallback } from 'react';
 
 import { TelaDasLicoes } from '@/components/licao/tela-das-licoes';
+import { MODULOS_EM_BREVE } from '@/constants/em-breve';
 import { useAoVoltarAoApp } from '@/hooks/use-ao-voltar-ao-app';
 import { useLicoes } from '@/hooks/use-licoes';
 import { participanteDoRoteiro } from '@/lib/participante';
@@ -35,6 +36,7 @@ export default function LicoesScreen() {
     return (
         <TelaDasLicoes
             estado={estado}
+            emBreve={MODULOS_EM_BREVE}
             aoAbrir={(topicId) => router.push({ pathname: '/licoes/[topicId]', params: { topicId } })}
             aoTentarDeNovo={recarregar}
             aoSair={sair}

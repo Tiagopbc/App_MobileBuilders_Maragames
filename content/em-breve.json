@@ -1,0 +1,52 @@
+[
+  {
+    "modulo": "Game Engines",
+    "licoes": [
+      "O que é uma Engine",
+      "Unity — Primeiros Passos",
+      "Godot — Nós e Cenas",
+      "Unreal — Primeiros Passos",
+      "Física em Engines"
+    ]
+  },
+  {
+    "modulo": "Programação para Jogos",
+    "licoes": [
+      "Lógica de Programação",
+      "Movimento de Personagem",
+      "Padrões de Código",
+      "C# para Jogos",
+      "GDScript Básico"
+    ]
+  },
+  {
+    "modulo": "Arte & Pixel Art",
+    "licoes": [
+      "Pixel Art Básico",
+      "Animação de Sprites",
+      "Cor e Paletas",
+      "Tilesets e Mapas",
+      "Arte de UI"
+    ]
+  },
+  {
+    "modulo": "Áudio & Música",
+    "licoes": [
+      "Efeitos Sonoros (SFX)",
+      "Trilha Sonora",
+      "Áudio 3D e Espacial",
+      "Implementação de Áudio",
+      "Voz e Dublagem"
+    ]
+  },
+  {
+    "modulo": "Publicação & Monetização",
+    "licoes": [
+      "Publicando na Steam",
+      "Modelos de Monetização",
+      "Marketing de Jogos",
+      "Publicação Mobile",
+      "Publicação em Consoles"
+    ]
+  }
+]

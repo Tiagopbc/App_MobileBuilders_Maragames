@@ -1,9 +1,39 @@
 [
   {
-    "topicId": "mda_framework",
+    "topicId": "o_que_e_game_design",
     "ordem": 1,
     "trilha": "medido",
     "lessonOrder": 1,
+    "titulo": "O que é Game Design",
+    "modulo": "Fundamentos de Game Design",
+    "cartao": [
+      {
+        "titulo": "Decidir o que o jogo deve ser",
+        "texto": "Para Jesse Schell, game design é o ato de decidir o que um jogo deve ser: quais são as regras, os objetivos, os desafios e o que o jogador pode fazer. Programar, desenhar e compor são outras áreas; o designer trabalha com todas elas, mas a decisão sobre como o jogo funciona é dele."
+      },
+      {
+        "titulo": "O que é um jogo",
+        "texto": "Salen e Zimmerman definem jogo como um sistema em que jogadores entram num conflito artificial, definido por regras, que termina num resultado quantificável. Artificial quer dizer separado da vida comum: o conflito existe dentro do jogo. Quantificável quer dizer que, no fim, dá para dizer quem ganhou, quem perdeu ou quantos pontos cada um fez."
+      },
+      {
+        "titulo": "Os elementos formais",
+        "texto": "Tracy Fullerton lista os elementos que dão forma a qualquer jogo: jogadores, objetivos, procedimentos (as ações e a ordem em que acontecem), regras, recursos, conflito, limites e resultado. Tirar um deles costuma desmontar o jogo. Eles são o vocabulário do designer para descrever e comparar jogos."
+      },
+      {
+        "titulo": "Obstáculos desnecessários",
+        "texto": "Bernard Suits resume: jogar é a tentativa voluntária de superar obstáculos desnecessários. No golfe, o objetivo é pôr a bola no buraco, e o jeito mais fácil seria levá-la com a mão. A regra proíbe esse caminho e obriga a usar o taco. Aceitar essa ineficiência de propósito é o que faz o jogo existir."
+      },
+      {
+        "titulo": "O jogo não é a experiência",
+        "texto": "O designer não controla diretamente o que o jogador sente. Ele controla o jogo: regras, desafios, recursos e ritmo. A experiência acontece na cabeça de quem joga, e muda de pessoa para pessoa. Por isso o trabalho do designer é criar as condições para uma experiência e testar com gente de verdade se ela aparece."
+      }
+    ]
+  },
+  {
+    "topicId": "mda_framework",
+    "ordem": 2,
+    "trilha": "medido",
+    "lessonOrder": 2,
     "titulo": "Framework MDA",
     "modulo": "Fundamentos de Game Design",
     "cartao": [
@@ -34,80 +64,104 @@
     ]
   },
   {
-    "topicId": "gdd_documento",
+    "topicId": "core_loop_diversao",
+    "ordem": 3,
+    "trilha": "medido",
+    "lessonOrder": 3,
+    "titulo": "Core Loop e Diversão",
+    "modulo": "Fundamentos de Game Design",
+    "cartao": [
+      {
+        "titulo": "A mecânica central",
+        "texto": "Salen e Zimmerman chamam de mecânica central a atividade que o jogador repete várias vezes ao longo do jogo. Em Super Mario é pular; em Tetris, girar e encaixar peças. Se a mecânica central não for boa de repetir, nada em volta dela salva o jogo."
+      },
+      {
+        "titulo": "O core loop",
+        "texto": "O core loop é o ciclo que se fecha em volta da mecânica central: agir, ver o resultado, ganhar algo e usar o que ganhou para agir de novo. Em Stardew Valley: plantar, colher, vender e comprar sementes melhores. Cada volta alimenta a próxima."
+      },
+      {
+        "titulo": "Loops de vários tamanhos",
+        "texto": "Um jogo tem loops dentro de loops. O de segundos é a ação (mirar e atirar). O de minutos é a partida ou a fase. O de dias e semanas é a progressão (subir de nível, desbloquear personagens). Se um deles quebra, o jogador sente que algo perdeu o sentido."
+      },
+      {
+        "titulo": "Diversão é aprender",
+        "texto": "Para Raph Koster, a diversão vem de aprender: o cérebro gosta de reconhecer e dominar padrões. Quando o jogador já domina tudo, o jogo fica chato; quando não consegue aprender nada, fica frustrante. O designer mantém padrões novos chegando."
+      },
+      {
+        "titulo": "O canal do fluxo",
+        "texto": "Csikszentmihalyi chama de fluxo o estado de concentração total em que o desafio está à altura da habilidade. Desafio demais para a habilidade gera ansiedade; de menos, tédio. Bons jogos sobem o desafio junto com a habilidade de quem joga."
+      },
+      {
+        "titulo": "Quatro tipos de diversão",
+        "texto": "Nicole Lazzaro observou jogadores e separou quatro chaves: diversão difícil (superar desafios), diversão fácil (explorar por curiosidade), estado alterado (jogar para mudar como se sente) e diversão com pessoas (competir, cooperar, conviver). Jogos diferentes apostam em chaves diferentes."
+      }
+    ]
+  },
+  {
+    "topicId": "balanceamento_de_jogo",
+    "ordem": 4,
+    "trilha": "medido",
+    "lessonOrder": 4,
+    "titulo": "Balanceamento de Jogo",
+    "modulo": "Fundamentos de Game Design",
+    "cartao": [
+      {
+        "titulo": "Para que serve balancear",
+        "texto": "Balancear é ajustar números e regras para que o jogo seja justo, desafiador na medida certa e cheio de escolhas que valem a pena. Um jogo desbalanceado não precisa ter bug: basta uma opção valer tanto mais que as outras que ninguém escolhe mais nada."
+      },
+      {
+        "titulo": "Simétrico e assimétrico",
+        "texto": "No balanceamento simétrico, todos começam com os mesmos recursos e as mesmas regras, como no xadrez. No assimétrico, os lados são diferentes, como as raças de StarCraft. A assimetria é mais rica, mas exige que as diferenças se compensem nas chances de vencer."
+      },
+      {
+        "titulo": "Estratégia dominante",
+        "texto": "Uma estratégia dominante é uma opção melhor que as outras em qualquer situação. Quando ela existe, a escolha morre: todo mundo faz a mesma coisa. Schell recomenda caçar e eliminar estratégias dominantes, porque o que mantém o jogo vivo são escolhas com prós e contras."
+      },
+      {
+        "titulo": "Pedra, papel e tesoura",
+        "texto": "Um jeito clássico de evitar a opção dominante é o balanceamento intransitivo: cada opção vence uma e perde para outra, como pedra, papel e tesoura. Os tipos de Pokémon funcionam assim: fogo vence planta, planta vence água, água vence fogo."
+      },
+      {
+        "titulo": "Realimentação positiva e negativa",
+        "texto": "Na realimentação positiva, a vantagem gera mais vantagem e a partida se decide cedo. Na negativa, o jogo ajuda quem está atrás ou freia quem lidera, e a disputa fica apertada. Adams e Dormans mostram que a maioria dos jogos combina as duas: a positiva para a partida terminar, a negativa para ela não acabar cedo demais."
+      },
+      {
+        "titulo": "Medir e testar",
+        "texto": "Balanceamento se faz com números e teste. O designer acompanha dados como a taxa de vitória de cada personagem e quanto cada opção é escolhida, ajusta um valor por vez e testa de novo. Uma opção que vence muito e é muito escolhida costuma estar forte demais."
+      }
+    ]
+  },
+  {
+    "topicId": "level_design",
     "ordem": 5,
-    "trilha": "diaria",
-    "lessonOrder": 6,
-    "titulo": "GDD: o documento do jogo",
+    "trilha": "medido",
+    "lessonOrder": 5,
+    "titulo": "Level Design",
     "modulo": "Fundamentos de Game Design",
     "cartao": [
       {
-        "titulo": "Para que serve",
-        "texto": "O GDD (game design document) registra o que o jogo é e como ele funciona: a ideia, as regras, o conteúdo e o que fica de fora. Serve para a equipe inteira trabalhar na mesma direção. É um documento vivo, que muda junto com o projeto."
+        "titulo": "O que é level design",
+        "texto": "Level design é montar os espaços e os desafios onde as mecânicas acontecem. Uma boa fase faz três coisas: ensina uma ideia, testa se o jogador aprendeu e, de vez em quando, surpreende. O mesmo pulo pode ser fácil ou dramático dependendo de onde o designer põe o abismo."
       },
       {
-        "titulo": "O que costuma ter",
-        "texto": "A visão do jogo em uma frase, o público e a plataforma, o ciclo principal de jogo (o que o jogador faz repetidamente), as mecânicas e os controles, a progressão, referências de arte e som e o escopo: o que entra e o que não entra."
+        "titulo": "Ensinar sem texto",
+        "texto": "A fase 1-1 de Super Mario Bros. é o exemplo clássico. O primeiro Goomba vem andando num trecho aberto, e o jogador aprende a pular por cima dele. O primeiro cogumelo sai de um bloco e rola até o jogador. Nada disso precisa de texto: o espaço ensina."
       },
       {
-        "titulo": "Curto primeiro",
-        "texto": "Documento enorme ninguém lê nem atualiza. Muitas equipes começam com um GDD de uma página e acrescentam detalhe à medida que o protótipo é testado. O que o teste mostra que não funciona é corrigido no documento."
+        "titulo": "Apresentar, desenvolver, virar, concluir",
+        "texto": "Nas fases de Super Mario 3D Land, a Nintendo usou uma estrutura em quatro tempos, inspirada no kishōtenketsu: apresentar uma mecânica num lugar seguro, desenvolvê-la com desafios maiores, dar uma reviravolta que muda o que o jogador sabia e concluir. Cada fase gira em torno de uma ideia."
       },
       {
-        "titulo": "Escopo sob controle",
-        "texto": "Separe o essencial (sem isso o jogo não existe) do desejável (fica para depois). Quando cada reunião acrescenta uma funcionalidade nova e o lançamento escorrega, o nome do problema é aumento descontrolado de escopo, o feature creep."
-      }
-    ]
-  },
-  {
-    "topicId": "ux_ui_jogos",
-    "ordem": 6,
-    "trilha": "diaria",
-    "lessonOrder": 7,
-    "titulo": "UX/UI em jogos",
-    "modulo": "Fundamentos de Game Design",
-    "cartao": [
-      {
-        "titulo": "UI e UX",
-        "texto": "UI é o que aparece na tela: menus, botões e o HUD. UX é a experiência de entender e usar o jogo: saber o que fazer, perceber o que aconteceu, não se perder. Uma boa UI está a serviço de uma boa UX."
+        "titulo": "Guiar o olhar",
+        "texto": "O jogador vai para onde o olho vai. Luz, cor, contraste e linhas da arquitetura apontam o caminho. Um marco grande visível de longe, como um castelo no horizonte, diz para onde ir; Totten chama esse recurso de weenie, como nos parques da Disney."
       },
       {
-        "titulo": "HUD",
-        "texto": "O HUD é a informação sobreposta à tela durante a partida, como vida, munição e minimapa. Mostre só o que o jogador precisa naquele momento. Uma interface diegética existe dentro do mundo do jogo: um relógio no pulso do personagem, uma luz no traje."
+        "titulo": "Ritmo",
+        "texto": "Uma fase boa alterna tensão e alívio. Depois de um combate difícil, uma área calma deixa o jogador respirar, explorar e se preparar. Sem pausas, a tensão vira cansaço; sem tensão, a fase vira passeio."
       },
       {
-        "titulo": "Feedback",
-        "texto": "Toda ação precisa de uma resposta que o jogador perceba: um brilho, um som, um número, um tremor na tela. Sem isso ele não sabe se a ação funcionou, e o jogo parece quebrado."
-      },
-      {
-        "titulo": "Ensinar jogando",
-        "texto": "Em vez de uma tela cheia de comandos no começo, apresente uma coisa por vez, numa situação segura em que o jogador já usa o que acabou de aprender. A forma dos objetos também ensina: uma parede rachada sugere que pode ser quebrada."
-      }
-    ]
-  },
-  {
-    "topicId": "playtest_iteracao",
-    "ordem": 8,
-    "trilha": "diaria",
-    "lessonOrder": 8,
-    "titulo": "Playtest e iteração",
-    "modulo": "Fundamentos de Game Design",
-    "cartao": [
-      {
-        "titulo": "O que é playtest",
-        "texto": "Playtest é observar pessoas jogando para descobrir onde o jogo não funciona como você queria. Testa-se o jogo, não o jogador. Comece cedo, até com protótipos simples, e repita ao longo do projeto."
-      },
-      {
-        "titulo": "Observe mais do que pergunta",
-        "texto": "Veja onde a pessoa trava, o que ignora, onde desiste. Não explique nem ajude durante o teste. Peça para ela pensar em voz alta. O que alguém diz e o que faz podem ser diferentes; o comportamento costuma revelar mais."
-      },
-      {
-        "titulo": "Quem testa",
-        "texto": "Quem fez o jogo já sabe demais e não enxerga o que confunde um novato. Amigos tendem a ser gentis. Inclua pessoas novas, de preferência do público que o jogo quer atingir."
-      },
-      {
-        "titulo": "Iterar",
-        "texto": "Depois do teste, liste os problemas, priorize pelos que mais afetam a experiência e aparecem com mais jogadores, ajuste e teste de novo. O ciclo é: prototipar, testar, analisar, ajustar."
+        "titulo": "Caminho crítico e portões",
+        "texto": "O caminho crítico é o trajeto mínimo para terminar a fase; em volta dele ficam áreas opcionais, com segredos e recompensas. Portões, como uma porta trancada ou uma parede que só quebra com uma habilidade nova, controlam a ordem em que o jogador explora e dão motivo para voltar."
       }
     ]
   }

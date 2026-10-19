@@ -457,6 +457,15 @@ describe('a lista de lições', () => {
         expect(rotas.caminho()).toBe('/licoes/gdd');
     });
 
+    it('depois das lições, mostra os módulos em breve com as lições trancadas, sem abrir', async () => {
+        await abrirEm('/licoes');
+
+        expect(await screen.findByText('Game Engines · Em breve')).toBeOnTheScreen();
+        expect(screen.getByText('Publicação & Monetização · Em breve')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Unity — Primeiros Passos, em breve')).toBeOnTheScreen();
+        expect(screen.queryByRole('button', { name: /Unity — Primeiros Passos/ })).toBeNull();
+    });
+
     it('se a leitura falha, avisa e deixa tentar de novo', async () => {
         jest.spyOn(console, 'warn').mockImplementation(() => {});
         repo.falhaAoCarregar = true;

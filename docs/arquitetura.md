@@ -2,7 +2,7 @@
 
 App mobile de estudo de criação de jogos, feito para a Beast Maragames na disciplina de Programação Mobile (UNDB). O aluno percorre lições organizadas em módulos e, a cada questão, diz o quanto tem certeza da resposta. O app usa essa confiança declarada para mostrar o que a pessoa sabe de fato e o que só acha que sabe.
 
-Nesta entrega, o conteúdo traz um módulo completo, **Fundamentos de Game Design**, com 4 lições: Framework MDA, GDD, UX/UI em jogos e Playtest e iteração.
+Por enquanto, só o módulo **Fundamentos de Game Design** tem questões, com 5 lições: O que é Game Design, Framework MDA, Core Loop e Diversão, Balanceamento de Jogo e Level Design. Os outros 5 módulos (Game Engines, Programação para Jogos, Arte & Pixel Art, Áudio & Música e Publicação & Monetização) aparecem na lista de lições como "em breve", só com os títulos das lições, a partir de `content/em-breve.json`.
 
 ## O que o aluno faz
 
@@ -107,7 +107,7 @@ Os comentários do código citam itens (item 14, item 22...) do registro de deci
 
 | Entrega | Data | O que entra |
 |---|---|---|
-| 1 | 16/10 | Login, cadastro, home, Perfil, Progresso e o módulo Fundamentos de Game Design |
-| 2 | 06/11 | Os outros 5 módulos |
+| 1 | 16/10 | Login, cadastro, home, Perfil, Progresso e 4 lições de Fundamentos de Game Design |
+| 2 | 06/11 | As 5 lições de Fundamentos de Game Design, os outros módulos em breve e, no Perfil, o estado em lista e sem instituição e curso |
 | 3 | 14/11 | Simulação de turma, exportação, análise estatística e relatório |
 | 4 | 27/11 | Documentação final |
