@@ -15,7 +15,7 @@ import {
     ROTULO_DO_SEXO,
     TEXTOS_DO_PERFIL,
 } from '@/constants/textos';
-import { EXPERIENCIAS, FAIXAS_ETARIAS, SEXOS, SITUACOES_DE_ESTUDO, pedeInstituicaoECurso } from '@/lib/perfil';
+import { EXPERIENCIAS, FAIXAS_ETARIAS, SEXOS, SITUACOES_DE_ESTUDO } from '@/lib/perfil';
 import {
     formatarTelefone,
     somenteDigitos,
@@ -38,8 +38,6 @@ type Campos = {
     cidade: string;
     uf: string;
     situacaoDeEstudo: SituacaoDeEstudo | null;
-    instituicao: string;
-    curso: string;
     experiencia: Experiencia;
 };
 
@@ -71,14 +69,12 @@ function camposDe(inicial: Partial<DadosPerfil>): Campos {
         cidade: inicial.cidade ?? '',
         uf: inicial.uf ?? '',
         situacaoDeEstudo: inicial.situacaoDeEstudo ?? null,
-        instituicao: inicial.instituicao ?? '',
-        curso: inicial.curso ?? '',
         experiencia: inicial.experiencia ?? 'iniciante',
     };
 }
 
-// O que vai para `salvarPerfil`: textos aparados e telefone só em dígitos.
-// Instituição e curso só vão para quem faz graduação ou pós; nas outras situações, não existem.
+// O que vai para `salvarPerfil`: textos aparados e telefone só em dígitos. Instituição e curso
+// saíram do perfil em 18/10/2026: não vão mais, e `salvarPerfil` apaga o que sobrou deles.
 function dadosDe(c: Campos): Partial<DadosPerfil> {
     const dados: Partial<DadosPerfil> = {
         nome: c.nome.trim(),
@@ -91,10 +87,6 @@ function dadosDe(c: Campos): Partial<DadosPerfil> {
     if (c.faixaEtaria) dados.faixaEtaria = c.faixaEtaria;
     if (c.sexo) dados.sexo = c.sexo;
     if (c.situacaoDeEstudo) dados.situacaoDeEstudo = c.situacaoDeEstudo;
-    if (pedeInstituicaoECurso(c.situacaoDeEstudo)) {
-        dados.instituicao = c.instituicao.trim();
-        dados.curso = c.curso.trim();
-    }
     return dados;
 }
 
@@ -107,8 +99,6 @@ const CAMPOS_DOS_DADOS: readonly (keyof DadosPerfil)[] = [
     'cidade',
     'uf',
     'situacaoDeEstudo',
-    'instituicao',
-    'curso',
     'experiencia',
 ];
 
@@ -132,8 +122,6 @@ export function FormularioDoPerfil({
     const [salvando, setSalvando] = useState(false);
     const [deuCerto, setDeuCerto] = useState(false);
 
-    const estuda = pedeInstituicaoECurso(campos.situacaoDeEstudo);
-
     const validadores = {
         nome: () => validarTexto(campos.nome, 'o nome', 2, 60),
         apelido: () => validarTexto(campos.apelido, 'o apelido', 2, 20),
@@ -143,9 +131,6 @@ export function FormularioDoPerfil({
         cidade: () => validarTexto(campos.cidade, 'a cidade', 2, 60),
         uf: () => validarUf(campos.uf),
         situacaoDeEstudo: () => validarEscolha(campos.situacaoDeEstudo, TEXTOS_DO_PERFIL.escolhaASituacao),
-        // Só valem para quem estuda; para os outros, os dois campos nem aparecem.
-        instituicao: () => (estuda ? validarTexto(campos.instituicao, 'a instituição', 2, 80) : null),
-        curso: () => (estuda ? validarTexto(campos.curso, 'o curso', 2, 80) : null),
     } satisfies Record<string, () => Erro>;
     const conferir = (campo: keyof typeof validadores) => setErros((e) => ({ ...e, [campo]: validadores[campo]() }));
 
@@ -281,27 +266,6 @@ export function FormularioDoPerfil({
                 desabilitado={salvando}
             />
 
-            {estuda && (
-                <>
-                    <CampoTexto
-                        rotulo={TEXTOS_DO_PERFIL.instituicao}
-                        erro={erros.instituicao}
-                        value={campos.instituicao}
-                        onChangeText={(t) => mudar('instituicao', t)}
-                        onBlur={() => conferir('instituicao')}
-                        editable={!salvando}
-                    />
-
-                    <CampoTexto
-                        rotulo={TEXTOS_DO_PERFIL.curso}
-                        erro={erros.curso}
-                        value={campos.curso}
-                        onChangeText={(t) => mudar('curso', t)}
-                        onBlur={() => conferir('curso')}
-                        editable={!salvando}
-                    />
-                </>
-            )}
 
             <Opcoes
                 rotulo={TEXTOS_DO_PERFIL.experiencia}

@@ -34,11 +34,14 @@ it.each(Object.entries(LISTAS))('a lista de %s da regra é a do app', (_nome, li
     expect(regras).toContain(naRegra(lista));
 });
 
-it('a regra exige instituição e curso nas mesmas situações que o app, e os recusa nas outras', () => {
-    const exigem = perfil.SITUACOES_DE_ESTUDO.filter((s) => perfil.pedeInstituicaoECurso(s));
-
-    expect(regras).toContain(`function estuda(d) { return d.situacaoDeEstudo in ${naRegra(exigem)}; }`);
-    expect(regras).toContain("!('instituicao' in d) && !('curso' in d)");
+// Instituição e curso saíram do perfil em 18/10/2026. A regra não os exige mais; num perfil
+// antigo que ainda os tenha, eles continuam valendo até a pessoa salvar o perfil de novo.
+it('a regra não exige instituição nem curso, e só os confere quando existem', () => {
+    expect(perfil.pedeInstituicaoECurso).toBeUndefined();
+    expect(regras).not.toContain('function estuda(d)');
+    for (const campo of ['instituicao', 'curso']) {
+        expect(regras).toContain(`(!('${campo}' in d) || (d.${campo} is string && d.${campo}.size() >= 2 && d.${campo}.size() <= 80))`);
+    }
 });
 
 // A autoavaliação é gravada uma vez, então a regra exige uma nota para cada módulo: os ids são

@@ -88,7 +88,7 @@ export function paraPerfil(d: Dados): Perfil {
         atualizadoEm: d.atualizadoEm,
     };
     // O que pode não existir no documento só entra no objeto quando existe: instituição e curso
-    // (só de quem estuda), as perguntas opcionais e o aceite de contato.
+    // (sobra de perfis antigos), as perguntas opcionais e o aceite de contato.
     for (const campo of CAMPOS_OPCIONAIS_DO_PERFIL) {
         if (d[campo] !== undefined) (perfil as unknown as Record<string, unknown>)[campo] = d[campo];
     }

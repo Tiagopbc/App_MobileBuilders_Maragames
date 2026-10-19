@@ -7,7 +7,6 @@ import {
     extrasRespondidos,
     idDoModulo,
     modulosDosTopicos,
-    pedeInstituicaoECurso,
     perfilCompleto,
 } from '../perfil';
 
@@ -64,31 +63,15 @@ describe('perfilCompleto', () => {
         ).toBe(false);
     });
 
-    it('quem faz graduação ou pós precisa de instituição e curso', () => {
-        expect(perfilCompleto({ ...NUCLEO, situacaoDeEstudo: 'graduacao' })).toBe(false);
-        expect(perfilCompleto({ ...NUCLEO, situacaoDeEstudo: 'pos', instituicao: 'UNDB' })).toBe(false);
-        expect(perfilCompleto({ ...NUCLEO, situacaoDeEstudo: 'graduacao', instituicao: 'UNDB', curso: 'Jogos Digitais' })).toBe(true);
-    });
-
-    it('quem não estuda, já se formou ou está no ensino médio não precisa dos dois', () => {
-        for (const situacaoDeEstudo of ['nao_estudo', 'formado', 'ensino_medio'] as const) {
+    // Instituição e curso saíram do perfil em 18/10/2026: a situação de estudo basta.
+    it('nenhuma situação de estudo pede instituição nem curso', () => {
+        for (const situacaoDeEstudo of ['ensino_medio', 'graduacao', 'pos', 'formado', 'nao_estudo'] as const) {
             expect(perfilCompleto({ ...NUCLEO, situacaoDeEstudo })).toBe(true);
         }
     });
 
     it('as perguntas opcionais e o aceite de contato não entram na conta', () => {
         expect(perfilCompleto({ ...NUCLEO, aceitaContato: false })).toBe(true);
-    });
-});
-
-describe('pedeInstituicaoECurso', () => {
-    it('só na graduação e na pós', () => {
-        expect(pedeInstituicaoECurso('graduacao')).toBe(true);
-        expect(pedeInstituicaoECurso('pos')).toBe(true);
-        expect(pedeInstituicaoECurso('ensino_medio')).toBe(false);
-        expect(pedeInstituicaoECurso('formado')).toBe(false);
-        expect(pedeInstituicaoECurso('nao_estudo')).toBe(false);
-        expect(pedeInstituicaoECurso(null)).toBe(false);
     });
 });
 

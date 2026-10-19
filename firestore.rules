@@ -12,12 +12,8 @@ service cloud.firestore {
     // então a checagem vale tanto para a criação quanto para a edição do perfil.
     // As listas são as de src/lib/perfil.ts. Mudou uma, muda a outra.
 
-    function estuda(d) {
-      return d.situacaoDeEstudo in ['graduacao', 'pos'];
-    }
-
-    // O núcleo obrigatório (item 34). Instituição e curso são exigidos na graduação e na pós, e
-    // não podem existir nas outras situações: sobra de um perfil anterior não fica.
+    // O núcleo obrigatório (item 34). Instituição e curso saíram do perfil em 18/10/2026: não são
+    // exigidos, e só são conferidos num perfil antigo que ainda os tenha (o app os apaga ao salvar).
     function nucleoValido(d) {
       return d.nome is string && d.nome.size() >= 2 && d.nome.size() <= 60
           && d.apelido is string && d.apelido.size() >= 2 && d.apelido.size() <= 20
@@ -28,10 +24,8 @@ service cloud.firestore {
           && d.uf in ['AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA',
                       'PB', 'PR', 'PE', 'PI', 'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO']
           && d.situacaoDeEstudo in ['ensino_medio', 'graduacao', 'pos', 'formado', 'nao_estudo']
-          && ((estuda(d)
-                && d.instituicao is string && d.instituicao.size() >= 2 && d.instituicao.size() <= 80
-                && d.curso is string && d.curso.size() >= 2 && d.curso.size() <= 80)
-              || (!estuda(d) && !('instituicao' in d) && !('curso' in d)))
+          && (!('instituicao' in d) || (d.instituicao is string && d.instituicao.size() >= 2 && d.instituicao.size() <= 80))
+          && (!('curso' in d) || (d.curso is string && d.curso.size() >= 2 && d.curso.size() <= 80))
           && d.experiencia in ['iniciante', 'intermediario', 'avancado'];
     }
 

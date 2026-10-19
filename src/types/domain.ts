@@ -135,7 +135,7 @@ export interface Perfil extends ExtrasDoPerfil {
     cidade: string;
     uf: string; // sigla do estado, ex.: 'MA'
     situacaoDeEstudo: SituacaoDeEstudo;
-    // Só de quem faz graduação ou pós; nas outras situações, os dois ficam ausentes.
+    // Sobra de perfis de antes de 18/10/2026: o app não pede mais, e salvar o perfil apaga os dois.
     instituicao?: string;
     curso?: string;
     experiencia: Experiencia; // em criar jogos, e não em jogar
@@ -159,8 +159,6 @@ export type DadosPerfil = Pick<
     | 'cidade'
     | 'uf'
     | 'situacaoDeEstudo'
-    | 'instituicao'
-    | 'curso'
     | 'experiencia'
 >;
 

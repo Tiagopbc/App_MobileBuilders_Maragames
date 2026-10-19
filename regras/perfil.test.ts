@@ -125,27 +125,20 @@ describe('o núcleo obrigatório do perfil (item 34)', () => {
         await assertFails(criar(sem('faixaEtaria', 'cidade', 'uf', 'situacaoDeEstudo')));
     });
 
-    it('na graduação e na pós, instituição e curso são obrigatórios', async () => {
-        await assertFails(criar(sem('instituicao')));
-        await assertFails(criar(sem('curso')));
-        await assertFails(criar({ ...sem('instituicao', 'curso'), situacaoDeEstudo: 'pos' }));
-    });
-
-    it.each(['ensino_medio', 'formado', 'nao_estudo'])('quem marca %s não precisa de instituição nem de curso', async (situacaoDeEstudo) => {
+    // Instituição e curso saíram do perfil em 18/10/2026: nenhuma situação os exige.
+    it.each(['ensino_medio', 'graduacao', 'pos', 'formado', 'nao_estudo'])('quem marca %s não precisa de instituição nem de curso', async (situacaoDeEstudo) => {
         await assertSucceeds(criar({ ...sem('instituicao', 'curso'), situacaoDeEstudo }));
     });
 
-    // Os dois campos só existem para quem estuda: sobra de um perfil anterior não fica.
-    it.each(['ensino_medio', 'formado', 'nao_estudo'])('quem marca %s não pode guardar instituição nem curso', async (situacaoDeEstudo) => {
-        await assertFails(criar({ ...PERFIL, situacaoDeEstudo }));
-        await assertFails(criar({ ...sem('curso'), situacaoDeEstudo }));
-        await assertFails(criar({ ...sem('instituicao'), situacaoDeEstudo }));
+    // Perfis antigos ainda têm os dois campos, e continuam podendo ser salvos.
+    it('o perfil antigo, com instituição e curso, continua válido', async () => {
+        await assertSucceeds(criar(PERFIL));
+        await assertSucceeds(setDoc(doc(db, 'users', 'u1'), { situacaoDeEstudo: 'formado', atualizadoEm: Date.now() }, { merge: true }));
     });
 
-    it('quem deixa a graduação sem tirar os dois campos é recusado', async () => {
-        await criar(PERFIL);
-
-        await assertFails(setDoc(doc(db, 'users', 'u1'), { situacaoDeEstudo: 'formado', atualizadoEm: Date.now() }, { merge: true }));
+    it('se existem, instituição e curso continuam conferidos', async () => {
+        await assertFails(criar({ ...PERFIL, instituicao: 'U' }));
+        await assertFails(criar({ ...PERFIL, curso: 7 }));
     });
 
     // Como o app faz quando a pessoa deixa de estudar: tira os dois campos na mesma gravação.

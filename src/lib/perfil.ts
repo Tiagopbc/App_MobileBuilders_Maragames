@@ -58,18 +58,13 @@ export function alternarOpcao<V extends string>(opcoes: readonly V[], marcadas: 
     return opcoes.filter((o) => o === tocada || (marcadas.includes(o) && o !== OPCAO_EXCLUSIVA));
 }
 
-/** Instituição e curso só fazem sentido para quem está na graduação ou na pós. */
-export function pedeInstituicaoECurso(situacao: SituacaoDeEstudo | null | undefined): boolean {
-    return situacao === 'graduacao' || situacao === 'pos';
-}
-
 /**
  * O perfil vale como completo quando o núcleo obrigatório existe. As perguntas opcionais e o
  * aceite de contato ficam de fora: ninguém é barrado por não respondê-las.
  */
 export function perfilCompleto(p: Partial<Perfil> | null): boolean {
     if (!p) return false;
-    const nucleo =
+    return (
         !!p.nome &&
         !!p.apelido &&
         !!p.telefone &&
@@ -78,9 +73,8 @@ export function perfilCompleto(p: Partial<Perfil> | null): boolean {
         !!p.cidade &&
         !!p.uf &&
         !!p.situacaoDeEstudo &&
-        !!p.experiencia;
-    if (!nucleo) return false;
-    return !pedeInstituicaoECurso(p.situacaoDeEstudo) || (!!p.instituicao && !!p.curso);
+        !!p.experiencia
+    );
 }
 
 const CAMPOS_EXTRAS: readonly (keyof ExtrasDoPerfil)[] = [

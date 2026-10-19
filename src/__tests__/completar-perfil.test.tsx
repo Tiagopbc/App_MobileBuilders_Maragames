@@ -122,21 +122,14 @@ describe('a tela de completar o perfil', () => {
         expect(screen.getByRole('button', { name: 'Estado (UF), MA' })).toBeOnTheScreen();
     });
 
-    it('instituição e curso só aparecem para quem faz graduação ou pós', async () => {
+    it('nenhuma situação de estudo pede instituição nem curso', async () => {
         const user = await abrir();
 
-        expect(screen.queryByLabelText('Instituição')).toBeNull();
-        expect(screen.queryByLabelText('Curso')).toBeNull();
-
-        await user.press(opcao('Graduação'));
-        expect(campo('Instituição')).toBeOnTheScreen();
-        expect(campo('Curso')).toBeOnTheScreen();
-
-        await user.press(opcao('Não estudo'));
-        expect(screen.queryByLabelText('Instituição')).toBeNull();
-
-        await user.press(opcao('Pós-graduação'));
-        expect(campo('Instituição')).toBeOnTheScreen();
+        for (const situacao of ['Graduação', 'Pós-graduação', 'Não estudo']) {
+            await user.press(opcao(situacao));
+            expect(screen.queryByLabelText('Instituição')).toBeNull();
+            expect(screen.queryByLabelText('Curso')).toBeNull();
+        }
     });
 
     it('quem não estuda salva o núcleo sem instituição nem curso, com o estado em maiúsculas', async () => {
@@ -162,25 +155,17 @@ describe('a tela de completar o perfil', () => {
         );
     });
 
-    it('quem faz graduação precisa dizer a instituição e o curso, e eles são salvos', async () => {
+    it('quem faz graduação salva só a situação, sem instituição nem curso', async () => {
         const user = await abrir();
 
         await preencherOQueNaoMuda(user);
         await user.press(opcao('Graduação'));
         await user.press(salvar());
 
-        expect(await screen.findByText('Informe a instituição.')).toBeOnTheScreen();
-        expect(screen.getByText('Informe o curso.')).toBeOnTheScreen();
-        expect(mockSalvar).not.toHaveBeenCalled();
-
-        await user.type(campo('Instituição'), 'UNDB');
-        await user.type(campo('Curso'), 'Jogos Digitais');
-        await user.press(salvar());
-
-        expect(mockSalvar).toHaveBeenCalledWith(
-            expect.objectContaining({ situacaoDeEstudo: 'graduacao', instituicao: 'UNDB', curso: 'Jogos Digitais' }),
-            { aceitaContato: false }
-        );
+        const [dados] = mockSalvar.mock.calls[0];
+        expect(dados.situacaoDeEstudo).toBe('graduacao');
+        expect(dados).not.toHaveProperty('instituicao');
+        expect(dados).not.toHaveProperty('curso');
     });
 
     it('o aceite de contato começa desmarcado e só vai como sim se a pessoa marcar', async () => {

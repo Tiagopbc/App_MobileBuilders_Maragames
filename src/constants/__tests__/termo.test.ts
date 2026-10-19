@@ -39,6 +39,13 @@ describe('o termo de participação', () => {
         expect(texto).toMatch(/quanto confia/i);
     });
 
+    // Instituição e curso saíram do perfil em 18/10/2026, e o termo não pode citar o que não é gravado.
+    it('não cita instituição nem curso, que o app não pede mais', () => {
+        expect(texto).not.toMatch(/instituição/i);
+        expect(texto).not.toMatch(/\bcurso\b/i);
+        expect(VERSAO_DO_TERMO).toBe('18/10/2026');
+    });
+
     it('lista o que fica gravado de cada resposta e do perfil', () => {
         for (const dado of [
             /alternativa escolhida/i,
@@ -49,8 +56,6 @@ describe('o termo de participação', () => {
             /apelido/i,
             /e-mail/i,
             /telefone/i,
-            /instituição/i,
-            /curso/i,
             /experiência/i,
             /faixa etária/i,
             /sexo/i,

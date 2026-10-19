@@ -526,8 +526,6 @@ export const TEXTOS_DO_PERFIL = {
     escolhaOEstado: 'Escolha',
     fecharALista: 'Fechar a lista',
     situacaoDeEstudo: 'Situação de estudo',
-    instituicao: 'Instituição',
-    curso: 'Curso',
     experiencia: 'Experiência em criar jogos',
     aceitaContato: 'Aceito receber mensagens da Beast Maragames',
     escolhaAFaixaEtaria: 'Escolha a faixa etária.',

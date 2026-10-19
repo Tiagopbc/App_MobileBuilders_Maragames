@@ -4,11 +4,12 @@
 // Revisto em 15/10/2026 (passo 4 do plano até o piloto, item 24): para que serve cada dado, onde
 // fica, até quando, o que a pessoa pode pedir, riscos e benefícios, e a data da versão.
 // Revisto em 16/10/2026: quem fez o app aparece pelo nome do grupo, sem nome de pessoa.
+// Revisto em 18/10/2026: instituição e curso saíram do perfil, e do termo.
 // Fica separado de textos.ts porque é um documento, não rótulo de interface: mudar uma frase
 // aqui muda o que o participante aceitou.
 
 /** A data desta versão do texto, mostrada no topo: diz que termo cada pessoa aceitou. */
-export const VERSAO_DO_TERMO = '16/10/2026';
+export const VERSAO_DO_TERMO = '18/10/2026';
 
 export interface SecaoDoTermo {
     titulo: string;
@@ -40,8 +41,8 @@ export const TERMO: readonly SecaoDoTermo[] = [
         texto:
             'De cada resposta: a alternativa escolhida, se estava certa, a confiança que você declarou, ' +
             'o tempo que levou, o horário e se você estava no navegador ou no celular. Do seu perfil: ' +
-            'nome, apelido, e-mail, telefone, faixa etária, sexo, cidade e estado, situação de estudo, ' +
-            'instituição e curso (se você estuda) e experiência em criar jogos. Se você responder, ' +
+            'nome, apelido, e-mail, telefone, faixa etária, sexo, cidade e estado, situação de estudo ' +
+            'e experiência em criar jogos. Se você responder, ' +
             'também as perguntas opcionais de "Sobre você e os jogos". Ficam gravadas ainda a nota que ' +
             'você se dá em cada área e a data em que você aceitou este termo. No sexo, há a opção ' +
             '"Prefiro não informar".',
@@ -52,7 +53,7 @@ export const TERMO: readonly SecaoDoTermo[] = [
             'A faixa etária e o sexo servem para ver se o resultado muda entre grupos de pessoas, ' +
             'sempre em conjunto: de um grupo com menos de 5 pessoas, os relatórios mostram só quantas ' +
             'pessoas ele tem, e nenhum resultado. A faixa etária também confirma que você tem 18 anos ' +
-            'ou mais. Cidade, estado, situação de estudo, instituição, curso e experiência servem para ' +
+            'ou mais. Cidade, estado, situação de estudo e experiência servem para ' +
             'descrever quem participou. O e-mail é ' +
             'o da sua conta, para entrar e recuperar a senha. O telefone é para o grupo falar com você ' +
             'sobre o estudo, por exemplo para lembrar de uma revisão.',

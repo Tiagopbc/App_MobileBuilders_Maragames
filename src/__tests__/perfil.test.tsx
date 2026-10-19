@@ -112,8 +112,9 @@ describe('a tela de Perfil', () => {
         expect(await screen.findByDisplayValue('Paulo Souza')).toBeOnTheScreen();
         expect(campo('Apelido').props.value).toBe('Paulo');
         expect(campo('Telefone').props.value).toBe('(98) 98765-4321');
-        expect(campo('Instituição').props.value).toBe('UNDB');
-        expect(campo('Curso').props.value).toBe('Engenharia de Software');
+        // O perfil antigo ainda tem instituição e curso gravados, mas eles não aparecem mais.
+        expect(screen.queryByLabelText('Instituição')).toBeNull();
+        expect(screen.queryByLabelText('Curso')).toBeNull();
         expect(screen.getByRole('radio', { name: 'Iniciante' })).toBeChecked();
     });
 
@@ -150,8 +151,6 @@ describe('a tela de Perfil', () => {
             cidade: 'São Luís',
             uf: 'MA',
             situacaoDeEstudo: 'graduacao',
-            instituicao: 'UNDB',
-            curso: 'Engenharia de Software',
             experiencia: 'avancado',
         });
     });
@@ -175,12 +174,12 @@ describe('a tela de Perfil', () => {
         const user = userEvent.setup();
         await screen.findByDisplayValue('Paulo Souza');
 
-        await user.clear(campo('Curso'));
-        await user.type(campo('Curso'), 'Jogos Digitais');
+        await user.clear(campo('Cidade'));
+        await user.type(campo('Cidade'), 'Imperatriz');
         await user.press(botao('Salvar alterações'));
 
         expect(await screen.findByText('Não foi possível salvar. Tente de novo.')).toBeOnTheScreen();
-        expect(campo('Curso').props.value).toBe('Jogos Digitais');
+        expect(campo('Cidade').props.value).toBe('Imperatriz');
     });
 
     it('quem aceitou o termo vê a data do aceite; quem não aceitou, que ainda falta', async () => {

@@ -168,12 +168,11 @@ export function SessionProvider({ children }: { children: ReactNode }) {
             criadoEm: perfil?.criadoEm ?? agora,
             atualizadoEm: agora,
         };
-        // Instituição e curso só existem para quem faz graduação ou pós. Quem deixa de estudar
-        // perde os dois: com `merge`, campo que não vem continua no banco, então é preciso apagar.
-        const { instituicao, curso, ...semEstudo } = base;
-        const doEstudo = { instituicao: instituicao ?? deleteField(), curso: curso ?? deleteField() };
+        // Instituição e curso saíram do perfil em 18/10/2026, mas perfis antigos ainda os têm. Com
+        // `merge`, campo que não vem continua no banco, então salvar o perfil apaga os dois.
+        const semEstudo = { instituicao: deleteField(), curso: deleteField() };
 
-        await setDoc(doc(db, 'users', user.uid), { ...semEstudo, ...doEstudo, ...paraOBanco(extras) }, { merge: true });
+        await setDoc(doc(db, 'users', user.uid), { ...base, ...semEstudo, ...paraOBanco(extras) }, { merge: true });
         // Atualiza o estado local em vez de reler do Firestore: o guard reage na hora.
         // O `merge` mantém no banco a forma e o consentimento, que não estão em `base`;
         // o estado local faz o mesmo, ou editar o perfil mandaria a pessoa de volta ao termo.
