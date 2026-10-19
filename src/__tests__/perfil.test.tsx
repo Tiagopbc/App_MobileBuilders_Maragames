@@ -278,7 +278,7 @@ describe('o núcleo do perfil, na edição (item 34)', () => {
         expect(screen.getByRole('radio', { name: '25 a 34' })).toBeChecked();
         expect(screen.getByRole('radio', { name: 'Masculino' })).toBeChecked();
         expect(campo('Cidade').props.value).toBe('São Luís');
-        expect(campo('Estado (UF)').props.value).toBe('MA');
+        expect(screen.getByRole('button', { name: 'Estado (UF), MA' })).toBeOnTheScreen();
         expect(screen.getByRole('radio', { name: 'Graduação' })).toBeChecked();
     });
 

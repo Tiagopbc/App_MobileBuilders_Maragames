@@ -4,6 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { CampoTexto } from '@/components/campo-texto';
 import { Caixa, Opcoes } from '@/components/opcoes';
+import { SeletorDeUf } from '@/components/perfil/seletor-de-uf';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import {
@@ -76,7 +77,7 @@ function camposDe(inicial: Partial<DadosPerfil>): Campos {
     };
 }
 
-// O que vai para `salvarPerfil`: textos aparados, telefone só em dígitos, estado em maiúsculas.
+// O que vai para `salvarPerfil`: textos aparados e telefone só em dígitos.
 // Instituição e curso só vão para quem faz graduação ou pós; nas outras situações, não existem.
 function dadosDe(c: Campos): Partial<DadosPerfil> {
     const dados: Partial<DadosPerfil> = {
@@ -84,7 +85,7 @@ function dadosDe(c: Campos): Partial<DadosPerfil> {
         apelido: c.apelido.trim(),
         telefone: somenteDigitos(c.telefone),
         cidade: c.cidade.trim(),
-        uf: c.uf.trim().toUpperCase(),
+        uf: c.uf,
         experiencia: c.experiencia,
     };
     if (c.faixaEtaria) dados.faixaEtaria = c.faixaEtaria;
@@ -154,7 +155,7 @@ export function FormularioDoPerfil({
     }
 
     // Uma escolha feita tira o erro dela na hora: não há "sair do campo" num botão.
-    function escolher<C extends 'faixaEtaria' | 'sexo' | 'situacaoDeEstudo'>(campo: C, valor: Campos[C]) {
+    function escolher<C extends 'faixaEtaria' | 'sexo' | 'uf' | 'situacaoDeEstudo'>(campo: C, valor: Campos[C]) {
         mudar(campo, valor);
         setErros((e) => ({ ...e, [campo]: null }));
     }
@@ -258,17 +259,11 @@ export function FormularioDoPerfil({
                     />
                 </View>
                 <View style={styles.uf}>
-                    <CampoTexto
-                        rotulo={TEXTOS_DO_PERFIL.uf}
-                        placeholder={TEXTOS_DO_PERFIL.dicaDaUf}
+                    <SeletorDeUf
+                        valor={campos.uf}
+                        aoEscolher={(uf) => escolher('uf', uf)}
                         erro={erros.uf}
-                        value={campos.uf}
-                        onChangeText={(t) => mudar('uf', t.toUpperCase())}
-                        onBlur={() => conferir('uf')}
-                        autoCapitalize="characters"
-                        autoCorrect={false}
-                        maxLength={2}
-                        editable={!salvando}
+                        desabilitado={salvando}
                     />
                 </View>
             </View>

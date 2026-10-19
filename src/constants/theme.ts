@@ -23,6 +23,7 @@ export const Colors = {
     botao: '#3B2781',
     textoDoBotao: '#FFFFFF',
     fundoDaLogo: '#FFFFFF',
+    veu: '#000000', // o fundo escurecido atrás de uma lista aberta por cima da tela, com opacidade
     // Estado e quadrante: sucesso = Firme, aviso = Frágil, lacuna = Lacuna, erro = Ponto cego.
     sucesso: '#1E7A4C',
     aviso: '#8A6100',
@@ -41,6 +42,7 @@ export const Colors = {
     botao: '#554495',
     textoDoBotao: '#FFFFFF',
     fundoDaLogo: '#FFFFFF', // a logo é roxa: no escuro ela vai sobre um círculo branco
+    veu: '#000000',
     // No protótipo escuro estas quatro são fundos com texto branco. Aqui elas são texto, ícone
     // e borda sobre fundo escuro, então entram clareadas: as do protótipo não passam no contraste.
     sucesso: '#3DD68C',

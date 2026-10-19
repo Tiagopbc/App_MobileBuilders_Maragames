@@ -52,7 +52,13 @@ async function preencherOQueNaoMuda(user: ReturnType<typeof userEvent.setup>) {
     await user.press(opcao('18 a 24'));
     await user.press(opcao('Feminino'));
     await user.type(campo('Cidade'), ' São Luís ');
-    await user.type(campo('Estado (UF)'), 'ma');
+    await escolherUf(user, 'MA');
+}
+
+// O estado é escolhido numa lista: o campo abre as siglas, e tocar numa delas fecha a lista.
+async function escolherUf(user: ReturnType<typeof userEvent.setup>, uf: string) {
+    await user.press(screen.getByRole('button', { name: /^Estado \(UF\)/ }));
+    await user.press(screen.getByRole('radio', { name: uf }));
 }
 
 describe('a tela de completar o perfil', () => {
@@ -102,13 +108,18 @@ describe('a tela de completar o perfil', () => {
         expect(mockSalvar).not.toHaveBeenCalled();
     });
 
-    it('estado que não é sigla mostra o erro', async () => {
+    it('o estado é escolhido numa lista com as 27 siglas, em ordem alfabética', async () => {
         const user = await abrir();
 
-        await user.type(campo('Estado (UF)'), 'XX');
-        await user.press(salvar());
+        await user.press(screen.getByRole('button', { name: 'Estado (UF), escolha' }));
+        const siglas = screen.getAllByRole('radio', { name: /^[A-Z]{2}$/ });
+        expect(siglas).toHaveLength(27);
+        expect(siglas.slice(0, 4).map((s) => s.props.accessibilityLabel)).toEqual(['AC', 'AL', 'AM', 'AP']);
 
-        expect(await screen.findByText('Use a sigla do estado, como MA.')).toBeOnTheScreen();
+        await user.press(screen.getByRole('radio', { name: 'MA' }));
+
+        expect(screen.queryByRole('radio', { name: 'AC' })).toBeNull();
+        expect(screen.getByRole('button', { name: 'Estado (UF), MA' })).toBeOnTheScreen();
     });
 
     it('instituição e curso só aparecem para quem faz graduação ou pós', async () => {
