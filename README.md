@@ -17,7 +17,7 @@ A arquitetura, o ciclo da lição e o que fica no banco estão em [docs/arquitet
 
 ## Tecnologias
 
-- [Expo](https://expo.dev) SDK 57 com [expo-router](https://docs.expo.dev/router/introduction/), React Native e TypeScript
+- [Expo](https://expo.dev) SDK 58 com [expo-router](https://docs.expo.dev/router/introduction/), React Native e TypeScript
 - Firebase Authentication e Cloud Firestore
 - Jest e Testing Library, com o emulador do Firestore para as regras
 
@@ -25,7 +25,7 @@ A arquitetura, o ciclo da lição e o que fica no banco estão em [docs/arquitet
 
 ### Pré-requisitos
 
-- Node.js 20.19 ou mais novo, com npm
+- Node.js 22 (22.13 ou mais novo) ou 24 (24.3 ou mais novo), com npm
 - Um projeto Firebase próprio, com:
   - **Authentication** com o provedor "E-mail/senha" ativado;
   - **Cloud Firestore** criado;
