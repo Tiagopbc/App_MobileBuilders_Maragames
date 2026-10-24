@@ -51,6 +51,8 @@ describe('a tela de login', () => {
         await abrirOApp();
 
         expect(await screen.findByRole('image', { name: 'Logo da Beast Maragames' })).toBeOnTheScreen();
+        // A logo das listras do Maranhão é só da tela de boas-vindas.
+        expect(screen.queryByTestId('logo-maranhao')).toBeNull();
         expect(screen.getByText('Beast Maragames')).toBeOnTheScreen();
         expect(screen.getByText('Pronto pra soltar a fera?')).toBeOnTheScreen();
     });
