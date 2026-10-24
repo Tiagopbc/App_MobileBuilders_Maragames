@@ -15,12 +15,12 @@ export default function AutoavaliacaoScreen() {
     // Só o valor de quando a tela abriu: quem já respondeu (URL digitada na web) volta para a
     // home. Depois de gravar aqui, quem fecha a tela é `sair`, não este redirect.
     const [jaTinhaRespondido] = useState(() => !precisaDaAutoavaliacao);
-    if (jaTinhaRespondido) return <Redirect href="/" />;
+    if (jaTinhaRespondido) return <Redirect href="/home" />;
 
     function sair() {
         // Na web, quem abre a URL direto não tem para onde voltar.
         if (router.canGoBack()) router.back();
-        else router.replace('/');
+        else router.replace('/home');
     }
 
     async function gravar(notas: Record<string, number>) {

@@ -22,12 +22,12 @@ export default function PerfilScreen() {
         }, [recarregar])
     );
 
-    if (!perfil) return <Redirect href="/" />;
+    if (!perfil) return <Redirect href="/home" />;
 
     function fechar() {
         // Na web, quem abre a URL direto não tem para onde voltar.
         if (router.canGoBack()) router.back();
-        else router.replace('/');
+        else router.replace('/home');
     }
 
     // Enquanto as lições não chegam, ou se a leitura falha, o cabeçalho mostra só o apelido.

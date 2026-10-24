@@ -13,12 +13,12 @@ export default function ConsentimentoScreen() {
     // Só o valor de quando a tela abriu: quem já tinha aceitado (URL digitada na web) volta
     // para a home. Depois do aceite feito aqui, quem fecha a tela é `sair`, não este redirect.
     const [jaTinhaAceitado] = useState(() => perfil?.consentiuEm !== undefined);
-    if (jaTinhaAceitado) return <Redirect href="/" />;
+    if (jaTinhaAceitado) return <Redirect href="/home" />;
 
     function sair() {
         // Na web, quem abre a URL direto não tem para onde voltar.
         if (router.canGoBack()) router.back();
-        else router.replace('/');
+        else router.replace('/home');
     }
 
     async function aceitar() {

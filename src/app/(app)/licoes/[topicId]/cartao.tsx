@@ -14,7 +14,7 @@ export default function CartaoDaLicaoScreen() {
     const { user, perfil } = useSession();
     const router = useRouter();
 
-    if (!user) return <Redirect href="/" />;
+    if (!user) return <Redirect href="/home" />;
 
     const { formaPre } = participanteDoRoteiro(perfil);
     const paraALicao = { pathname: '/licoes/[topicId]', params: { topicId } } as const;

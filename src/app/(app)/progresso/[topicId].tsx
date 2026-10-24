@@ -22,7 +22,7 @@ export default function TopicoScreen() {
         }, [recarregar])
     );
 
-    if (!user) return <Redirect href="/" />;
+    if (!user) return <Redirect href="/home" />;
 
     function sair() {
         // Na web, quem abre a URL direto não tem para onde voltar.
