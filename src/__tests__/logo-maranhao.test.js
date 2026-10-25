@@ -19,10 +19,10 @@ const ESTRELA_VERMELHA = tracosDe(original)[0];
 // Cada listra é um <rect> da largura da janela (478), de cima para baixo.
 const listras = [...svg.matchAll(/<rect [^>]*width="478"[^>]*fill="(#[0-9A-Fa-f]{6})"/g)].map((m) => m[1].toUpperCase());
 
-const VERMELHO = '#C8102E';
+const VERMELHO = '#EB3238';
 const BRANCO = '#FFFFFF';
-const PRETO = '#101010';
-const AZUL = '#1E4FA3';
+const PRETO = '#201D1E';
+const AZUL = '#012682';
 
 it('o arquivo existe', () => {
     expect(existe).toBe(true);
@@ -89,18 +89,38 @@ describe('a bandeira na janela do controle', () => {
         expect(listras.filter((c) => c === PRETO)).toHaveLength(2);
     });
 
-    // A bandeira oficial só descreve a contagem, e não a ordem: esta é a que sai dela, com as
-    // listras alternadas e o vermelho nas pontas. Se a ordem mudar, é só trocar aqui e no SVG.
+    // A ordem é a da imagem da bandeira oficial, conferida de cima para baixo: vermelho nas pontas,
+    // com o preto na terceira e na sétima listra. As cores são as medidas nessa mesma imagem.
     it('as listras alternam, de cima para baixo, com o vermelho nas pontas', () => {
         expect(listras).toEqual([VERMELHO, BRANCO, PRETO, BRANCO, VERMELHO, BRANCO, PRETO, BRANCO, VERMELHO]);
     });
 
     it('tem o cantão azul no alto, à esquerda, com a estrela branca de cinco pontas', () => {
-        const cantao = svg.match(/<rect [^>]*width="159"[^>]*fill="(#[0-9A-Fa-f]{6})"/);
+        const cantao = svg.match(/<rect [^>]*width="179"[^>]*fill="(#[0-9A-Fa-f]{6})"/);
         const estrela = svg.match(/<polygon[^>]* fill="#FFFFFF"[^>]* points="([^"]+)"/);
 
         expect(cantao[1].toUpperCase()).toBe(AZUL);
         expect(estrela[1].trim().split(/\s+/)).toHaveLength(10);
+    });
+
+    // Na bandeira, a estrela ocupa cerca de 70% da altura do cantão e fica no centro dele.
+    it('a estrela é grande e fica no centro do cantão', () => {
+        const pontos = svg
+            .match(/<polygon[^>]* points="([^"]+)"/)[1]
+            .trim()
+            .split(/\s+/)
+            .map((p) => p.split(',').map(Number));
+        const xs = pontos.map((p) => p[0]);
+        const ys = pontos.map((p) => p[1]);
+        const [cantaoX, cantaoY, cantaoLargura, cantaoAltura] = [301, 410, 179, 130];
+        const centroX = (Math.min(...xs) + Math.max(...xs)) / 2;
+        const alturaDaEstrela = Math.max(...ys) - Math.min(...ys);
+
+        expect(centroX).toBeCloseTo(cantaoX + cantaoLargura / 2, 0);
+        expect(Math.min(...ys)).toBeGreaterThan(cantaoY);
+        expect(Math.max(...ys)).toBeLessThan(cantaoY + cantaoAltura);
+        expect(alturaDaEstrela / cantaoAltura).toBeGreaterThan(0.65);
+        expect(alturaDaEstrela / cantaoAltura).toBeLessThan(0.8);
     });
 
     // Sem recorte, o que segura a bandeira dentro da janela é a ordem: ela vai por baixo do lobo,
