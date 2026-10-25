@@ -8,7 +8,7 @@ export default function SobreVoceScreen() {
     const { perfil, salvarExtras } = useSession();
     const router = useRouter();
 
-    if (!perfil) return <Redirect href="/" />;
+    if (!perfil) return <Redirect href="/home" />;
 
     function fechar() {
         // Na web, quem abre a URL direto não tem para onde voltar.

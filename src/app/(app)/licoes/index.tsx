@@ -25,12 +25,12 @@ export default function LicoesScreen() {
     // E quando o app volta do segundo plano: a situação das revisões muda com o dia.
     useAoVoltarAoApp(recarregar);
 
-    if (!user) return <Redirect href="/" />;
+    if (!user) return <Redirect href="/home" />;
 
     function sair() {
         // Na web, quem abre a URL direto não tem para onde voltar.
         if (router.canGoBack()) router.back();
-        else router.replace('/');
+        else router.replace('/home');
     }
 
     return (

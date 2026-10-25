@@ -22,7 +22,7 @@ export default function PassoDaLicaoScreen() {
     const router = useRouter();
 
     const paraALicao = { pathname: '/licoes/[topicId]', params: { topicId } } as const;
-    if (!user) return <Redirect href="/" />;
+    if (!user) return <Redirect href="/home" />;
     if (!ehPasso(passo)) return <Redirect href={paraALicao} />;
 
     const { formaPre } = participanteDoRoteiro(perfil);

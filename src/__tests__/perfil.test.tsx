@@ -514,7 +514,7 @@ describe('a aparência, no Perfil', () => {
 // A prova da Fase 6 do plano.
 describe('da home ao Perfil e de volta', () => {
     it('editar o apelido muda a saudação da home', async () => {
-        const rotas = await abrirEm('/');
+        const rotas = await abrirEm('/home');
         const user = userEvent.setup();
         expect(await screen.findByText('Olá, Paulo')).toBeOnTheScreen();
 
@@ -527,6 +527,6 @@ describe('da home ao Perfil e de volta', () => {
         await user.press(botao('Voltar ao início'));
 
         expect(await screen.findByText('Olá, Mestre')).toBeOnTheScreen();
-        expect(rotas.caminho()).toBe('/');
+        expect(rotas.caminho()).toBe('/home');
     });
 });

@@ -604,3 +604,41 @@ export function resumoDoPerfil(apelido: string, resumo: { xp: number | null; fei
     return partes.join(' · ');
 }
 
+
+// --- Tela de boas-vindas, Configuração e Regras do jogo. ---
+
+export const TEXTOS_DE_BOAS_VINDAS = {
+    nome: 'Maragames App',
+    assinatura: `by ${NOME_DO_GRUPO}`,
+    iniciar: 'Iniciar',
+    configuracao: 'Configuração',
+    regras: 'Regras do jogo',
+} as const;
+
+// As regras só explicam o que o app já faz: os nomes da certeza e dos quadrantes saem das mesmas
+// listas que as telas de resposta e de resultado usam, e os valores do XP são os de `src/lib/xp.ts`.
+export const TEXTOS_DAS_REGRAS = {
+    licao: {
+        titulo: 'A lição',
+        etapas: 'Cada lição segue cinco etapas: Diagnóstico, Cartão de conceito, Prática, Verificação e Revisão.',
+        revisao: 'A Revisão abre 7 dias depois da verificação e mostra o quanto ficou.',
+    },
+    certeza: {
+        titulo: 'A certeza',
+        texto: `Em cada questão, você escolhe a resposta e diz o quanto confia nela: ${ROTULO_CONFIANCA[1]}, ${ROTULO_CONFIANCA[2]} ou ${ROTULO_CONFIANCA[3]}.`,
+    },
+    xp: {
+        titulo: 'O XP',
+        acerto: 'O acerto vale 1, 2 ou 3 pontos, conforme a certeza.',
+        erro: 'O erro vale 0, −1 ou −4.',
+        palpite: 'O palpite nunca perde ponto. Errar com certeza custa caro.',
+    },
+    resultado: {
+        titulo: 'O resultado',
+        texto: 'No fim de cada bloco, cada resposta cai em um destes quadrantes:',
+    },
+    sequencia: {
+        titulo: 'A sequência',
+        texto: 'A sequência conta os dias seguidos em que você respondeu pelo menos uma questão.',
+    },
+} as const;

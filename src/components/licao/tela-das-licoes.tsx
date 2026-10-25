@@ -3,8 +3,8 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
+import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { MaxContentWidth, Spacing, type ThemeColor } from '@/constants/theme';
 import type { ModuloEmBreve } from '@/constants/em-breve';
 import { TEXTOS, dominioEmContagem, licaoEmBreve, moduloEmBreve, situacaoDaLicao } from '@/constants/textos';
@@ -49,7 +49,7 @@ export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair
     const theme = useTheme();
 
     return (
-        <ThemedView style={styles.container}>
+        <FundoDaMarca style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
                 <View style={styles.cabecalho}>
                     <Pressable
@@ -144,7 +144,7 @@ export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair
                     </ScrollView>
                 )}
             </SafeAreaView>
-        </ThemedView>
+        </FundoDaMarca>
     );
 }
 

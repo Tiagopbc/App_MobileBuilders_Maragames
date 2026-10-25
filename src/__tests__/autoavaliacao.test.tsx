@@ -168,7 +168,7 @@ describe('a autoavaliação antes do primeiro diagnóstico', () => {
         const { caminho } = await abrirEm('/autoavaliacao');
 
         expect(await screen.findByText('Para hoje')).toBeOnTheScreen();
-        expect(caminho()).toBe('/');
+        expect(caminho()).toBe('/home');
     });
 
     it('depois do aceite do termo, as notas vêm em seguida', async () => {
@@ -184,7 +184,7 @@ describe('a autoavaliação antes do primeiro diagnóstico', () => {
     });
 
     it('pelo Para hoje, a lição nova abre na página dela, e não no diagnóstico', async () => {
-        const { user, caminho } = await abrirEm('/');
+        const { user, caminho } = await abrirEm('/home');
 
         await user.press(await screen.findByRole('button', { name: 'Começar' }));
 
