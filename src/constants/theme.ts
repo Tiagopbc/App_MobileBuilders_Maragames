@@ -39,6 +39,15 @@ export const Colors = {
     fundoCerta: '#F6F4FA',
     fundoErrada: '#F6F4FA',
     relevoDoBotao: '#3B2781',
+    // Botões Violeta com halo: o degradê só existe no escuro; no claro, as três paradas repetem o
+    // roxo do botão e o secundário segue só contorno.
+    botaoTopo: '#3B2781',
+    botaoMeio: '#3B2781',
+    botaoBase: '#3B2781',
+    haloDoBotao: '#3B2781',
+    secundarioTopo: '#FFFFFF',
+    secundarioBase: '#FFFFFF',
+    bordaDoSecundario: '#E4E0EE',
     placaDaCarta: '#F1EDF8',
     caixaDaCarta: '#FFFFFF',
     bordaDaCaixa: '#E4E0EE',
@@ -71,7 +80,16 @@ export const Colors = {
     textoDaLetra: '#E4DDF3',
     fundoCerta: '#142522',
     fundoErrada: '#24152A',
-    relevoDoBotao: '#3B2781',
+    relevoDoBotao: '#24105A',
+    // Violeta com halo: do violeta vivo, em cima, ao roxo profundo, embaixo, com uma sombra roxa
+    // suave por baixo. É mais violeta que o roxo da marca, para o botão chamar o toque.
+    botaoTopo: '#8146E8',
+    botaoMeio: '#5B2BD6',
+    botaoBase: '#3B1E8C',
+    haloDoBotao: '#5B2BD6',
+    secundarioTopo: '#2B1D63',
+    secundarioBase: '#150D33',
+    bordaDoSecundario: '#4C1D95',
     placaDaCarta: '#2A2152',
     caixaDaCarta: '#120F22',
     bordaDaCaixa: '#33285F',

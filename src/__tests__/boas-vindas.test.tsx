@@ -95,28 +95,30 @@ describe('a tela de boas-vindas', () => {
         expect(rotas.caminho()).toBe('/');
     });
 
-    it('a logo é a do Maranhão, e o leitor de tela a chama pelo nome da marca', async () => {
+    it('a logo é a do app, e o leitor de tela a chama pelo nome da marca', async () => {
         await abrirEm('/');
 
-        expect(await screen.findByTestId('logo-maranhao')).toBeOnTheScreen();
+        const logo = await screen.findByTestId('logo-app');
+        expect(logo.props.source).toEqual([require('@/assets/images/logo-app.svg')]);
         expect(screen.getByRole('image', { name: 'Logo da Beast Maragames' })).toBeOnTheScreen();
     });
 
-    // O círculo branco some no fundo branco do tema claro: lá a logo ganha um aro lilás.
-    it('no tema escuro, a logo é a do círculo branco liso', async () => {
-        await escolherTema('escuro');
+    // A tela só apresenta o app: o lobinho, uma chamada e uma frase. Nada além do Iniciar se toca.
+    it('apresenta o app com o lobinho, o título e a frase', async () => {
         await abrirEm('/');
 
-        const logo = await screen.findByTestId('logo-maranhao');
-        expect(logo.props.source).toEqual([require('@/assets/images/logo-beast-maranhao.svg')]);
+        expect(await screen.findByText('Solte a fera do game design')).toBeOnTheScreen();
+        expect(screen.getByText('Aprenda game design em lições curtas, como quem joga.')).toBeOnTheScreen();
+        expect(screen.getByRole('image', { name: 'O lobinho da Beast Maragames segurando um controle' })).toBeOnTheScreen();
+        expect(screen.getAllByRole('button')).toHaveLength(3);
     });
 
-    it('no tema claro, a logo é a do círculo com aro lilás', async () => {
+    it('a logo é a mesma nos dois temas', async () => {
         await escolherTema('claro');
         await abrirEm('/');
 
-        const logo = await screen.findByTestId('logo-maranhao');
-        expect(logo.props.source).toEqual([require('@/assets/images/logo-beast-maranhao-claro.svg')]);
+        const logo = await screen.findByTestId('logo-app');
+        expect(logo.props.source).toEqual([require('@/assets/images/logo-app.svg')]);
     });
 
     it('não diz o nome de quem entrou: a saudação é da home', async () => {
