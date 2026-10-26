@@ -10,7 +10,7 @@ const { inflateSync } = require('zlib');
 // sem gerar os PNGs de novo, ou o contrário, faz ele falhar.
 
 const IMAGENS = join(__dirname, '..', '..', 'assets', 'images');
-const OPACIDADE = 0.2;
+const OPACIDADE = 0.15;
 
 const svg = readFileSync(join(IMAGENS, 'fundo-escuro.svg'), 'utf8');
 
@@ -93,15 +93,18 @@ describe.each([
         expect(png.tipo).toBe(6);
     });
 
-    // Com 0,10 a média do alfa dava cerca de 1,8; com 0,20, o dobro, cerca de 3,6.
-    it('está desenhado com a opacidade nova, e não com a antiga', () => {
-        expect(png.media).toBeGreaterThan(3.0);
-        expect(png.media).toBeLessThan(4.2);
+    // A média do alfa acompanha a opacidade: medida nos PNGs, dá cerca de 17,7 vezes o valor
+    // (1,8 com 0,10 e 3,5 com 0,20). Com a margem de 15%, um PNG de outra opacidade não passa.
+    it('está desenhado com a opacidade do SVG, e não com outra', () => {
+        const esperada = OPACIDADE * 17.7;
+        expect(png.media).toBeGreaterThan(esperada * 0.85);
+        expect(png.media).toBeLessThan(esperada * 1.15);
     });
 
-    // Itens que se sobrepõem somam: dois a 0,20 dão cerca de 0,36 (92 de 255), nunca mais que isso.
+    // Itens que se sobrepõem somam: dois a 0,15 dão cerca de 0,28 (71 de 255), nunca mais que isso.
     it('nenhum ponto passa do que dois itens sobrepostos dão', () => {
+        const doisItens = Math.round((1 - (1 - OPACIDADE) ** 2) * 255);
         expect(png.maximo).toBeGreaterThanOrEqual(Math.round(OPACIDADE * 255) - 2);
-        expect(png.maximo).toBeLessThanOrEqual(100);
+        expect(png.maximo).toBeLessThanOrEqual(doisItens + 8);
     });
 });
