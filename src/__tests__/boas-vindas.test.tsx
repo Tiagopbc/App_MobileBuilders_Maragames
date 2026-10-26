@@ -102,6 +102,23 @@ describe('a tela de boas-vindas', () => {
         expect(screen.getByRole('image', { name: 'Logo da Beast Maragames' })).toBeOnTheScreen();
     });
 
+    // O círculo branco some no fundo branco do tema claro: lá a logo ganha um aro lilás.
+    it('no tema escuro, a logo é a do círculo branco liso', async () => {
+        await escolherTema('escuro');
+        await abrirEm('/');
+
+        const logo = await screen.findByTestId('logo-maranhao');
+        expect(logo.props.source).toEqual([require('@/assets/images/logo-beast-maranhao.svg')]);
+    });
+
+    it('no tema claro, a logo é a do círculo com aro lilás', async () => {
+        await escolherTema('claro');
+        await abrirEm('/');
+
+        const logo = await screen.findByTestId('logo-maranhao');
+        expect(logo.props.source).toEqual([require('@/assets/images/logo-beast-maranhao-claro.svg')]);
+    });
+
     it('não diz o nome de quem entrou: a saudação é da home', async () => {
         await abrirEm('/');
         await screen.findByText('Maragames App');
