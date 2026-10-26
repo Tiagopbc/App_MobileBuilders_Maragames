@@ -8,14 +8,16 @@ Por enquanto, só o módulo **Fundamentos de Game Design** tem questões, com 5 
 
 ```mermaid
 flowchart LR
-    L[Login ou cadastro] --> P[Completar o perfil] --> H[Home]
+    L[Login ou cadastro] --> P[Completar o perfil] --> B[Boas-vindas] --> H[Home]
+    B --> CF[Configuração]
+    B --> RG[Regras do jogo]
     H --> LI[Lições]
     H --> PR[Progresso]
     H --> PE[Perfil]
     LI --> T[Termo e autoavaliação<br/>na primeira vez] --> CI[Ciclo da lição]
 ```
 
-A home mostra o cartão "Para hoje", com o próximo passo sugerido, o XP, a sequência de dias e as revisões agendadas. O Perfil reúne os dados do cadastro, as perguntas de "Sobre você", o tema claro ou escuro, o termo aceito e a saída da conta.
+A boas-vindas é a primeira tela de quem já entrou, em `/`: o nome do app, o botão Iniciar, a Configuração (só a escolha do tema, a mesma do Perfil) e as Regras do jogo. O Iniciar troca a boas-vindas pela home, que fica em `/home`. A home mostra o cartão "Para hoje", com o próximo passo sugerido, o XP, a sequência de dias e as revisões agendadas. O Perfil reúne os dados do cadastro, as perguntas de "Sobre você", o tema claro ou escuro, o termo aceito e a saída da conta.
 
 ## O ciclo de uma lição
 
