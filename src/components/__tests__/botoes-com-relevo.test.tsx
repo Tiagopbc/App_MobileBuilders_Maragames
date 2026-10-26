@@ -1,4 +1,5 @@
 import { act, render, screen } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 
 import { Colors } from '@/constants/theme';
 import { escolherTema } from '@/lib/tema';
@@ -37,12 +38,25 @@ describe('no tema escuro', () => {
         expect(principal).toHaveStyle({ borderBottomWidth: 3.5, borderBottomColor: Colors.dark.relevoDoBotao });
     });
 
-    it('o botão secundário é o card roxo com relevo', async () => {
+    // Violeta com halo: o degradê vai do violeta vivo, em cima, ao roxo profundo, embaixo.
+    it('o botão principal tem o degradê violeta, a luz no topo e o halo', async () => {
+        const { principal } = await abrir();
+        const { botaoTopo, botaoMeio, botaoBase, haloDoBotao } = Colors.dark;
+
+        expect(principal).toHaveStyle({
+            backgroundImage: `linear-gradient(180deg, ${botaoTopo} 0%, ${botaoMeio} 55%, ${botaoBase} 100%)`,
+        });
+        expect(StyleSheet.flatten(principal.props.style).boxShadow).toMatch(/^inset /);
+        expect(StyleSheet.flatten(principal.props.style).boxShadow).toContain(haloDoBotao);
+    });
+
+    it('o botão secundário é o card com degradê escuro e relevo', async () => {
         const { secundario } = await abrir();
+        const { secundarioTopo, secundarioBase, bordaDoSecundario } = Colors.dark;
 
         expect(secundario).toHaveStyle({
-            backgroundColor: Colors.dark.cartao,
-            borderColor: Colors.dark.bordaDoCartao,
+            backgroundImage: `linear-gradient(180deg, ${secundarioTopo} 0%, ${secundarioBase} 100%)`,
+            borderColor: bordaDoSecundario,
             borderBottomWidth: 5,
         });
     });
@@ -53,10 +67,12 @@ describe('no tema claro, como antes', () => {
         await act(() => escolherTema('claro'));
     });
 
-    it('o botão principal não tem borda', async () => {
+    it('o botão principal não tem borda, degradê nem halo', async () => {
         const { principal } = await abrir();
 
-        expect(principal).toHaveStyle({ borderBottomWidth: 0 });
+        expect(principal).toHaveStyle({ borderBottomWidth: 0, backgroundColor: Colors.light.botao });
+        expect(StyleSheet.flatten(principal.props.style).backgroundImage).toBeUndefined();
+        expect(StyleSheet.flatten(principal.props.style).boxShadow).toBeUndefined();
     });
 
     it('o botão secundário é só contorno', async () => {

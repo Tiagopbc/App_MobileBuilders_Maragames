@@ -5,6 +5,7 @@ import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'reac
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
+import { useRelevoDoSecundario } from '@/components/botao-secundario';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
@@ -36,6 +37,7 @@ type TelaDoCartaoProps = {
 export function TelaDoCartao({ topicId, aoComecarPratica, aoSair, rotuloDoFim = TEXTOS.comecarPratica }: TelaDoCartaoProps) {
     const theme = useTheme();
     const relevo = useRelevo();
+    const relevoDoSecundario = useRelevoDoSecundario();
     const escuro = useColorScheme() === 'dark';
     const { estado, tentarDeNovo } = useCartao(topicId);
     const [indice, setIndice] = useState(0);
@@ -158,12 +160,9 @@ export function TelaDoCartao({ topicId, aoComecarPratica, aoSair, rotuloDoFim = 
                                         backgroundColor: theme.cartao,
                                         opacity: indice === 0 ? 0.4 : pressed ? 0.7 : 1,
                                     },
-                                    // No escuro, o card roxo com relevo; no claro, sem borda, como antes.
-                                    relevo.espessura > 0 && {
-                                        borderWidth: 1.5,
-                                        borderBottomWidth: 1.5 + relevo.espessura,
-                                        borderColor: theme.bordaDoCartao,
-                                    },
+                                    // No escuro, o mesmo fundo e relevo do botão secundário; no claro,
+                                    // sem borda, como antes.
+                                    relevo.espessura > 0 && relevoDoSecundario,
                                 ]}>
                                 <ThemedText type="smallBold">{TEXTOS.voltar}</ThemedText>
                             </Pressable>

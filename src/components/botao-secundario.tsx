@@ -10,10 +10,9 @@ type BotaoSecundarioProps = {
 };
 
 // A ação alternativa da tela (entrar com o Google, por exemplo): no claro, só contorno, para não
-// disputar com o botão principal; no escuro, o card roxo com relevo, sobre o padrão do fundo.
+// disputar com o botão principal; no escuro, o card com degradê escuro e relevo, sobre o padrão.
 export function BotaoSecundario({ rotulo, onPress, desabilitado = false }: BotaoSecundarioProps) {
-    const theme = useTheme();
-    const relevo = useRelevo();
+    const relevoDoSecundario = useRelevoDoSecundario();
 
     return (
         <Pressable
@@ -23,12 +22,8 @@ export function BotaoSecundario({ rotulo, onPress, desabilitado = false }: Botao
             onPress={onPress}
             style={({ pressed }) => [
                 styles.botao,
-                {
-                    backgroundColor: relevo.espessura > 0 ? theme.cartao : undefined,
-                    borderColor: theme.bordaDoCartao,
-                    borderBottomWidth: 1.5 + relevo.espessura,
-                    opacity: desabilitado ? 0.4 : pressed ? 0.7 : 1,
-                },
+                relevoDoSecundario,
+                { opacity: desabilitado ? 0.4 : pressed ? 0.7 : 1 },
             ]}>
             <ThemedText themeColor="primaria" style={styles.rotulo}>
                 {rotulo}
@@ -37,11 +32,25 @@ export function BotaoSecundario({ rotulo, onPress, desabilitado = false }: Botao
     );
 }
 
+// O contorno e o fundo do botão secundário. O "Voltar" do cartão de conceito usa o mesmo.
+export function useRelevoDoSecundario() {
+    const theme = useTheme();
+    const relevo = useRelevo();
+
+    const contorno = { borderWidth: 1.5, borderBottomWidth: 1.5 + relevo.espessura, borderColor: theme.bordaDoSecundario };
+
+    if (relevo.espessura === 0) return contorno;
+    return {
+        ...contorno,
+        backgroundColor: theme.cartao,
+        backgroundImage: `linear-gradient(180deg, ${theme.secundarioTopo} 0%, ${theme.secundarioBase} 100%)`,
+    };
+}
+
 const styles = StyleSheet.create({
     botao: {
         minHeight: 48,
         borderRadius: 14,
-        borderWidth: 1.5,
         alignItems: 'center',
         justifyContent: 'center',
     },

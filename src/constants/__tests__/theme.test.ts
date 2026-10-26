@@ -45,6 +45,12 @@ const PARES_DE_TEXTO: [ThemeColor, ThemeColor][] = [
     ['textoDaLetra', 'fundoDaLetra'],
     ['sucesso', 'fundoCerta'],
     ['erro', 'fundoErrada'],
+    // Os botões Violeta com halo: o texto branco tem de ler em todo o degradê.
+    ['textoDoBotao', 'botaoTopo'],
+    ['textoDoBotao', 'botaoMeio'],
+    ['textoDoBotao', 'botaoBase'],
+    ['primaria', 'secundarioTopo'],
+    ['primaria', 'secundarioBase'],
     // A carta de jogo do cartão de conceito.
     ['text', 'placaDaCarta'],
     ['text', 'caixaDaCarta'],
