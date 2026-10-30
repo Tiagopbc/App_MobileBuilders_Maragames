@@ -83,6 +83,8 @@ A arquitetura, o ciclo da lição e o que fica no banco estão em [docs/arquitet
 | `npm run lint` | ESLint |
 | `npm run seed:conteudo:check` | Valida o conteúdo de `content/` sem gravar nada |
 | `npm run seed:conteudo` | Valida e grava o conteúdo no Firestore |
+| `npm run relatorio -- --simulado 100` | Gera o relatório de uma turma de 100 alunos virtuais, sem ler o banco |
+| `npm run exportar -- --simulado 100` | Grava a mesma turma em tabelas CSV e no banco fictício, sem ler o banco |
 
 ## Conteúdo
 
@@ -99,6 +101,22 @@ npm run seed:conteudo:check            # só valida, não precisa de credencial
 npm run seed:conteudo                  # valida e grava
 npm run seed:conteudo -- --prune       # grava e apaga questões que saíram do JSON
 ```
+
+## Relatório e turma simulada
+
+O relatório para a Beast Maragames é uma página só, com os números da turma em conjunto e nada que identifique alguém: ganho do diagnóstico para a verificação, retenção na revisão, calibração da confiança, quadrantes e perfis de resposta.
+
+Para ver o relatório funcionando antes de haver uma turma usando o app, o `--simulado` sorteia alunos virtuais de perfis variados, que respondem às lições com as mesmas regras do app (`src/lib/simulacao.ts`). Nada disso lê ou grava o Firestore, e a página avisa no topo que os dados são simulados.
+
+```bash
+npm run relatorio -- --simulado 100 --semente 1250808581   # a mesma semente gera sempre a mesma turma
+npm run relatorio -- --simulado 100 --cenario nulo         # um cenário só: base, nulo, confianca_cega, forma_b_dificil ou certeza_protege
+npm run exportar -- --simulado 100 --semente 1250808581    # a mesma turma em tabelas CSV
+```
+
+Os cenários servem para conferir as contas. No **nulo** ninguém aprende nem esquece, e o relatório tem que mostrar ganho perto de zero; na **confiança cega** a certeza não depende de saber, e a calibração tem que cair a zero.
+
+O relatório sai em `relatorio/simulado/` e as tabelas em `exportacao/`, duas pastas fora do git. Sem `--simulado`, os dois comandos leem o Firestore e pedem a chave de conta de serviço (ver [Conteúdo](#conteúdo)).
 
 Gravar no Firestore pede a chave de conta de serviço do projeto em `serviceAccountKey.json`, na raiz. Para gerá-la, abra o console do Firebase em **Configurações do projeto → Contas de serviço → Gerar nova chave privada** e salve o arquivo baixado com esse nome. A chave dá acesso total ao banco: ela está no `.gitignore`, nunca deve entrar no repositório e não deve ser enviada a ninguém.
 
@@ -118,7 +136,7 @@ src/
 assets/         ícone, splash, logo e mascote
 content/        lições e questões em JSON
 regras/         testes das regras do Firestore
-scripts/        seed do conteúdo
+scripts/        seed do conteúdo, exportação e relatório
 firestore.rules regras de segurança do banco
 docs/           documentação
 ```

@@ -102,6 +102,12 @@ As regras ficam em `firestore.rules` e são testadas no emulador do Firestore (`
 | `participante.ts` | A forma do diagnóstico (A ou B), alternada pela ordem de aceite do termo |
 | `perfil.ts` | Campos obrigatórios e listas de opções do perfil |
 | `validacao.ts` | Validação de e-mail, senha, telefone e campos do perfil |
+| `estatistica.ts` | Intervalos de confiança por reamostragem das pessoas, retenção corrigida pelo chute e teste pareado, com semente fixa |
+| `perfis-de-resposta.ts` | O perfil de resposta de cada pessoa (domina, sabe mas duvida, confiante demais...) pelas respostas dela |
+| `retencao.ts` | O quanto do que a pessoa acertou na verificação ainda está lá na revisão |
+| `exportacao.ts` | As tabelas da exportação e os números da turma, com código no lugar do nome |
+| `relatorio.ts` | A página do relatório para a Beast Maragames |
+| `simulacao.ts` | A turma de alunos virtuais e os cenários que conferem as contas |
 
 Os comentários do código citam itens (item 14, item 22...) do registro de decisões técnicas do grupo, que entra numa entrega futura.
 
