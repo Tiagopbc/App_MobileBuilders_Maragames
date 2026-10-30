@@ -79,7 +79,7 @@ describe('a tela "Sobre você e os jogos"', () => {
             'Qual é o seu objetivo com jogos?',
             'Quanto tempo por semana você tem para estudar?',
             'Como você conheceu a Beast Maragames?',
-            'Você já é aluno do site da Beast Maragames?',
+            'Você já estuda pelo site da Beast Maragames?',
         ]) {
             expect(grupo(pergunta)).toBeOnTheScreen();
         }
@@ -94,7 +94,7 @@ describe('a tela "Sobre você e os jogos"', () => {
         // Marcadas fora de ordem de propósito.
         await user.press(opcao('Que engines você já usou?', 'checkbox', 'Unity'));
         await user.press(opcao('Que engines você já usou?', 'checkbox', 'Godot'));
-        await user.press(opcao('Você já é aluno do site da Beast Maragames?', 'radio', 'Não'));
+        await user.press(opcao('Você já estuda pelo site da Beast Maragames?', 'radio', 'Não'));
         await user.press(salvar());
 
         expect(mockSalvarExtras).toHaveBeenCalledWith({
@@ -136,7 +136,7 @@ describe('a tela "Sobre você e os jogos"', () => {
         expect(opcao('Que áreas de criar jogos mais te interessam?', 'checkbox', 'Arte')).toBeChecked();
         expect(opcao('Que áreas de criar jogos mais te interessam?', 'checkbox', 'Áudio')).toBeChecked();
         expect(opcao('Que áreas de criar jogos mais te interessam?', 'checkbox', 'Programação')).not.toBeChecked();
-        expect(opcao('Você já é aluno do site da Beast Maragames?', 'radio', 'Sim')).toBeChecked();
+        expect(opcao('Você já estuda pelo site da Beast Maragames?', 'radio', 'Sim')).toBeChecked();
         expect(screen.getByText('3 de 9 respondidas')).toBeOnTheScreen();
     });
 
