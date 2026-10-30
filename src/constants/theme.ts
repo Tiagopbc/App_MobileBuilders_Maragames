@@ -52,6 +52,17 @@ export const Colors = {
     caixaDaCarta: '#FFFFFF',
     bordaDaCaixa: '#E4E0EE',
     textoDoPe: '#5E5873',
+    // Direção estética: nomes novos, ainda sem uso nas telas. Os valores que já existem só mudam
+    // quando os componentes passarem a usar estes.
+    textoDeApoio: '#5E5873', // explicação e nota sob um título; no claro, igual ao textSecondary
+    realce: '#E9E3F5', // anel do lobinho, selo da fase e esqueleto de carregamento
+    fundoApagado: '#F5F3FA', // alternativa que não é a certa, depois do veredito
+    relevoDoCartao: '#C2B6DD', // a borda de baixo do card que leva toque
+    fundoFirme: '#E3F3EA',
+    fundoFragil: '#FBF0D6',
+    fundoPontoCego: '#FBE6E6',
+    fundoLacuna: '#E6EBFA',
+    botaoDesabilitado: '#E4E0EE', // o texto do botão desativado usa textSecondary
   },
   dark: {
     text: '#F2F1F6',
@@ -94,6 +105,16 @@ export const Colors = {
     caixaDaCarta: '#120F22',
     bordaDaCaixa: '#33285F',
     textoDoPe: '#9D92C4',
+    textoDeApoio: '#C9C6D6',
+    realce: '#2A2152',
+    fundoApagado: '#14121F',
+    relevoDoCartao: '#3B2781',
+    fundoFirme: '#11271E',
+    fundoFragil: '#2A2210',
+    fundoPontoCego: '#2B1419',
+    fundoLacuna: '#171C35',
+    // Quase sem roxo, para não parecer o card selecionado (cartaoSelecionado, #2A2152).
+    botaoDesabilitado: '#23212F',
   },
 } as const;
 
@@ -105,6 +126,30 @@ export const Relevo = {
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
+
+// Os raios de canto, com nome: o 14 do botão e da alternativa, o 16 do card, o 18 da carta.
+export const Raio = {
+  letra: 8,
+  medio: 12,
+  botao: 14,
+  card: 16,
+  carta: 18,
+  folha: 24,
+  selo: 999,
+} as const;
+
+// Os oito tamanhos de texto, em Lexend: tamanho, altura da linha e peso (uma chave de `Fonts`).
+// Nada abaixo de 12, e o 12 só em rótulo curto.
+export const Tipo = {
+  display: { tamanho: 28, linha: 34, peso: 'bold' },
+  titulo: { tamanho: 24, linha: 30, peso: 'bold' },
+  destaque: { tamanho: 22, linha: 28, peso: 'bold' },
+  enunciado: { tamanho: 20, linha: 28, peso: 'semibold' },
+  corpo: { tamanho: 16, linha: 24, peso: 'regular' },
+  legenda: { tamanho: 14, linha: 20, peso: 'regular' },
+  rotulo: { tamanho: 13, linha: 18, peso: 'semibold' },
+  mini: { tamanho: 12, linha: 16, peso: 'semibold' },
+} as const;
 
 // Lexend, a fonte do protótipo. Com fonte própria, cada peso é um arquivo e tem o seu nome de
 // família; os arquivos são carregados no layout raiz. Quem escreve texto usa `ThemedText`, que
