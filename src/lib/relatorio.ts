@@ -666,7 +666,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
         `<meta name="robots" content="noindex, nofollow">\n` +
         `<title>Beast Maragames · Relatório de aprendizagem${opcoes.simulacao ? ' (simulação)' : ''}</title>\n<style>${ESTILO}</style>\n</head>\n` +
         `<body>\n<main>\n${cabecalho}\n${corpo}\n` +
-        `<footer>Feito pelo grupo Mobile Builders, na disciplina de Programação Mobile da UNDB.` +
+        `<footer>Feito por Tiago Cavalcanti, na disciplina de Programação Mobile da UNDB.` +
         (simulacao
             ? `<br>Dados sintéticos · semente ${simulacao.semente}` +
               (simulacao.versaoConteudo ? ` · versão do conteúdo ${esc(simulacao.versaoConteudo)}` : '') +
@@ -833,7 +833,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
         'Que tipo de respondente cada pessoa é? O perfil sai só das respostas dela: quanto acerta, com que certeza, quanto erra achando que sabe e em quanto tempo responde.',
         ind.perfisDeResposta.map((p) => contagem(p.rotulo, p.pessoas, maisDeUmPerfil, plural(p.pessoas, 'pessoa', 'pessoas'))).join('') +
             `<ul class="ler nota">${ind.perfisDeResposta.map((p) => `<li><strong>${esc(p.rotulo)}:</strong> ${esc(p.criterio)}.</li>`).join('')}</ul>` +
-            `<p class="nota">A revisão não entra nesta conta, porque repete as questões da verificação. Os limites de cada perfil são escolhas do grupo, a revisar com dados de verdade.</p>`
+            `<p class="nota">A revisão não entra nesta conta, porque repete as questões da verificação. Os limites de cada perfil são escolhas do autor, a revisar com dados de verdade.</p>`
     );
 
     // 5. Autoavaliação

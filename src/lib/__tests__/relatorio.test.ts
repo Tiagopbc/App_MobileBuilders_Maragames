@@ -695,6 +695,20 @@ describe('relatorioHtml', () => {
         expect(pagina()).toContain('descrevem e não provam causa');
     });
 
+    it('assina com o nome de quem fez o app, e não com um grupo', () => {
+        const html = pagina();
+
+        expect(html).toContain('Feito por Tiago Cavalcanti, na disciplina de Programação Mobile da UNDB.');
+        expect(html).not.toMatch(/grupo Mobile Builders/i);
+    });
+
+    it('diz que os limites dos perfis são escolhas do autor', () => {
+        const html = pagina();
+
+        expect(html).toContain('são escolhas do autor, a revisar com dados de verdade');
+        expect(html).not.toContain('escolhas do grupo');
+    });
+
     describe('percentual e amostra', () => {
         it('com respostas suficientes, mostra o percentual e, ao lado, a contagem', () => {
             const html = pagina(indicadores(), 1);
