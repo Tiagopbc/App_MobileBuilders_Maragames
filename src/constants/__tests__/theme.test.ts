@@ -1,4 +1,4 @@
-import { Colors, Fonts, Relevo, type ThemeColor } from '../theme';
+import { Colors, Fonts, Raio, Relevo, Tipo, type ThemeColor } from '../theme';
 
 // Contraste entre duas cores, pela fórmula da WCAG 2: de 1 (iguais) a 21 (preto no branco).
 function luminancia(hex: string): number {
@@ -55,6 +55,22 @@ const PARES_DE_TEXTO: [ThemeColor, ThemeColor][] = [
     ['text', 'placaDaCarta'],
     ['text', 'caixaDaCarta'],
     ['textoDoPe', 'cartao'],
+    // Texto de apoio, realce, fundo apagado e botão desativado.
+    ['textoDeApoio', 'background'],
+    ['textoDeApoio', 'cartao'],
+    ['textoDeApoio', 'fundoFirme'],
+    ['text', 'realce'],
+    ['textSecondary', 'fundoApagado'],
+    ['textSecondary', 'botaoDesabilitado'],
+    // O fundo de cada quadrante, com o texto e a cor do próprio quadrante por cima.
+    ['text', 'fundoFirme'],
+    ['text', 'fundoFragil'],
+    ['text', 'fundoPontoCego'],
+    ['text', 'fundoLacuna'],
+    ['sucesso', 'fundoFirme'],
+    ['aviso', 'fundoFragil'],
+    ['erro', 'fundoPontoCego'],
+    ['lacuna', 'fundoLacuna'],
 ];
 
 const PARES_DE_CONTORNO: [ThemeColor, ThemeColor][] = [
@@ -108,5 +124,23 @@ describe('a identidade da Beast Maragames', () => {
 
     it('os dois temas têm os mesmos nomes de cor', () => {
         expect(Object.keys(Colors.dark).sort()).toEqual(Object.keys(Colors.light).sort());
+    });
+
+    it('os raios têm nome: letra, médio, botão, card, carta, folha e selo', () => {
+        expect(Raio).toEqual({ letra: 8, medio: 12, botao: 14, card: 16, carta: 18, folha: 24, selo: 999 });
+    });
+
+    it('a tipografia tem os oito tamanhos nomeados, e nenhum abaixo de 12', () => {
+        expect(Object.keys(Tipo)).toEqual(['display', 'titulo', 'destaque', 'enunciado', 'corpo', 'legenda', 'rotulo', 'mini']);
+        for (const estilo of Object.values(Tipo)) {
+            expect(estilo.tamanho).toBeGreaterThanOrEqual(12);
+            expect(estilo.linha).toBeGreaterThan(estilo.tamanho);
+            expect(['regular', 'semibold', 'bold']).toContain(estilo.peso);
+        }
+    });
+
+    it('o texto do corpo é 16/24 e o menor é 12/16', () => {
+        expect(Tipo.corpo).toMatchObject({ tamanho: 16, linha: 24 });
+        expect(Tipo.mini).toMatchObject({ tamanho: 12, linha: 16 });
     });
 });
