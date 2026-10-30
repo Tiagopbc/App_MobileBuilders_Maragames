@@ -40,12 +40,15 @@
     "firebase-tools": "^15.32.1",
     "jest": "~30.5.2",
     "jest-expo": "~58.0.12",
+    "tsx": "^4.23.15",
     "typescript": "~6.0.3"
   },
   "scripts": {
     "start": "expo start",
     "seed:conteudo": "node ./scripts/seed-conteudo.js",
     "seed:conteudo:check": "node ./scripts/seed-conteudo.js --dry-run",
+    "exportar": "tsx ./scripts/exportar-piloto.ts",
+    "relatorio": "tsx ./scripts/gerar-relatorio.ts",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
