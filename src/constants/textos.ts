@@ -401,7 +401,7 @@ export function formatarXpTotal(xp: number): string {
 export const TEXTOS_DO_LOGIN = {
     logo: 'Logo da Beast Maragames',
     marca: 'Beast Maragames',
-    chamada: 'Pronto pra soltar a fera?',
+    chamada: 'Hora de soltar a fera?',
     convite: 'Entre para começar o desafio de hoje.',
     email: 'E-mail',
     exemploDeEmail: 'voce@exemplo.com',
@@ -528,7 +528,7 @@ export const TEXTOS_DO_PERFIL = {
     estudoEJogos: 'Estudo e jogos',
     nome: 'Nome completo',
     apelido: 'Apelido',
-    dicaDoApelido: 'como você aparece no ranking',
+    dicaDoApelido: 'como você aparece no app',
     telefone: 'Telefone',
     faixaEtaria: 'Faixa etária',
     sexo: 'Sexo',
@@ -560,7 +560,7 @@ export const TEXTOS_DO_PERFIL = {
     objetivo: 'Qual é o seu objetivo com jogos?',
     tempoPorSemana: 'Quanto tempo por semana você tem para estudar?',
     comoConheceu: 'Como você conheceu a Beast Maragames?',
-    alunoDoSite: 'Você já é aluno do site da Beast Maragames?',
+    alunoDoSite: 'Você já estuda pelo site da Beast Maragames?',
     sim: 'Sim',
     nao: 'Não',
     // A autoavaliação por módulo, antes do primeiro diagnóstico.
@@ -590,17 +590,17 @@ export function notaDoModulo(modulo: string, nota: number): string {
 // único contato de pessoa que fica no código, por decisão do grupo.
 export const CONTATO_DO_GRUPO = 'pereirabc1981@gmail.com';
 
-// Quem fez o app: o nome do grupo, que assina a seção Sobre no lugar da marca da cliente.
-export const NOME_DO_GRUPO = 'Mobile Builders';
+// Quem fez o app: o nome do autor, que assina a boas-vindas e a seção Sobre no lugar da marca da cliente.
+export const AUTOR = 'Tiago Cavalcanti';
 
 export const TEXTOS_DO_SOBRE = {
     titulo: 'Sobre',
     contato: `Dúvidas ou para sair do estudo, escreva para ${CONTATO_DO_GRUPO}.`,
 } as const;
 
-/** "Mobile Builders · versão 1.0.0" */
+/** "Tiago Cavalcanti · versão 1.0.0" */
 export function versaoDoAppNoPerfil(versao: string): string {
-    return `${NOME_DO_GRUPO} · versão ${versao}`;
+    return `${AUTOR} · versão ${versao}`;
 }
 
 /**
@@ -620,7 +620,7 @@ export function resumoDoPerfil(apelido: string, resumo: { xp: number | null; fei
 
 export const TEXTOS_DE_BOAS_VINDAS = {
     nome: 'Maragames App',
-    assinatura: `by ${NOME_DO_GRUPO}`,
+    assinatura: `by ${AUTOR}`,
     titulo: 'Solte a fera do game design',
     apoio: 'Aprenda game design em lições curtas, como quem joga.',
     mascote: 'O lobinho da Beast Maragames segurando um controle',

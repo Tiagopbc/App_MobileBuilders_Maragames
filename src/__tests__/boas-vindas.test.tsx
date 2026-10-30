@@ -88,7 +88,7 @@ describe('a tela de boas-vindas', () => {
         const rotas = await abrirEm('/');
 
         expect(await screen.findByText('Maragames App')).toBeOnTheScreen();
-        expect(screen.getByText('by Mobile Builders')).toBeOnTheScreen();
+        expect(screen.getByText('by Tiago Cavalcanti')).toBeOnTheScreen();
         expect(screen.getByRole('button', { name: 'Iniciar' })).toBeOnTheScreen();
         expect(screen.getByRole('button', { name: 'Configuração' })).toBeOnTheScreen();
         expect(screen.getByRole('button', { name: 'Regras do jogo' })).toBeOnTheScreen();

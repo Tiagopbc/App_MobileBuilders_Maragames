@@ -20,6 +20,11 @@ import {
     formatarXp,
     formatarXpTotal,
     resumirQuadrantes,
+    AUTOR,
+    TEXTOS_DE_BOAS_VINDAS,
+    TEXTOS_DO_LOGIN,
+    TEXTOS_DO_PERFIL,
+    versaoDoAppNoPerfil,
 } from '../textos';
 
 describe('formatarXp', () => {
@@ -179,5 +184,30 @@ describe('o pé da carta de conceito', () => {
 
     it('para o leitor de tela, diz o tipo da carta e a posição por extenso', () => {
         expect(peDaCartaParaLeitor(0, 3)).toBe('Conceito, 1 de 3');
+    });
+});
+
+describe('a assinatura de quem fez o app', () => {
+    it('o autor é uma pessoa só, e a assinatura da boas-vindas diz "by" e o nome', () => {
+        expect(AUTOR).toBe('Tiago Cavalcanti');
+        expect(TEXTOS_DE_BOAS_VINDAS.assinatura).toBe('by Tiago Cavalcanti');
+    });
+
+    it('o Perfil mostra o autor e a versão do app', () => {
+        expect(versaoDoAppNoPerfil('1.0.0')).toBe('Tiago Cavalcanti · versão 1.0.0');
+    });
+});
+
+describe('os textos sem marca de gênero nem promessa que o app não cumpre', () => {
+    it('a chamada do login não marca gênero', () => {
+        expect(TEXTOS_DO_LOGIN.chamada).toBe('Hora de soltar a fera?');
+    });
+
+    it('a dica do apelido não fala em ranking, que o app não tem', () => {
+        expect(TEXTOS_DO_PERFIL.dicaDoApelido).toBe('como você aparece no app');
+    });
+
+    it('a pergunta sobre o site da cliente não marca gênero', () => {
+        expect(TEXTOS_DO_PERFIL.alunoDoSite).toBe('Você já estuda pelo site da Beast Maragames?');
     });
 });

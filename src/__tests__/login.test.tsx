@@ -54,7 +54,7 @@ describe('a tela de login', () => {
         // A logo de app, com a bandeira do Maranhão, é só da tela de boas-vindas.
         expect(screen.queryByTestId('logo-app')).toBeNull();
         expect(screen.getByText('Beast Maragames')).toBeOnTheScreen();
-        expect(screen.getByText('Pronto pra soltar a fera?')).toBeOnTheScreen();
+        expect(screen.getByText('Hora de soltar a fera?')).toBeOnTheScreen();
     });
 
     it('pede a senha com o mínimo que a validação exige', async () => {
@@ -66,7 +66,7 @@ describe('a tela de login', () => {
     it('Entrar só habilita com e-mail e senha preenchidos', async () => {
         await abrirOApp();
         const user = userEvent.setup();
-        await screen.findByText('Pronto pra soltar a fera?');
+        await screen.findByText('Hora de soltar a fera?');
 
         expect(entrar()).toBeDisabled();
 
@@ -80,7 +80,7 @@ describe('a tela de login', () => {
     it('Entrar envia o e-mail e a senha digitados', async () => {
         await abrirOApp();
         const user = userEvent.setup();
-        await screen.findByText('Pronto pra soltar a fera?');
+        await screen.findByText('Hora de soltar a fera?');
 
         await user.type(screen.getByLabelText('E-mail'), 'ana@exemplo.com');
         await user.type(screen.getByLabelText('Senha'), 'segredo-de-teste');
@@ -93,7 +93,7 @@ describe('a tela de login', () => {
         mockEntrarComEmail.mockRejectedValue({ code: 'auth/invalid-credential' });
         await abrirOApp();
         const user = userEvent.setup();
-        await screen.findByText('Pronto pra soltar a fera?');
+        await screen.findByText('Hora de soltar a fera?');
 
         await user.type(screen.getByLabelText('E-mail'), 'ana@exemplo.com');
         await user.type(screen.getByLabelText('Senha'), 'segredo-de-teste');
@@ -105,7 +105,7 @@ describe('a tela de login', () => {
     it('a senha começa escondida, e o botão do campo a mostra', async () => {
         await abrirOApp();
         const user = userEvent.setup();
-        await screen.findByText('Pronto pra soltar a fera?');
+        await screen.findByText('Hora de soltar a fera?');
 
         expect(screen.getByLabelText('Senha').props.secureTextEntry).toBe(true);
 
@@ -125,7 +125,7 @@ describe('a tela de login', () => {
 
         await userEvent.setup().press(await screen.findByRole('button', { name: 'Voltar ao início' }));
 
-        expect(await screen.findByText('Pronto pra soltar a fera?')).toBeOnTheScreen();
+        expect(await screen.findByText('Hora de soltar a fera?')).toBeOnTheScreen();
     });
 });
 
@@ -135,7 +135,7 @@ describe('esqueci a senha, no login', () => {
     it('sem e-mail digitado, pede o e-mail e não envia nada', async () => {
         await abrirOApp();
         const user = userEvent.setup();
-        await screen.findByText('Pronto pra soltar a fera?');
+        await screen.findByText('Hora de soltar a fera?');
 
         await user.press(esqueci());
 
@@ -146,7 +146,7 @@ describe('esqueci a senha, no login', () => {
     it('com um e-mail que não é e-mail, também não envia', async () => {
         await abrirOApp();
         const user = userEvent.setup();
-        await screen.findByText('Pronto pra soltar a fera?');
+        await screen.findByText('Hora de soltar a fera?');
 
         await user.type(screen.getByLabelText('E-mail'), 'ana-sem-arroba');
         await user.press(esqueci());
@@ -158,7 +158,7 @@ describe('esqueci a senha, no login', () => {
     it('com o e-mail digitado, pede o link para ele e avisa sem dizer se a conta existe', async () => {
         await abrirOApp();
         const user = userEvent.setup();
-        await screen.findByText('Pronto pra soltar a fera?');
+        await screen.findByText('Hora de soltar a fera?');
 
         await user.type(screen.getByLabelText('E-mail'), ' ana@exemplo.com ');
         await user.press(esqueci());
@@ -173,7 +173,7 @@ describe('esqueci a senha, no login', () => {
         mockRedefinirSenha.mockRejectedValue({ code: 'auth/network-request-failed' });
         await abrirOApp();
         const user = userEvent.setup();
-        await screen.findByText('Pronto pra soltar a fera?');
+        await screen.findByText('Hora de soltar a fera?');
 
         await user.type(screen.getByLabelText('E-mail'), 'ana@exemplo.com');
         await user.press(esqueci());
