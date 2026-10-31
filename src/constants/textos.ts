@@ -87,6 +87,7 @@ export const TEXTO_DA_FALTA: Record<Falta, string> = {
 
 export const TEXTOS = {
     perguntaDeConfianca: 'Quanto você confia?',
+    comoFuncionamOsPontos: 'Como funcionam os pontos',
     confirmar: 'Confirmar',
     proxima: 'Próxima',
     concluir: 'Concluir',
@@ -385,6 +386,13 @@ export function quandoARevisaoAbre(liberaEm: number): string {
     return `A revisão abre ${noOuNa(abre.diaDaSemana)} ${DIAS_DA_SEMANA[abre.diaDaSemana]}, ${diaEMes(abre)}.`;
 }
 
+/** "+3", "−4", "0": os pontos de um nível de certeza na tabela das regras, sem a unidade. */
+export function formatarPontos(pontos: number): string {
+    if (pontos > 0) return `+${pontos}`;
+    if (pontos < 0) return `−${Math.abs(pontos)}`;
+    return '0';
+}
+
 /** "+3 XP", "−4 XP", "0 XP". O sinal de menos é o tipográfico (U+2212), que alinha com o de mais. */
 export function formatarXp(xp: number): string {
     if (xp > 0) return `+${xp} XP`;
@@ -630,29 +638,39 @@ export const TEXTOS_DE_BOAS_VINDAS = {
 } as const;
 
 // As regras só explicam o que o app já faz: os nomes da certeza e dos quadrantes saem das mesmas
-// listas que as telas de resposta e de resultado usam, e os valores do XP são os de `src/lib/xp.ts`.
+// listas que as telas de resposta e de resultado usam, e os pontos de cada nível saem da conta do
+// XP (`src/lib/xp.ts`), na tela das regras.
 export const TEXTOS_DAS_REGRAS = {
-    licao: {
-        titulo: 'A lição',
-        etapas: 'Cada lição segue cinco etapas: Diagnóstico, Cartão de conceito, Prática, Verificação e Revisão.',
-        revisao: 'A Revisão abre 7 dias depois da verificação e mostra o quanto ficou.',
+    jogo: {
+        titulo: 'O jogo',
+        texto: 'Você aprende game design em lições curtas, como quem joga. Em cada questão, escolhe uma resposta e diz o quanto confia nela.',
+        apoio: 'Acertar rende pontos. Saber o que você sabe, e o que ainda não sabe, rende ainda mais.',
     },
     certeza: {
         titulo: 'A certeza',
-        texto: `Em cada questão, você escolhe a resposta e diz o quanto confia nela: ${ROTULO_CONFIANCA[1]}, ${ROTULO_CONFIANCA[2]} ou ${ROTULO_CONFIANCA[3]}.`,
+        texto: 'Marque o nível que combina com o que você sente de verdade. Não existe nível errado.',
     },
-    xp: {
-        titulo: 'O XP',
-        acerto: 'O acerto vale 1, 2 ou 3 pontos, conforme a certeza.',
-        erro: 'O erro vale 0, −1 ou −4.',
-        palpite: 'O palpite nunca perde ponto. Errar com certeza custa caro.',
+    pontos: {
+        titulo: 'Os pontos',
+        acertar: 'Acertar',
+        errar: 'Errar',
+        apoio: 'O palpite nunca tira ponto. Errar com certeza custa mais, por isso a certeza compensa quando você realmente sabe.',
     },
     resultado: {
         titulo: 'O resultado',
         texto: 'No fim de cada bloco, cada resposta cai em um destes quadrantes:',
+        comCerteza: 'Com certeza',
+        semCerteza: 'Sem certeza',
+        acertou: 'Acertou',
+        errou: 'Errou',
+    },
+    licao: {
+        titulo: 'A lição',
+        etapas: 'Cinco etapas: Diagnóstico, Cartão de conceito, Prática, Verificação e Revisão, que abre 7 dias depois.',
+        medido: 'Só na Prática você vê o resultado a cada questão. No Diagnóstico e na Verificação tudo aparece no fim, para medir o que você sabe de verdade.',
     },
     sequencia: {
         titulo: 'A sequência',
-        texto: 'A sequência conta os dias seguidos em que você respondeu pelo menos uma questão.',
+        texto: 'Conta os dias seguidos em que você respondeu pelo menos uma questão.',
     },
 } as const;

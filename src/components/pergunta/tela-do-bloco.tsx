@@ -30,6 +30,7 @@ const LETRAS = 'ABCD';
 
 type TelaDoBlocoProps = EntradaDoBloco & {
     aoSair: () => void; // fecha a tela; quem navega é a rota
+    aoAbrirRegras: () => void; // o link "Como funcionam os pontos"; também é da rota
     // O fim de um passo de lição (item 30): entra no lugar do resultado do bloco. Quem o monta é
     // a rota, que sabe qual é o passo e para onde ele leva.
     fim?: (relatorio: Relatorio) => ReactNode;
@@ -37,7 +38,7 @@ type TelaDoBlocoProps = EntradaDoBloco & {
 
 // A tela inteira de um bloco: cabeçalho, a pergunta da vez e o fim. Não sabe de onde os dados
 // vêm (isso é do hook) nem para onde a navegação vai (isso é da rota).
-export function TelaDoBloco({ aoSair, fim, ...entrada }: TelaDoBlocoProps) {
+export function TelaDoBloco({ aoSair, aoAbrirRegras, fim, ...entrada }: TelaDoBlocoProps) {
     const theme = useTheme();
     const { estado, titulo, confirmar, avancar, tentarDeNovo } = useBloco(entrada);
     const naQuestao = estado.tipo === 'pergunta' || estado.tipo === 'feedback';
@@ -117,6 +118,7 @@ export function TelaDoBloco({ aoSair, fim, ...entrada }: TelaDoBlocoProps) {
                         aviso={aviso}
                         aoConfirmar={confirmar}
                         aoAvancar={avancar}
+                        aoAbrirRegras={aoAbrirRegras}
                     />
                 )}
             </SafeAreaView>
@@ -129,9 +131,10 @@ type PerguntaProps = {
     aviso: string | null; // onde o resultado aparece, nos blocos sem feedback por questão
     aoConfirmar: (selecao: SelecaoCompleta) => void;
     aoAvancar: () => void;
+    aoAbrirRegras: () => void;
 };
 
-function Pergunta({ estado, aviso, aoConfirmar, aoAvancar }: PerguntaProps) {
+function Pergunta({ estado, aviso, aoConfirmar, aoAvancar, aoAbrirRegras }: PerguntaProps) {
     // Alternativa e confiança são dois campos do mesmo estado, marcados em qualquer ordem.
     // Só existem aqui, na tela: trocar de ideia antes de confirmar não gera evento.
     const theme = useTheme();
@@ -193,6 +196,7 @@ function Pergunta({ estado, aviso, aoConfirmar, aoAvancar }: PerguntaProps) {
                     valor={marcado.confianca}
                     desabilitado={travado}
                     onChange={(confianca) => setSelecao((s) => ({ ...s, confianca }))}
+                    aoAbrirRegras={aoAbrirRegras}
                 />
 
                 {estado.tipo === 'feedback' ? (

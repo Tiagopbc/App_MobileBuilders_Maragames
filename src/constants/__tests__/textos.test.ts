@@ -17,6 +17,7 @@ import {
     numeroDaCarta,
     peDaCartaParaLeitor,
     formatarTaxa,
+    formatarPontos,
     formatarXp,
     formatarXpTotal,
     resumirQuadrantes,
@@ -26,6 +27,14 @@ import {
     TEXTOS_DO_PERFIL,
     versaoDoAppNoPerfil,
 } from '../textos';
+
+describe('formatarPontos', () => {
+    it('põe o sinal: mais, o menos tipográfico e o zero sem sinal', () => {
+        expect(formatarPontos(3)).toBe('+3');
+        expect(formatarPontos(-4)).toBe('−4');
+        expect(formatarPontos(0)).toBe('0');
+    });
+});
 
 describe('formatarXp', () => {
     it('ganho aparece com sinal de mais', () => {

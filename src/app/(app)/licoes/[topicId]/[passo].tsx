@@ -85,6 +85,7 @@ export default function PassoDaLicaoScreen() {
                     topicId={topicId}
                     formaPre={formaPre}
                     aoSair={sair}
+                    aoAbrirRegras={() => router.push('/regras')}
                     fim={(relatorio) => fim(relatorio, licao)}
                 />
             )}
