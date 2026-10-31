@@ -26,7 +26,7 @@ export function SeletorConfianca({ valor, onChange, desabilitado, aoAbrirRegras 
 
     return (
         <View accessibilityRole="radiogroup" accessibilityLabel={TEXTOS.perguntaDeConfianca} style={styles.grupo}>
-            <View style={styles.cabecalho}>
+            <View testID="cabecalho-da-confianca" style={styles.cabecalho}>
                 <ThemedText type="smallBold" themeColor="textSecondary">
                     {TEXTOS.perguntaDeConfianca}
                 </ThemedText>
@@ -85,7 +85,15 @@ export function SeletorConfianca({ valor, onChange, desabilitado, aoAbrirRegras 
 
 const styles = StyleSheet.create({
     grupo: { gap: Spacing.two },
-    cabecalho: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: Spacing.two },
+    // Quebra em tela estreita ou com letra grande: o link desce para a linha de baixo, inteiro.
+    cabecalho: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        columnGap: Spacing.two,
+        rowGap: Spacing.half,
+    },
     link: { fontSize: 13, textDecorationLine: 'underline' },
     linha: { flexDirection: 'row', gap: Spacing.two },
     // Larguras iguais; o rótulo quebra em duas linhas se a tela for estreita ou a fonte, grande.

@@ -26,6 +26,12 @@ describe.each(['claro', 'escuro'] as const)('no tema %s', (tema) => {
         expect(screen.queryByText(/acerta|erra\b|[+−]\d/i)).not.toBeOnTheScreen();
     });
 
+    // Em tela estreita (320 pt) ou com letra grande, a pergunta e o link não cabem lado a lado:
+    // a linha quebra, e o link continua inteiro e tocável em vez de sair da tela.
+    it('o cabeçalho quebra de linha em tela estreita, em vez de empurrar o link para fora', () => {
+        expect(screen.getByTestId('cabecalho-da-confianca')).toHaveStyle({ flexWrap: 'wrap' });
+    });
+
     it('tem o link "Como funcionam os pontos", que abre a regra', async () => {
         await userEvent.setup().press(screen.getByRole('link', { name: 'Como funcionam os pontos' }));
 
