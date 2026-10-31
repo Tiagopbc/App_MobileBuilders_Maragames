@@ -1,11 +1,12 @@
 import { useCallback } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
+import { Superficie, SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import {
@@ -115,7 +116,7 @@ export default function HomeScreen() {
           </View>
 
           {/* Para hoje: a trilha diária como sugestão, um passo só, sem limite por dia (item 30). */}
-          <View style={[styles.cartao, { backgroundColor: theme.backgroundElement, borderColor: theme.borda }]}>
+          <Superficie style={styles.cartao}>
             <View style={styles.topo}>
               <ThemedText type="smallBold" themeColor="primaria" style={styles.ola}>
                 {TEXTOS.paraHoje}
@@ -165,7 +166,7 @@ export default function HomeScreen() {
             {sugestao?.tipo === 'tudo_concluido' && (
               <ThemedText style={styles.titulo}>{TEXTOS.todasAsLicoesConcluidas}</ThemedText>
             )}
-          </View>
+          </Superficie>
 
           {agendadas.length > 0 && (
             <View style={styles.secao}>
@@ -196,15 +197,12 @@ export default function HomeScreen() {
             {ATALHOS.map((item) => {
               const resumo = pronto && item.resumo ? item.resumo(pronto) : null;
               return (
-                <Pressable
+                <SuperficieQueLevaToque
                   key={item.id}
                   accessibilityRole="button"
                   accessibilityLabel={resumo ? `${item.titulo}, ${resumo}` : item.titulo}
                   onPress={() => router.push(item.rota)}
-                  style={({ pressed }) => [
-                    styles.card,
-                    { backgroundColor: theme.backgroundElement, borderColor: theme.borda, opacity: pressed ? 0.6 : 1 },
-                  ]}>
+                  style={styles.card}>
                   <Ionicons name={item.icone} size={32} color={theme.primaria} />
                   <ThemedText type="smallBold" style={styles.noCentro}>
                     {item.titulo}
@@ -214,7 +212,7 @@ export default function HomeScreen() {
                       {resumo}
                     </ThemedText>
                   )}
-                </Pressable>
+                </SuperficieQueLevaToque>
               );
             })}
           </View>
@@ -264,7 +262,6 @@ const styles = StyleSheet.create({
   cartao: {
     gap: Spacing.two,
     padding: Spacing.three,
-    borderRadius: 16,
     borderWidth: 1,
   },
   titulo: {
@@ -294,8 +291,6 @@ const styles = StyleSheet.create({
     minHeight: 112,
     paddingVertical: Spacing.three,
     paddingHorizontal: Spacing.one,
-    borderRadius: 16,
-    borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
     gap: Spacing.one,

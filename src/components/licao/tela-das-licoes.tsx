@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
+import { SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { MaxContentWidth, Spacing, type ThemeColor } from '@/constants/theme';
 import type { ModuloEmBreve } from '@/constants/em-breve';
@@ -89,19 +90,12 @@ export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair
                                     const dominio = licao.dominio ? dominioEmContagem(licao.dominio) : null;
                                     const icone = ICONE_DO_ESTADO[licao.estado.tipo];
                                     return (
-                                        <Pressable
+                                        <SuperficieQueLevaToque
                                             key={licao.topicId}
                                             accessibilityRole="button"
                                             accessibilityLabel={[licao.titulo, situacao, dominio].filter(Boolean).join(', ')}
                                             onPress={() => aoAbrir(licao.topicId)}
-                                            style={({ pressed }) => [
-                                                styles.licao,
-                                                {
-                                                    backgroundColor: theme.backgroundElement,
-                                                    borderColor: theme.borda,
-                                                    opacity: pressed ? 0.7 : 1,
-                                                },
-                                            ]}>
+                                            style={styles.licao}>
                                             <Ionicons name={icone.nome} size={24} color={theme[icone.cor]} />
                                             <View style={styles.textos}>
                                                 <ThemedText style={styles.nome}>{licao.titulo}</ThemedText>
@@ -110,7 +104,7 @@ export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair
                                                 </ThemedText>
                                             </View>
                                             <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
-                                        </Pressable>
+                                        </SuperficieQueLevaToque>
                                     );
                                 })}
                             </View>
@@ -128,11 +122,13 @@ export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair
                                         style={[
                                             styles.licao,
                                             styles.trancada,
-                                            { backgroundColor: theme.backgroundElement, borderColor: theme.borda },
+                                            { backgroundColor: theme.fundoApagado, borderColor: theme.bordaDoCartao },
                                         ]}>
                                         <Ionicons name="lock-closed-outline" size={24} color={theme.textSecondary} />
                                         <View style={styles.textos}>
-                                            <ThemedText style={styles.nome}>{titulo}</ThemedText>
+                                            <ThemedText style={styles.nome} themeColor="textSecondary">
+                                                {titulo}
+                                            </ThemedText>
                                             <ThemedText type="small" themeColor="textSecondary">
                                                 {TEXTOS.emBreve}
                                             </ThemedText>
@@ -168,10 +164,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: Spacing.three,
         padding: Spacing.three,
-        borderRadius: 16,
-        borderWidth: 1,
     },
     textos: { flex: 1, gap: Spacing.half },
     nome: { fontSize: 17, lineHeight: 22, fontWeight: 600 },
-    trancada: { opacity: 0.6 },
+    // Trancada: tracejada e chapada, sem opacidade; o cadeado e o texto de apoio dizem o resto.
+    trancada: { borderRadius: 16, borderWidth: 1, borderStyle: 'dashed', opacity: 1 },
 });

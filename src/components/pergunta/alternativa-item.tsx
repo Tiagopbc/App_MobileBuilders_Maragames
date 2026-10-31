@@ -21,7 +21,7 @@ const APARENCIA: Record<EstadoDaAlternativa, Aparencia> = {
     selecionada: { fundo: 'cartaoSelecionado', cor: 'bordaSelecionada', icone: null },
     certa: { fundo: 'fundoCerta', cor: 'sucesso', icone: 'checkmark-circle' },
     errada: { fundo: 'fundoErrada', cor: 'erro', icone: 'close-circle' },
-    apagada: { fundo: 'cartao', cor: null, icone: null },
+    apagada: { fundo: 'fundoApagado', cor: null, icone: null },
 };
 
 type AlternativaItemProps = {
@@ -38,6 +38,7 @@ export function AlternativaItem({ letra, texto, estado, marcada, desabilitada, o
     const relevo = useRelevo();
     const { fundo, cor, icone } = APARENCIA[estado];
     const selecionada = estado === 'selecionada';
+    const apagada = estado === 'apagada';
 
     return (
         <Pressable
@@ -51,13 +52,22 @@ export function AlternativaItem({ letra, texto, estado, marcada, desabilitada, o
                 {
                     backgroundColor: theme[fundo],
                     borderColor: cor ? theme[cor] : theme.bordaDoCartao,
-                    opacity: estado === 'apagada' ? 0.5 : pressed ? 0.7 : 1,
+                    opacity: apagada ? 1 : pressed ? 0.7 : 1,
                 },
                 // A escolhida fica "apertada": perde o relevo e desce. A margem de baixo devolve
-                // o que sobra, para a lista não pular. No claro, o relevo é zero.
+                // o que sobra, para a lista não pular. A apagada é chapada: perde o relevo sem
+                // descer, e o texto passa para o de apoio, em vez de desbotar com opacidade. O
+                // relevo embaixo tem cor própria; certa e errada mantêm a cor do próprio estado.
                 selecionada
                     ? { borderBottomWidth: 1.5, marginTop: relevo.afunda, marginBottom: relevo.espessura - relevo.afunda }
-                    : { borderBottomWidth: 1.5 + relevo.espessura, marginTop: 0, marginBottom: 0 },
+                    : apagada
+                      ? { borderBottomWidth: 1.5, marginTop: 0, marginBottom: relevo.espessura }
+                      : {
+                            borderBottomWidth: 1.5 + relevo.espessura,
+                            borderBottomColor: cor ? theme[cor] : theme.relevoDoCartao,
+                            marginTop: 0,
+                            marginBottom: 0,
+                        },
             ]}>
             <View
                 style={[
@@ -75,7 +85,7 @@ export function AlternativaItem({ letra, texto, estado, marcada, desabilitada, o
                 </ThemedText>
             </View>
             <View style={styles.texto}>
-                <TextoComCodigo>{texto}</TextoComCodigo>
+                <TextoComCodigo themeColor={apagada ? 'textSecondary' : undefined}>{texto}</TextoComCodigo>
             </View>
             {icone && cor && <Ionicons name={icone} size={22} color={theme[cor]} />}
         </Pressable>

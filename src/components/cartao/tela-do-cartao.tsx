@@ -108,6 +108,7 @@ export function TelaDoCartao({ topicId, aoComecarPratica, aoSair, rotuloDoFim = 
                                 {
                                     backgroundColor: theme.cartao,
                                     borderColor: theme.bordaDoCartao,
+                                    borderBottomColor: theme.relevoDoCartao,
                                     borderBottomWidth: 1.5 + relevo.espessura,
                                 },
                             ]}>
@@ -156,15 +157,15 @@ export function TelaDoCartao({ topicId, aoComecarPratica, aoSair, rotuloDoFim = 
                                 onPress={() => setIndice((i) => i - 1)}
                                 style={({ pressed }) => [
                                     styles.voltar,
-                                    {
-                                        backgroundColor: theme.cartao,
-                                        opacity: indice === 0 ? 0.4 : pressed ? 0.7 : 1,
-                                    },
-                                    // No escuro, o mesmo fundo e relevo do botão secundário; no claro,
-                                    // sem borda, como antes.
-                                    relevo.espessura > 0 && relevoDoSecundario,
+                                    // No primeiro slide é o botão desativado de sempre (fundo e texto
+                                    // próprios, sem relevo nem opacidade); nos outros, o secundário.
+                                    indice === 0
+                                        ? { backgroundColor: theme.botaoDesabilitado, borderBottomWidth: 0, opacity: 1 }
+                                        : [relevoDoSecundario, { opacity: pressed ? 0.7 : 1 }],
                                 ]}>
-                                <ThemedText type="smallBold">{TEXTOS.voltar}</ThemedText>
+                                <ThemedText type="smallBold" themeColor={indice === 0 ? 'textSecondary' : 'text'}>
+                                    {TEXTOS.voltar}
+                                </ThemedText>
                             </Pressable>
 
                             <View style={styles.avancar}>

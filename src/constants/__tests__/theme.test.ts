@@ -113,13 +113,40 @@ describe('a identidade da Beast Maragames', () => {
         });
     });
 
-    it('no escuro, a borda de baixo dos cards soma 5 (1,5 + o relevo); no claro, não há relevo', () => {
+    it('a borda de baixo dos cards soma 5 no escuro e 4 no claro (1,5 + o relevo)', () => {
         expect(1.5 + Relevo.dark.espessura).toBe(5);
-        expect(Relevo.light).toEqual({ espessura: 0, afunda: 0 });
+        expect(1.5 + Relevo.light.espessura).toBe(4);
+        expect(Relevo.light).toEqual({ espessura: 2.5, afunda: 2 });
     });
 
-    it('o card apertado desce 3 pt no escuro', () => {
+    it('o card apertado desce 3 pt no escuro e 2 pt no claro', () => {
         expect(Relevo.dark.afunda).toBe(3);
+        expect(Relevo.light.afunda).toBe(2);
+    });
+
+    it('no claro, o fundo é lilás e os cards são brancos, com o relevo lilás embaixo', () => {
+        expect(Colors.light).toMatchObject({
+            background: '#F5F3FA',
+            backgroundElement: '#FFFFFF',
+            cartao: '#FFFFFF',
+            bordaDoCartao: '#D9D1EB',
+            relevoDoCartao: '#C2B6DD',
+            cartaoSelecionado: '#EDE7F8',
+        });
+    });
+
+    it('no claro, o botão principal é um degradê do roxo vivo ao roxo da marca, com relevo', () => {
+        expect(Colors.light).toMatchObject({
+            botaoTopo: '#5A3FB2',
+            botaoMeio: '#47309C',
+            botaoBase: '#3B2781',
+            relevoDoBotao: '#24105A',
+        });
+    });
+
+    it('o secundário tem a cor do relevo própria, e no escuro ela repete a borda de hoje', () => {
+        expect(Colors.light.relevoDoSecundario).toBe('#C2B6DD');
+        expect(Colors.dark.relevoDoSecundario).toBe(Colors.dark.bordaDoSecundario);
     });
 
     it('os dois temas têm os mesmos nomes de cor', () => {

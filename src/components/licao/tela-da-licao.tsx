@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { BotaoSecundario } from '@/components/botao-secundario';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
+import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { MaxContentWidth, Spacing, type ThemeColor } from '@/constants/theme';
 import {
@@ -100,7 +101,7 @@ export function TelaDaLicao({ estado, temForma, aoAbrir, aoTentarDeNovo, aoSair 
                         <ScrollView contentContainerStyle={styles.conteudo}>
                             <ThemedText type="subtitle">{pronto.titulo}</ThemedText>
 
-                            <View style={[styles.cartao, { backgroundColor: theme.backgroundElement, borderColor: theme.borda }]}>
+                            <Superficie style={styles.cartao}>
                                 {etapasDaLicao(pronto.licao).map(({ etapa, situacao }) => {
                                     const detalhe = detalheDaEtapa(etapa, pronto.questoesPorEtapa[etapa], pronto.licao.estado);
                                     const icone = ICONE_DA_SITUACAO[situacao];
@@ -123,10 +124,10 @@ export function TelaDaLicao({ estado, temForma, aoAbrir, aoTentarDeNovo, aoSair 
                                         </View>
                                     );
                                 })}
-                            </View>
+                            </Superficie>
 
                             {pronto.resultado && (
-                                <View style={[styles.cartao, { backgroundColor: theme.backgroundElement, borderColor: theme.borda }]}>
+                                <Superficie style={styles.cartao}>
                                     {pronto.resultado.ciclo === 'curto' ? (
                                         <ThemedText>
                                             {acertosDoTopico(
@@ -156,7 +157,7 @@ export function TelaDaLicao({ estado, temForma, aoAbrir, aoTentarDeNovo, aoSair 
                                             {quandoARevisaoAbre(pronto.licao.estado.liberaEm)}
                                         </ThemedText>
                                     )}
-                                </View>
+                                </Superficie>
                             )}
                         </ScrollView>
 
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
     centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.three, padding: Spacing.four },
     textoCentral: { textAlign: 'center' },
     conteudo: { gap: Spacing.three, paddingHorizontal: Spacing.four, paddingBottom: Spacing.four },
-    cartao: { gap: Spacing.two, padding: Spacing.three, borderRadius: 16, borderWidth: 1 },
+    cartao: { gap: Spacing.two, padding: Spacing.three },
     etapa: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, minHeight: 36 },
     nomeDaEtapa: { flex: 1 },
     numero: { fontSize: 32, lineHeight: 38, fontWeight: 700 },

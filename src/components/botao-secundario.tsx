@@ -9,9 +9,10 @@ type BotaoSecundarioProps = {
     desabilitado?: boolean;
 };
 
-// A ação alternativa da tela (entrar com o Google, por exemplo): no claro, só contorno, para não
-// disputar com o botão principal; no escuro, o card com degradê escuro e relevo, sobre o padrão.
+// A ação alternativa da tela: o card que leva toque, com relevo, em branco no claro e no degradê
+// escuro do escuro. Desativado, ganha a cor própria do botão desativado, sem opacidade.
 export function BotaoSecundario({ rotulo, onPress, desabilitado = false }: BotaoSecundarioProps) {
+    const theme = useTheme();
     const relevoDoSecundario = useRelevoDoSecundario();
 
     return (
@@ -22,10 +23,11 @@ export function BotaoSecundario({ rotulo, onPress, desabilitado = false }: Botao
             onPress={onPress}
             style={({ pressed }) => [
                 styles.botao,
-                relevoDoSecundario,
-                { opacity: desabilitado ? 0.4 : pressed ? 0.7 : 1 },
+                desabilitado
+                    ? { backgroundColor: theme.botaoDesabilitado, opacity: 1 }
+                    : [relevoDoSecundario, { opacity: pressed ? 0.7 : 1 }],
             ]}>
-            <ThemedText themeColor="primaria" style={styles.rotulo}>
+            <ThemedText themeColor={desabilitado ? 'textSecondary' : 'primaria'} style={styles.rotulo}>
                 {rotulo}
             </ThemedText>
         </Pressable>
@@ -37,11 +39,11 @@ export function useRelevoDoSecundario() {
     const theme = useTheme();
     const relevo = useRelevo();
 
-    const contorno = { borderWidth: 1.5, borderBottomWidth: 1.5 + relevo.espessura, borderColor: theme.bordaDoSecundario };
-
-    if (relevo.espessura === 0) return contorno;
     return {
-        ...contorno,
+        borderWidth: 1.5,
+        borderBottomWidth: 1.5 + relevo.espessura,
+        borderColor: theme.bordaDoSecundario,
+        borderBottomColor: theme.relevoDoSecundario,
         backgroundColor: theme.cartao,
         backgroundImage: `linear-gradient(180deg, ${theme.secundarioTopo} 0%, ${theme.secundarioBase} 100%)`,
     };

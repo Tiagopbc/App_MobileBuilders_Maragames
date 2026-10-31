@@ -10,8 +10,8 @@
 
 export const CoresDoRelatorio = {
     claro: {
-        fundo: '#FFFFFF',
-        elemento: '#F6F4FA',
+        fundo: '#F5F3FA',
+        elemento: '#FFFFFF',
         borda: '#E4E0EE',
         texto: '#1A1530',
         texto2: '#5E5873',

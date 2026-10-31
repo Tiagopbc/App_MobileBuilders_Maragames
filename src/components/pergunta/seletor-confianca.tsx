@@ -54,7 +54,12 @@ export function SeletorConfianca({ valor, onChange, desabilitado }: SeletorConfi
                                           marginTop: relevo.afunda,
                                           marginBottom: relevo.espessura - relevo.afunda,
                                       }
-                                    : { borderBottomWidth: 1.5 + relevo.espessura, marginTop: 0, marginBottom: 0 },
+                                    : {
+                                          borderBottomWidth: 1.5 + relevo.espessura,
+                                          borderBottomColor: theme.relevoDoCartao,
+                                          marginTop: 0,
+                                          marginBottom: 0,
+                                      },
                             ]}>
                             {/* O marcado muda de borda, de fundo e de peso: não depende só de cor. */}
                             <ThemedText type={marcado ? 'smallBold' : 'small'} style={styles.rotulo}>
