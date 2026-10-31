@@ -54,10 +54,16 @@ export function AlternativaItem({ letra, texto, estado, marcada, desabilitada, o
                     opacity: estado === 'apagada' ? 0.5 : pressed ? 0.7 : 1,
                 },
                 // A escolhida fica "apertada": perde o relevo e desce. A margem de baixo devolve
-                // o que sobra, para a lista não pular. No claro, o relevo é zero.
+                // o que sobra, para a lista não pular. O relevo embaixo tem cor própria; certa e
+                // errada mantêm a cor do próprio estado.
                 selecionada
                     ? { borderBottomWidth: 1.5, marginTop: relevo.afunda, marginBottom: relevo.espessura - relevo.afunda }
-                    : { borderBottomWidth: 1.5 + relevo.espessura, marginTop: 0, marginBottom: 0 },
+                    : {
+                          borderBottomWidth: 1.5 + relevo.espessura,
+                          borderBottomColor: cor ? theme[cor] : theme.relevoDoCartao,
+                          marginTop: 0,
+                          marginBottom: 0,
+                      },
             ]}>
             <View
                 style={[

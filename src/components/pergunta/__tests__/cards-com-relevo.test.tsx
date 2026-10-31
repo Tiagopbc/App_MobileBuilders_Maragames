@@ -48,6 +48,7 @@ describe('no tema escuro', () => {
         expect(item).toHaveStyle({
             backgroundColor: Colors.dark.cartao,
             borderColor: Colors.dark.bordaDoCartao,
+            borderBottomColor: Colors.dark.relevoDoCartao,
             borderBottomWidth: 5,
             marginTop: 0,
         });
@@ -72,7 +73,12 @@ describe('no tema escuro', () => {
     it('no seletor de confiança, o nível solto tem relevo e o escolhido fica apertado', async () => {
         const { solto, apertado } = await seletor();
 
-        expect(solto).toHaveStyle({ backgroundColor: Colors.dark.cartao, borderBottomWidth: 5, marginTop: 0 });
+        expect(solto).toHaveStyle({
+            backgroundColor: Colors.dark.cartao,
+            borderBottomColor: Colors.dark.relevoDoCartao,
+            borderBottomWidth: 5,
+            marginTop: 0,
+        });
         expect(apertado).toHaveStyle({
             backgroundColor: Colors.dark.cartaoSelecionado,
             borderColor: Colors.dark.bordaSelecionada,
@@ -114,6 +120,7 @@ describe('no tema claro', () => {
         expect(item).toHaveStyle({
             backgroundColor: Colors.light.cartao,
             borderColor: Colors.light.bordaDoCartao,
+            borderBottomColor: Colors.light.relevoDoCartao,
             borderBottomWidth: 4,
             marginTop: 0,
         });
@@ -133,7 +140,12 @@ describe('no tema claro', () => {
     it('no seletor de confiança, o nível solto é o card branco e o escolhido fica apertado', async () => {
         const { solto, apertado } = await seletor();
 
-        expect(solto).toHaveStyle({ backgroundColor: Colors.light.cartao, borderBottomWidth: 4, marginTop: 0 });
+        expect(solto).toHaveStyle({
+            backgroundColor: Colors.light.cartao,
+            borderBottomColor: Colors.light.relevoDoCartao,
+            borderBottomWidth: 4,
+            marginTop: 0,
+        });
         expect(apertado).toHaveStyle({
             backgroundColor: Colors.light.cartaoSelecionado,
             borderBottomWidth: 1.5,

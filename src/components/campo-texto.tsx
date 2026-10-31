@@ -30,8 +30,10 @@ export function CampoTexto({ rotulo, erro, aDireita, style, ...rest }: CampoText
                         styles.input,
                         {
                             color: theme.text,
-                            backgroundColor: theme.background,
-                            borderColor: erro ? theme.erro : theme.borda,
+                            backgroundColor: 'transparent',
+                            // Só a linha de baixo, em texto secundário (lê contra o fundo nos dois
+                            // temas); com erro, ela e a mensagem ficam na cor de erro.
+                            borderBottomColor: erro ? theme.erro : theme.textSecondary,
                             fontFamily: Fonts.regular,
                         },
                         aDireita ? styles.comBotao : null,
@@ -57,11 +59,12 @@ const LARGURA_DO_BOTAO = 48;
 
 const styles = StyleSheet.create({
     container: { gap: Spacing.one },
-    rotulo: { fontSize: 12, letterSpacing: 0.7, textTransform: 'uppercase' },
+    rotulo: { fontSize: 13, letterSpacing: 0.7, textTransform: 'uppercase' },
     input: {
-        borderWidth: 1.5,
-        borderRadius: 14,
-        paddingHorizontal: Spacing.three,
+        borderWidth: 0,
+        borderBottomWidth: 1.5,
+        borderRadius: 0,
+        paddingHorizontal: 0,
         paddingVertical: 12,
         fontSize: 16,
     },

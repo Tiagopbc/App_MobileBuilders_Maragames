@@ -108,6 +108,7 @@ export function TelaDoCartao({ topicId, aoComecarPratica, aoSair, rotuloDoFim = 
                                 {
                                     backgroundColor: theme.cartao,
                                     borderColor: theme.bordaDoCartao,
+                                    borderBottomColor: theme.relevoDoCartao,
                                     borderBottomWidth: 1.5 + relevo.espessura,
                                 },
                             ]}>
