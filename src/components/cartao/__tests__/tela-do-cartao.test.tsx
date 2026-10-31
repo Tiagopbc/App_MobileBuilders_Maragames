@@ -1,5 +1,7 @@
 import { render, screen, userEvent } from '@testing-library/react-native';
 
+import { Colors } from '@/constants/theme';
+
 import { repositorio } from '@/data/repositorio';
 import type { RepositorioFalso } from '@/test/repositorio-falso';
 
@@ -106,6 +108,17 @@ describe('o cartão de conceito', () => {
         await screen.findByText('Variáveis');
 
         expect(botao('Voltar')).toBeDisabled();
+    });
+
+    it('"Voltar" desabilitado é o botão desativado, sem opacidade', async () => {
+        await abrir();
+        await screen.findByText('Variáveis');
+
+        expect(botao('Voltar')).toHaveStyle({
+            backgroundColor: Colors.light.botaoDesabilitado,
+            borderBottomWidth: 0,
+            opacity: 1,
+        });
     });
 
     it('"Voltar" retorna ao slide anterior', async () => {

@@ -70,6 +70,19 @@ describe('no tema escuro', () => {
         expect(await alternativa('errada')).toHaveStyle({ backgroundColor: Colors.dark.fundoErrada });
     });
 
+    it('a alternativa apagada é chapada: sem relevo e sem opacidade', async () => {
+        const item = await alternativa('apagada');
+
+        expect(item).toHaveStyle({
+            backgroundColor: Colors.dark.fundoApagado,
+            borderBottomWidth: 1.5,
+            marginTop: 0,
+            marginBottom: 3.5,
+            opacity: 1,
+        });
+        expect(screen.getByText('As regras e os desafios da fase')).toHaveStyle({ color: Colors.dark.textSecondary });
+    });
+
     it('no seletor de confiança, o nível solto tem relevo e o escolhido fica apertado', async () => {
         const { solto, apertado } = await seletor();
 
@@ -135,6 +148,19 @@ describe('no tema claro', () => {
             borderBottomWidth: 1.5,
             marginTop: 2,
         });
+    });
+
+    it('a alternativa apagada é chapada: sem relevo e sem opacidade', async () => {
+        const item = await alternativa('apagada');
+
+        expect(item).toHaveStyle({
+            backgroundColor: Colors.light.fundoApagado,
+            borderBottomWidth: 1.5,
+            marginTop: 0,
+            marginBottom: 2.5,
+            opacity: 1,
+        });
+        expect(screen.getByText('As regras e os desafios da fase')).toHaveStyle({ color: Colors.light.textSecondary });
     });
 
     it('no seletor de confiança, o nível solto é o card branco e o escolhido fica apertado', async () => {

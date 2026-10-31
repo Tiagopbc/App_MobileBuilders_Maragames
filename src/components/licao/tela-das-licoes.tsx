@@ -128,11 +128,13 @@ export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair
                                         style={[
                                             styles.licao,
                                             styles.trancada,
-                                            { backgroundColor: theme.backgroundElement, borderColor: theme.borda },
+                                            { backgroundColor: theme.fundoApagado, borderColor: theme.bordaDoCartao },
                                         ]}>
                                         <Ionicons name="lock-closed-outline" size={24} color={theme.textSecondary} />
                                         <View style={styles.textos}>
-                                            <ThemedText style={styles.nome}>{titulo}</ThemedText>
+                                            <ThemedText style={styles.nome} themeColor="textSecondary">
+                                                {titulo}
+                                            </ThemedText>
                                             <ThemedText type="small" themeColor="textSecondary">
                                                 {TEXTOS.emBreve}
                                             </ThemedText>
@@ -173,5 +175,6 @@ const styles = StyleSheet.create({
     },
     textos: { flex: 1, gap: Spacing.half },
     nome: { fontSize: 17, lineHeight: 22, fontWeight: 600 },
-    trancada: { opacity: 0.6 },
+    // Trancada: tracejada e chapada, sem opacidade; o cadeado e o texto de apoio dizem o resto.
+    trancada: { borderStyle: 'dashed', opacity: 1 },
 });
