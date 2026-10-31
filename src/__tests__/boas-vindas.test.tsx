@@ -1,8 +1,16 @@
-import { userEvent } from '@testing-library/react-native';
+import { userEvent, within } from '@testing-library/react-native';
 import { useFonts } from 'expo-font';
 import { renderRouter, screen } from 'expo-router/testing-library';
 
-import { DESCRICAO_QUADRANTE, ROTULO_CONFIANCA, ROTULO_DO_TEMA, ROTULO_QUADRANTE } from '@/constants/textos';
+import {
+    DESCRICAO_QUADRANTE,
+    NIVEIS_DE_CONFIANCA,
+    ROTULO_CONFIANCA,
+    ROTULO_DO_TEMA,
+    ROTULO_QUADRANTE,
+    formatarPontos,
+} from '@/constants/textos';
+import { xpDaResposta } from '@/lib/xp';
 import { escolherTema, preferenciaDeTema } from '@/lib/tema';
 import type { RepositorioFalso } from '@/test/repositorio-falso';
 import { repositorio } from '@/data/repositorio';
@@ -174,16 +182,17 @@ describe('a Configuração', () => {
 });
 
 describe('as Regras do jogo', () => {
-    it('abrem pelo ? e têm os cinco blocos', async () => {
+    it('abrem pelo ? e têm os seis cards, com o conceito do jogo primeiro', async () => {
         const rotas = await abrirEm('/');
 
         await userEvent.setup().press(await screen.findByRole('button', { name: 'Regras do jogo' }));
 
-        expect(await screen.findByText('A lição')).toBeOnTheScreen();
+        expect(await screen.findByText('O jogo')).toBeOnTheScreen();
         expect(rotas.caminho()).toBe('/regras');
-        for (const titulo of ['A certeza', 'O XP', 'O resultado', 'A sequência']) {
+        for (const titulo of ['A certeza', 'Os pontos', 'O resultado', 'A lição', 'A sequência']) {
             expect(screen.getByText(titulo)).toBeOnTheScreen();
         }
+        expect(screen.getByText(/Você aprende game design em lições curtas, como quem joga/)).toBeOnTheScreen();
     });
 
     it('explicam a lição na ordem do app, com a revisão sete dias depois', async () => {
@@ -193,24 +202,47 @@ describe('as Regras do jogo', () => {
         expect(screen.getByText(/7 dias depois/)).toBeOnTheScreen();
     });
 
-    it('usam os mesmos nomes de certeza e de quadrante que o app mostra, sem repetir o texto', async () => {
+    it('dizem por que o diagnóstico e a verificação não mostram resultado por questão', async () => {
+        await abrirEm('/regras');
+
+        expect(await screen.findByText(/Só na Prática você vê o resultado a cada questão/)).toBeOnTheScreen();
+    });
+
+    it('usam os mesmos nomes de certeza que o app mostra', async () => {
         await abrirEm('/regras');
         await screen.findByText('A certeza');
 
         for (const rotulo of Object.values(ROTULO_CONFIANCA)) {
             expect(screen.getAllByText(new RegExp(rotulo)).length).toBeGreaterThan(0);
         }
-        for (const [quadrante, rotulo] of Object.entries(ROTULO_QUADRANTE)) {
-            expect(screen.getByText(rotulo)).toBeOnTheScreen();
-            expect(screen.getByText(DESCRICAO_QUADRANTE[quadrante as keyof typeof DESCRICAO_QUADRANTE])).toBeOnTheScreen();
-        }
+        expect(screen.getByText(/Não existe nível errado/)).toBeOnTheScreen();
     });
 
-    it('dizem o que cada nível de certeza vale no XP', async () => {
+    it('os pontos vêm da mesma conta do XP: o que cada nível vale ao acertar e ao errar', async () => {
         await abrirEm('/regras');
+        await screen.findByText('Os pontos');
 
-        expect(await screen.findByText(/acerto vale 1, 2 ou 3/i)).toBeOnTheScreen();
-        expect(screen.getByText(/erro vale 0, −1 ou −4/i)).toBeOnTheScreen();
+        for (const nivel of NIVEIS_DE_CONFIANCA) {
+            const linha = within(screen.getByTestId(`pontos-${nivel}`));
+            expect(linha.getByText(ROTULO_CONFIANCA[nivel])).toBeOnTheScreen();
+            expect(linha.getByText(formatarPontos(xpDaResposta(true, nivel)))).toBeOnTheScreen();
+            expect(linha.getByText(formatarPontos(xpDaResposta(false, nivel)))).toBeOnTheScreen();
+        }
+        expect(screen.getByText(/O palpite nunca tira ponto/)).toBeOnTheScreen();
+    });
+
+    it('o resultado é a matriz 2×2: acertou e errou por com e sem certeza, com os quatro quadrantes', async () => {
+        await abrirEm('/regras');
+        await screen.findByText('O resultado');
+
+        const matriz = within(screen.getByTestId('matriz-de-quadrantes'));
+        for (const rotulo of ['Com certeza', 'Sem certeza', 'Acertou', 'Errou']) {
+            expect(matriz.getByText(rotulo)).toBeOnTheScreen();
+        }
+        for (const [quadrante, rotulo] of Object.entries(ROTULO_QUADRANTE)) {
+            expect(matriz.getByText(rotulo)).toBeOnTheScreen();
+            expect(matriz.getByText(DESCRICAO_QUADRANTE[quadrante as keyof typeof DESCRICAO_QUADRANTE])).toBeOnTheScreen();
+        }
     });
 
     it('o voltar leva de volta à boas-vindas', async () => {

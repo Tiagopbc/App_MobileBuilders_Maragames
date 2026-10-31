@@ -10,13 +10,14 @@ type SeletorConfiancaProps = {
     valor: Confianca | null;
     onChange: (confianca: Confianca) => void;
     desabilitado: boolean;
+    aoAbrirRegras: () => void; // o link da regra dos pontos; quem navega é a rota
 };
 
 // Seleção independente da alternativa: pode ser marcada antes ou depois dela (item 25).
 // O componente trabalha com o valor 1, 2 ou 3; o rótulo vem do arquivo de strings.
 // Os três níveis ficam lado a lado, numa linha só, para caberem no rodapé fixo da pergunta:
 // nenhum deles pode depender de rolar a tela para ser visto.
-export function SeletorConfianca({ valor, onChange, desabilitado }: SeletorConfiancaProps) {
+export function SeletorConfianca({ valor, onChange, desabilitado, aoAbrirRegras }: SeletorConfiancaProps) {
     const theme = useTheme();
     const relevo = useRelevo();
     // No escuro, cada nível é um card roxo sobre o padrão do fundo; no claro, fica no fundo da
@@ -25,9 +26,18 @@ export function SeletorConfianca({ valor, onChange, desabilitado }: SeletorConfi
 
     return (
         <View accessibilityRole="radiogroup" accessibilityLabel={TEXTOS.perguntaDeConfianca} style={styles.grupo}>
-            <ThemedText type="smallBold" themeColor="textSecondary">
-                {TEXTOS.perguntaDeConfianca}
-            </ThemedText>
+            <View testID="cabecalho-da-confianca" style={styles.cabecalho}>
+                <ThemedText type="smallBold" themeColor="textSecondary">
+                    {TEXTOS.perguntaDeConfianca}
+                </ThemedText>
+                {/* Os pontos de cada nível não aparecem ao lado das opções: pesam na hora de decidir.
+                    Ficam na regra, a um toque daqui. */}
+                <Pressable accessibilityRole="link" accessibilityLabel={TEXTOS.comoFuncionamOsPontos} onPress={aoAbrirRegras} hitSlop={Spacing.two}>
+                    <ThemedText type="smallBold" themeColor="primaria" style={styles.link}>
+                        {TEXTOS.comoFuncionamOsPontos}
+                    </ThemedText>
+                </Pressable>
+            </View>
 
             <View style={styles.linha}>
                 {NIVEIS_DE_CONFIANCA.map((nivel) => {
@@ -75,6 +85,16 @@ export function SeletorConfianca({ valor, onChange, desabilitado }: SeletorConfi
 
 const styles = StyleSheet.create({
     grupo: { gap: Spacing.two },
+    // Quebra em tela estreita ou com letra grande: o link desce para a linha de baixo, inteiro.
+    cabecalho: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        alignItems: 'baseline',
+        columnGap: Spacing.two,
+        rowGap: Spacing.half,
+    },
+    link: { fontSize: 13, textDecorationLine: 'underline' },
     linha: { flexDirection: 'row', gap: Spacing.two },
     // Larguras iguais; o rótulo quebra em duas linhas se a tela for estreita ou a fonte, grande.
     nivel: {

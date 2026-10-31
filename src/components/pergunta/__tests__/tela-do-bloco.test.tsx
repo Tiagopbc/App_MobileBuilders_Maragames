@@ -20,6 +20,7 @@ const UID = 'u1';
 
 let agora = 0; // o relógio que a tela enxerga; o teste adianta à mão
 const aoSair = jest.fn();
+const aoAbrirRegras = jest.fn();
 
 function questao(id: string, topicId: string, bloco: BlocoQuestao, order: number): Question {
     return {
@@ -45,6 +46,7 @@ function questao(id: string, topicId: string, bloco: BlocoQuestao, order: number
 // Um tópico com 2 questões de prática, 2 da forma A e 2 da forma B.
 beforeEach(() => {
     aoSair.mockClear();
+    aoAbrirRegras.mockClear();
     repo.reiniciar();
     repo.licoes = [{ id: 'licao_mda', title: 'Framework MDA', order: 1, topicId: 'mda' }];
     repo.questoes = [
@@ -67,6 +69,7 @@ async function abrir(fase: Fase, opcoes: { formaPre?: FormaPre | null; topicId?:
             topicId={opcoes.topicId ?? 'mda'}
             formaPre={opcoes.formaPre === undefined ? 'A' : opcoes.formaPre}
             aoSair={aoSair}
+            aoAbrirRegras={aoAbrirRegras}
             relogio={() => agora}
         />
     );
@@ -191,6 +194,18 @@ describe('o rodapé fixo', () => {
         expect(rodape().getByRole('radio', { name: 'Tenho dúvida' })).toBeOnTheScreen();
         expect(rodape().getByRole('radio', { name: 'Tenho certeza' })).toBeOnTheScreen();
         expect(rodape().getByRole('button', { name: 'Confirmar' })).toBeOnTheScreen();
+    });
+
+    it.each([
+        ['pre', 'mda_a1'],
+        ['pratica', 'mda_p1'],
+    ] as const)('na fase %s o rodapé não mostra os pontos, e o link da regra abre as regras', async (fase, id) => {
+        await abrir(fase);
+        await screen.findByText(`Enunciado de ${id}`);
+
+        expect(rodape().queryByText(/acerta|erra\b|[+−]\d/i)).not.toBeOnTheScreen();
+        await userEvent.setup().press(rodape().getByRole('link', { name: 'Como funcionam os pontos' }));
+        expect(aoAbrirRegras).toHaveBeenCalledTimes(1);
     });
 
     it('enunciado e alternativas ficam na área que rola, fora do rodapé', async () => {

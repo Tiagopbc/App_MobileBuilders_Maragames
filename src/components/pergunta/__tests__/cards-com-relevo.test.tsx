@@ -26,7 +26,7 @@ async function alternativa(estado: EstadoDaAlternativa) {
 }
 
 async function seletor() {
-    await render(<SeletorConfianca valor={3} onChange={() => {}} desabilitado={false} />);
+    await render(<SeletorConfianca valor={3} onChange={() => {}} desabilitado={false} aoAbrirRegras={() => {}} />);
     return {
         solto: screen.getByRole('radio', { name: 'Palpite' }),
         apertado: screen.getByRole('radio', { name: 'Tenho certeza' }),
@@ -100,7 +100,7 @@ describe('no tema escuro', () => {
         });
     });
 
-    it('o feedback é o mesmo card, em vermelho quando erra', async () => {
+    it('o feedback é o mesmo card, na cor do quadrante: vermelho no ponto cego', async () => {
         await render(
             <FeedbackQuestao
                 feedback={{
@@ -115,7 +115,7 @@ describe('no tema escuro', () => {
         );
 
         expect(screen.getByTestId('feedback')).toHaveStyle({
-            backgroundColor: Colors.dark.fundoErrada,
+            backgroundColor: Colors.dark.fundoPontoCego,
             borderColor: Colors.dark.erro,
             borderBottomWidth: 5,
         });
