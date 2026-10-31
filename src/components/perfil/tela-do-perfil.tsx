@@ -9,6 +9,7 @@ import { Caixa } from '@/components/opcoes';
 import { FormularioDoPerfil } from '@/components/perfil/formulario-do-perfil';
 import { Secao } from '@/components/perfil/secao';
 import { SeletorDeTema } from '@/components/perfil/seletor-de-tema';
+import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { LarguraDoFormulario, Spacing } from '@/constants/theme';
 import {
@@ -154,7 +155,7 @@ export function TelaDoPerfil({
 
                     <Secao titulo={TEXTOS.conta}>
                         {/* O e-mail é a credencial da conta: aparece, mas não é campo. */}
-                        <View style={[styles.cartao, { backgroundColor: theme.backgroundElement, borderColor: theme.borda }]}>
+                        <Superficie style={styles.cartao}>
                             <ThemedText type="small" themeColor="textSecondary">
                                 {TEXTOS.emailDaConta}
                             </ThemedText>
@@ -162,7 +163,7 @@ export function TelaDoPerfil({
                             <ThemedText type="small" themeColor="textSecondary">
                                 {entraComSenha ? TEXTOS.entraPorSenha : TEXTOS.entraPeloGoogle}
                             </ThemedText>
-                        </View>
+                        </Superficie>
 
                         {entraComSenha && (
                             <BotaoSecundario
@@ -237,5 +238,5 @@ const styles = StyleSheet.create({
     inicial: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
     quem: { flex: 1, gap: Spacing.half },
     conteudo: { gap: Spacing.five, paddingHorizontal: Spacing.four, paddingBottom: Spacing.five },
-    cartao: { gap: Spacing.half, padding: Spacing.three, borderRadius: 16, borderWidth: 1 },
+    cartao: { gap: Spacing.half, padding: Spacing.three },
 });

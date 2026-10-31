@@ -6,6 +6,7 @@ import { BotaoPrincipal } from '@/components/botao-principal';
 import { Mascote } from '@/components/mascote';
 import { GradeDeQuadrantes } from '@/components/resultado/grade-de-quadrantes';
 import { ResultadoDoBloco } from '@/components/resultado/resultado-do-bloco';
+import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import {
@@ -134,7 +135,7 @@ export function FimDaLicao({ uid, topicId, formaPre, aoSair, relogio }: FimDaLic
                     </ThemedText>
                 ) : (
                     <>
-                        <View style={[styles.cartao, { backgroundColor: theme.backgroundElement, borderColor: theme.borda }]}>
+                        <Superficie style={styles.cartao}>
                             <ThemedText type="small" themeColor="textSecondary">
                                 {TEXTOS.xpDaLicao}
                             </ThemedText>
@@ -150,7 +151,7 @@ export function FimDaLicao({ uid, topicId, formaPre, aoSair, relogio }: FimDaLic
                                     {quandoARevisaoAbre(licao.estado.liberaEm)}
                                 </ThemedText>
                             )}
-                        </View>
+                        </Superficie>
 
                         <View style={styles.secao}>
                             <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
@@ -186,8 +187,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         gap: Spacing.one,
         padding: Spacing.three,
-        borderRadius: 16,
-        borderWidth: 1,
     },
     xp: { fontSize: 40, lineHeight: 48, fontWeight: 700 },
     secao: { alignSelf: 'stretch', gap: Spacing.two },

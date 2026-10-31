@@ -6,6 +6,7 @@ import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { GradeDeQuadrantes } from '@/components/resultado/grade-de-quadrantes';
 import { SeloQuadrante } from '@/components/selo-quadrante';
+import { Superficie } from '@/components/superficie';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
@@ -40,7 +41,6 @@ export function TelaDoTopico({ estado, topicId, aoAbrirLicao, aoTentarDeNovo, ao
     const theme = useTheme();
     const pronto = estado.tipo === 'pronto' ? estado : null;
     const licao = pronto?.licoes.find((l) => l.topicId === topicId);
-    const cartao = { backgroundColor: theme.backgroundElement, borderColor: theme.borda };
 
     const aVista = pronto ? pronto.aVista.filter((r) => r.topicId === topicId) : [];
     const resumo = resumoDasRespostas(aVista);
@@ -96,15 +96,15 @@ export function TelaDoTopico({ estado, topicId, aoAbrirLicao, aoTentarDeNovo, ao
                             <ThemedText type="subtitle">{licao.titulo}</ThemedText>
 
                             {aVista.length === 0 ? (
-                                <View style={[styles.cartao, cartao]}>
+                                <Superficie style={styles.cartao}>
                                     <ThemedText>{TEXTOS.semRespostasAVista}</ThemedText>
                                     <ThemedText type="small" themeColor="textSecondary">
                                         {TEXTOS.quandoOsNumerosAparecem}
                                     </ThemedText>
-                                </View>
+                                </Superficie>
                             ) : (
                                 <>
-                                    <View style={[styles.cartao, cartao]}>
+                                    <Superficie style={styles.cartao}>
                                         {licao.dominio && (
                                             <ThemedText style={styles.numero}>
                                                 {`Domínio ${formatarTaxa(licao.dominio.acertos, licao.dominio.total)}`}
@@ -127,7 +127,7 @@ export function TelaDoTopico({ estado, topicId, aoAbrirLicao, aoTentarDeNovo, ao
                                                 {`${TEXTOS.xpDaLicao}: ${formatarXp(licao.resultado.xp)}`}
                                             </ThemedText>
                                         )}
-                                    </View>
+                                    </Superficie>
 
                                     <View style={styles.secao}>
                                         <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
@@ -158,10 +158,10 @@ export function TelaDoTopico({ estado, topicId, aoAbrirLicao, aoTentarDeNovo, ao
                                 <View style={styles.secao}>
                                     <ThemedText type="smallBold">{TEXTOS.revisarNaPratica}</ThemedText>
                                     {aRevisar.map((questao) => (
-                                        <View key={questao.questionId} style={[styles.cartao, cartao]}>
+                                        <Superficie key={questao.questionId} style={styles.cartao}>
                                             <SeloQuadrante quadrante={questao.quadrante} />
                                             <TextoComCodigo type="small">{enunciadoDe(questao.questionId)}</TextoComCodigo>
-                                        </View>
+                                        </Superficie>
                                     ))}
                                 </View>
                             )}
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     textoCentral: { textAlign: 'center' },
     conteudo: { gap: Spacing.four, paddingHorizontal: Spacing.four, paddingBottom: Spacing.four },
     secao: { gap: Spacing.two },
-    cartao: { gap: Spacing.one, padding: Spacing.three, borderRadius: 16, borderWidth: 1 },
+    cartao: { gap: Spacing.one, padding: Spacing.three },
     numero: { fontSize: 22, lineHeight: 28, fontWeight: 700 },
     par: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, minHeight: 32 },
     cresce: { flex: 1 },

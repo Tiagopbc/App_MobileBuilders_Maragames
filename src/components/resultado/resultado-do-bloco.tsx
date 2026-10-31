@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { GradeDeQuadrantes } from '@/components/resultado/grade-de-quadrantes';
 import { SeloQuadrante } from '@/components/selo-quadrante';
+import { Superficie } from '@/components/superficie';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
@@ -15,7 +16,6 @@ import {
     resumirQuadrantes,
 } from '@/constants/textos';
 import type { Relatorio } from '@/hooks/use-bloco';
-import { useTheme } from '@/hooks/use-theme';
 
 type ResultadoDoBlocoProps = {
     relatorio: Relatorio;
@@ -28,16 +28,14 @@ type ResultadoDoBlocoProps = {
 
 // Só apresentação: os números chegam prontos de `resultadoDoBloco` (src/lib/resultado.ts).
 export function ResultadoDoBloco({ relatorio, medido, rotuloDoXp = TEXTOS.xpDoBloco }: ResultadoDoBlocoProps) {
-    const theme = useTheme();
     const { resultado, enunciados, nomesDosTopicos } = relatorio;
-    const cartao = { backgroundColor: theme.backgroundElement };
     const nomeDe = (topicId: string) => nomesDosTopicos[topicId] ?? topicId;
 
     return (
         <View style={styles.container}>
             <ThemedText type="subtitle">{TEXTOS.resultado}</ThemedText>
 
-            <View style={[styles.cartao, styles.xp, cartao]}>
+            <Superficie style={[styles.cartao, styles.xp]}>
                 <ThemedText type="small" themeColor="textSecondary">
                     {rotuloDoXp}
                 </ThemedText>
@@ -46,7 +44,7 @@ export function ResultadoDoBloco({ relatorio, medido, rotuloDoXp = TEXTOS.xpDoBl
                 <ThemedText themeColor="textSecondary">
                     {formatarAcertos(resultado.acertos, resultado.total)}
                 </ThemedText>
-            </View>
+            </Superficie>
 
             <Secao titulo={TEXTOS.comoVoceRespondeu}>
                 <GradeDeQuadrantes quadrantes={resultado.quadrantes} />
@@ -86,21 +84,21 @@ export function ResultadoDoBloco({ relatorio, medido, rotuloDoXp = TEXTOS.xpDoBl
                     resultado.topicosARevisar.map((topicId) => {
                         const topico = resultado.porTopico.find((t) => t.topicId === topicId)!;
                         return (
-                            <View key={topicId} style={[styles.cartao, cartao]}>
+                            <Superficie key={topicId} style={styles.cartao}>
                                 <ThemedText type="smallBold">{nomeDe(topicId)}</ThemedText>
                                 <ThemedText type="small" themeColor="textSecondary">
                                     {resumirQuadrantes(topico.quadrantes)}
                                 </ThemedText>
-                            </View>
+                            </Superficie>
                         );
                     })
                 ) : (
                     // Na prática o feedback já foi dado questão a questão, então citá-las não revela nada.
                     resultado.questoesARevisar.map((questao) => (
-                        <View key={questao.questionId} style={[styles.cartao, cartao]}>
+                        <Superficie key={questao.questionId} style={styles.cartao}>
                             <SeloQuadrante quadrante={questao.quadrante} />
                             <TextoComCodigo type="small">{enunciados[questao.questionId] ?? ''}</TextoComCodigo>
-                        </View>
+                        </Superficie>
                     ))
                 )}
             </Secao>
@@ -130,7 +128,7 @@ function Linha({ rotulo, valor }: { rotulo: string; valor: string }) {
 const styles = StyleSheet.create({
     container: { gap: Spacing.four },
     secao: { gap: Spacing.two },
-    cartao: { gap: Spacing.one, padding: Spacing.three, borderRadius: Spacing.three },
+    cartao: { gap: Spacing.one, padding: Spacing.three },
     xp: { alignItems: 'center' },
     numero: { fontSize: 40, lineHeight: 48, fontWeight: 700 },
     linha: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, minHeight: 32 },

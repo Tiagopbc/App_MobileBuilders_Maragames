@@ -1,8 +1,9 @@
 import { act, render, screen } from '@testing-library/react-native';
 
-import { Colors } from '@/constants/theme';
+import { Colors, Relevo } from '@/constants/theme';
 import type { EstadoDasLicoes } from '@/hooks/use-licoes';
 import { escolherTema } from '@/lib/tema';
+import { apertar } from '@/test/apertar';
 
 import { TelaDasLicoes } from '../tela-das-licoes';
 
@@ -54,6 +55,27 @@ describe.each([
             borderStyle: 'dashed',
             opacity: 1,
         });
+    });
+
+    it('a lição que abre é o card único: relevo embaixo e, apertada, desce sem opacidade', async () => {
+        const comLicao = {
+            ...pronto,
+            licoes: [{ topicId: 'logica', titulo: 'Lógica de Programação', modulo: 'Fundamentos', estado: { tipo: 'nova' }, dominio: null }],
+        } as unknown as EstadoDasLicoes;
+        await render(
+            <TelaDasLicoes estado={comLicao} emBreve={[]} aoAbrir={() => {}} aoTentarDeNovo={() => {}} aoSair={() => {}} />,
+        );
+        const item = screen.getByRole('button', { name: /Lógica de Programação/ });
+
+        expect(item).toHaveStyle({
+            backgroundColor: Colors[esquema].cartao,
+            borderBottomColor: Colors[esquema].relevoDoCartao,
+            borderBottomWidth: 1.5 + Relevo[esquema].espessura,
+        });
+
+        await act(() => apertar(item));
+
+        expect(item).toHaveStyle({ borderBottomWidth: 1.5, marginTop: Relevo[esquema].afunda, opacity: 1 });
     });
 
     it('o nome da lição em breve usa o texto de apoio, que passa no contraste', async () => {

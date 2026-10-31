@@ -7,10 +7,10 @@ import { CampoSenha } from '@/components/campo-senha';
 import { CampoTexto } from '@/components/campo-texto';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { LogoBeast } from '@/components/logo-beast';
+import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { TEXTOS_DO_LOGIN } from '@/constants/textos';
-import { useTheme } from '@/hooks/use-theme';
 import { useSession } from '@/lib/session';
 import { validarEmail } from '@/lib/validacao';
 
@@ -23,7 +23,6 @@ const ERROS: Record<string, string> = {
 };
 
 export default function SignInScreen() {
-    const theme = useTheme();
     const { entrarComEmail, redefinirSenha } = useSession();
 
     const [email, setEmail] = useState('');
@@ -83,7 +82,7 @@ export default function SignInScreen() {
                     </ThemedText>
                 </View>
 
-                <View style={[styles.cartao, { backgroundColor: theme.backgroundElement, borderColor: theme.borda }]}>
+                <Superficie tamanho="grande" style={styles.cartao}>
                     <CampoTexto
                         rotulo={TEXTOS_DO_LOGIN.email}
                         placeholder={TEXTOS_DO_LOGIN.exemploDeEmail}
@@ -132,7 +131,7 @@ export default function SignInScreen() {
                         carregando={carregando}
                         onPress={enviar}
                     />
-                </View>
+                </Superficie>
 
                 <View style={styles.cadastro}>
                     <ThemedText type="small" themeColor="textSecondary">
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
     topo: { alignItems: 'center', gap: Spacing.two },
     marca: { fontSize: 20, lineHeight: 26, fontWeight: 600 },
     centro: { textAlign: 'center' },
-    cartao: { gap: Spacing.three, padding: Spacing.three, borderRadius: 20, borderWidth: 1 },
+    cartao: { gap: Spacing.three, padding: Spacing.three },
     esqueci: { alignSelf: 'flex-end', minHeight: 32, justifyContent: 'center' },
     cadastro: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: Spacing.one },
 });

@@ -6,6 +6,7 @@ import { BarraDeProgresso } from '@/components/barra-de-progresso';
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { GradeDeQuadrantes } from '@/components/resultado/grade-de-quadrantes';
+import { Superficie, SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import {
@@ -39,7 +40,6 @@ const QUANTAS_A_REVISAR = 3;
 export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: TelaDoProgressoProps) {
     const theme = useTheme();
     const pronto = estado.tipo === 'pronto' ? estado : null;
-    const cartao = { backgroundColor: theme.backgroundElement, borderColor: theme.borda };
     const resumo = pronto ? resumoDasRespostas(pronto.aVista) : null;
     // As lições com resposta à vista, da mais fraca para a mais forte. É a ordem das duas listas.
     const porRevisao = pronto
@@ -97,19 +97,19 @@ export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: Tel
                 {pronto && resumo && pronto.aVista.length > 0 && (
                     <ScrollView contentContainerStyle={styles.conteudo}>
                         <View style={styles.linha}>
-                            <View style={[styles.cartao, styles.numeroDoTopo, cartao]}>
+                            <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
                                 <ThemedText type="small" themeColor="textSecondary">
                                     {TEXTOS.xpTotal}
                                 </ThemedText>
                                 {/* O total tem piso em 0 (item 14). */}
                                 <ThemedText style={styles.numero}>{formatarXp(pronto.xp ?? 0)}</ThemedText>
-                            </View>
-                            <View style={[styles.cartao, styles.numeroDoTopo, cartao]}>
+                            </Superficie>
+                            <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
                                 <ThemedText type="small" themeColor="textSecondary">
                                     {TEXTOS.sequencia}
                                 </ThemedText>
                                 <ThemedText style={styles.numero}>{contarDias(pronto.sequencia)}</ThemedText>
-                            </View>
+                            </Superficie>
                         </View>
 
                         {/* Vem antes dos quadrantes: "em que assunto eu preciso melhorar" é a primeira pergunta. */}
@@ -121,12 +121,12 @@ export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: Tel
                             {aRevisar.map(({ licao, dominio, quadrantes }) => {
                                 const oQueHa = resumirQuadrantes(quadrantes);
                                 return (
-                                    <Pressable
+                                    <SuperficieQueLevaToque
                                         key={licao.topicId}
                                         accessibilityRole="button"
                                         accessibilityLabel={`Revisar ${licao.titulo}, ${oQueHa}`}
                                         onPress={() => aoAbrir(licao.topicId)}
-                                        style={({ pressed }) => [styles.cartao, cartao, { opacity: pressed ? 0.7 : 1 }]}>
+                                        style={styles.cartao}>
                                         <View style={styles.par}>
                                             <ThemedText style={[styles.cresce, styles.nome]}>{licao.titulo}</ThemedText>
                                             <ThemedText type="smallBold" themeColor="primaria">
@@ -136,7 +136,7 @@ export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: Tel
                                         <ThemedText type="small" themeColor="textSecondary">
                                             {oQueHa}
                                         </ThemedText>
-                                    </Pressable>
+                                    </SuperficieQueLevaToque>
                                 );
                             })}
                         </View>
@@ -169,12 +169,12 @@ export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: Tel
                                 const oQueHa = resumirQuadrantes(quadrantes);
                                 const { resultado } = licao;
                                 return (
-                                    <Pressable
+                                    <SuperficieQueLevaToque
                                         key={licao.topicId}
                                         accessibilityRole="button"
                                         accessibilityLabel={`${licao.titulo}, ${dominioEmContagem(dominio)}`}
                                         onPress={() => aoAbrir(licao.topicId)}
-                                        style={({ pressed }) => [styles.cartao, cartao, { opacity: pressed ? 0.7 : 1 }]}>
+                                        style={styles.cartao}>
                                         <View style={styles.par}>
                                             <ThemedText style={[styles.cresce, styles.nome]}>{licao.titulo}</ThemedText>
                                             <ThemedText type="smallBold" themeColor="primaria">
@@ -198,7 +198,7 @@ export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: Tel
                                                 {oQueHa}
                                             </ThemedText>
                                         )}
-                                    </Pressable>
+                                    </SuperficieQueLevaToque>
                                 );
                             })}
                         </View>
@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
     conteudo: { gap: Spacing.four, paddingHorizontal: Spacing.four, paddingBottom: Spacing.five },
     linha: { flexDirection: 'row', gap: Spacing.two },
     secao: { gap: Spacing.two },
-    cartao: { gap: Spacing.two, padding: Spacing.three, borderRadius: 16, borderWidth: 1 },
+    cartao: { gap: Spacing.two, padding: Spacing.three },
     numeroDoTopo: { flex: 1, gap: Spacing.one },
     numero: { fontSize: 22, lineHeight: 28, fontWeight: 700 },
     par: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, minHeight: 32 },
