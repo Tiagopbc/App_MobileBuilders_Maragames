@@ -7,8 +7,8 @@ import { escolherTema } from '@/lib/tema';
 import { BotaoPrincipal } from '../botao-principal';
 import { BotaoSecundario } from '../botao-secundario';
 
-// No escuro, os botões ganham o relevo dos cards: o principal, uma borda de baixo roxa; o
-// secundário vira o card roxo. No claro, ficam como antes.
+// Os botões têm o relevo dos cards nos dois temas: o principal, uma borda de baixo roxa e o degradê;
+// o secundário vira o card. Desativado, o botão tem cor própria, e nunca opacidade.
 
 async function abrir() {
     await render(
@@ -62,23 +62,73 @@ describe('no tema escuro', () => {
     });
 });
 
-describe('no tema claro, como antes', () => {
+describe('no tema claro', () => {
     beforeEach(async () => {
         await act(() => escolherTema('claro'));
     });
 
-    it('o botão principal não tem borda, degradê nem halo', async () => {
+    it('o botão principal tem o degradê do roxo vivo ao roxo da marca e o relevo embaixo', async () => {
         const { principal } = await abrir();
+        const { botaoTopo, botaoMeio, botaoBase, relevoDoBotao } = Colors.light;
 
-        expect(principal).toHaveStyle({ borderBottomWidth: 0, backgroundColor: Colors.light.botao });
-        expect(StyleSheet.flatten(principal.props.style).backgroundImage).toBeUndefined();
-        expect(StyleSheet.flatten(principal.props.style).boxShadow).toBeUndefined();
+        expect(principal).toHaveStyle({
+            borderBottomWidth: 2.5,
+            borderBottomColor: relevoDoBotao,
+            backgroundImage: `linear-gradient(180deg, ${botaoTopo} 0%, ${botaoMeio} 55%, ${botaoBase} 100%)`,
+        });
+        expect(StyleSheet.flatten(principal.props.style).boxShadow).toMatch(/^inset /);
     });
 
-    it('o botão secundário é só contorno', async () => {
+    it('o botão secundário é o card branco, com o relevo lilás embaixo', async () => {
         const { secundario } = await abrir();
 
-        expect(secundario).toHaveStyle({ borderColor: Colors.light.borda, borderBottomWidth: 1.5 });
-        expect(secundario).not.toHaveStyle({ backgroundColor: Colors.light.cartao });
+        expect(secundario).toHaveStyle({
+            borderColor: Colors.light.bordaDoSecundario,
+            borderBottomColor: Colors.light.relevoDoSecundario,
+            borderBottomWidth: 4,
+        });
+    });
+});
+
+describe.each([
+    ['claro', Colors.light],
+    ['escuro', Colors.dark],
+] as const)('botões desativados no tema %s', (tema, cores) => {
+    beforeEach(async () => {
+        await act(() => escolherTema(tema));
+    });
+
+    async function abrirDesativados() {
+        await render(
+            <>
+                <BotaoPrincipal rotulo="Próximo" onPress={() => {}} desabilitado />
+                <BotaoSecundario rotulo="Voltar" onPress={() => {}} desabilitado />
+            </>,
+        );
+        return {
+            principal: screen.getByRole('button', { name: 'Próximo' }),
+            secundario: screen.getByRole('button', { name: 'Voltar' }),
+        };
+    }
+
+    it('o principal usa a cor de botão desativado, sem opacidade, degradê, halo nem relevo', async () => {
+        const { principal } = await abrirDesativados();
+        const estilo = StyleSheet.flatten(principal.props.style);
+
+        expect(principal).toHaveStyle({ backgroundColor: cores.botaoDesabilitado, borderBottomWidth: 0 });
+        expect(estilo.opacity).toBe(1);
+        expect(estilo.backgroundImage).toBeUndefined();
+        expect(estilo.boxShadow).toBeUndefined();
+        expect(screen.getByText('Próximo')).toHaveStyle({ color: cores.textSecondary });
+    });
+
+    it('o secundário também usa a cor de botão desativado, sem opacidade nem degradê', async () => {
+        const { secundario } = await abrirDesativados();
+        const estilo = StyleSheet.flatten(secundario.props.style);
+
+        expect(secundario).toHaveStyle({ backgroundColor: cores.botaoDesabilitado });
+        expect(estilo.opacity).toBe(1);
+        expect(estilo.backgroundImage).toBeUndefined();
+        expect(screen.getByText('Voltar')).toHaveStyle({ color: cores.textSecondary });
     });
 });

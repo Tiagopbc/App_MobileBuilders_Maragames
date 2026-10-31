@@ -8,7 +8,8 @@ import { FeedbackQuestao } from '../feedback-questao';
 import { SeletorConfianca } from '../seletor-confianca';
 
 // O card "Roxo da marca + Tátil" do tema escuro: borda de baixo grossa (1,5 + 3,5 = 5) e, quando
-// escolhido, o card fica "apertado": perde o relevo e desce 3 pt. No claro, tudo como antes.
+// escolhido, o card fica "apertado": perde o relevo e desce 3 pt. No claro, o relevo é 2,5 (borda
+// de baixo de 4) e o card apertado desce 2 pt.
 
 async function alternativa(estado: EstadoDaAlternativa) {
     await render(
@@ -102,36 +103,41 @@ describe('no tema escuro', () => {
     });
 });
 
-describe('no tema claro, como antes', () => {
+describe('no tema claro', () => {
     beforeEach(async () => {
         await act(() => escolherTema('claro'));
     });
 
-    it('a alternativa solta não tem relevo', async () => {
+    it('a alternativa solta é o card branco com 4 de borda embaixo', async () => {
         const item = await alternativa('normal');
 
         expect(item).toHaveStyle({
-            backgroundColor: Colors.light.backgroundElement,
-            borderColor: Colors.light.borda,
-            borderBottomWidth: 1.5,
+            backgroundColor: Colors.light.cartao,
+            borderColor: Colors.light.bordaDoCartao,
+            borderBottomWidth: 4,
             marginTop: 0,
         });
     });
 
-    it('a alternativa escolhida não desce', async () => {
+    it('a alternativa escolhida fica apertada: 1,5 de borda embaixo e 2 pt mais baixa', async () => {
         const item = await alternativa('selecionada');
 
         expect(item).toHaveStyle({
-            backgroundColor: Colors.light.backgroundSelected,
+            backgroundColor: Colors.light.cartaoSelecionado,
+            borderColor: Colors.light.bordaSelecionada,
             borderBottomWidth: 1.5,
-            marginTop: 0,
+            marginTop: 2,
         });
     });
 
-    it('o seletor de confiança fica no fundo da tela, sem relevo', async () => {
+    it('no seletor de confiança, o nível solto é o card branco e o escolhido fica apertado', async () => {
         const { solto, apertado } = await seletor();
 
-        expect(solto).toHaveStyle({ backgroundColor: Colors.light.background, borderBottomWidth: 1.5 });
-        expect(apertado).toHaveStyle({ backgroundColor: Colors.light.backgroundSelected, marginTop: 0 });
+        expect(solto).toHaveStyle({ backgroundColor: Colors.light.cartao, borderBottomWidth: 4, marginTop: 0 });
+        expect(apertado).toHaveStyle({
+            backgroundColor: Colors.light.cartaoSelecionado,
+            borderBottomWidth: 1.5,
+            marginTop: 2,
+        });
     });
 });

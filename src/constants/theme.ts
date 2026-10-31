@@ -14,8 +14,8 @@ export const Colors = {
   light: {
     text: '#1A1530',
     textSecondary: '#5E5873',
-    background: '#FFFFFF',
-    backgroundElement: '#F6F4FA', // cartões e itens de lista
+    background: '#F5F3FA', // fundo lilás claro: os cards brancos se destacam dele
+    backgroundElement: '#FFFFFF', // cartões e itens de lista
     backgroundSelected: '#F1EDF8',
     borda: '#E4E0EE',
     bordaSelecionada: '#554495',
@@ -29,31 +29,31 @@ export const Colors = {
     aviso: '#8A6100',
     lacuna: '#1F3C86',
     erro: '#B91E1E',
-    // Cards com relevo e carta de jogo (identidade do tema escuro). No claro, cada um repete a
-    // cor que aquele lugar já usava: só a estrutura da carta é nova aqui.
-    cartao: '#F6F4FA',
-    bordaDoCartao: '#E4E0EE',
-    cartaoSelecionado: '#F1EDF8',
-    fundoDaLetra: '#FFFFFF',
+    // Cards com relevo e carta de jogo, com a mesma estrutura do escuro: o card branco com borda
+    // lilás e o relevo lilás embaixo.
+    cartao: '#FFFFFF',
+    bordaDoCartao: '#D9D1EB',
+    cartaoSelecionado: '#EDE7F8',
+    fundoDaLetra: '#F1EDF8',
     textoDaLetra: '#5E5873',
-    fundoCerta: '#F6F4FA',
-    fundoErrada: '#F6F4FA',
-    relevoDoBotao: '#3B2781',
-    // Botões Violeta com halo: o degradê só existe no escuro; no claro, as três paradas repetem o
-    // roxo do botão e o secundário segue só contorno.
-    botaoTopo: '#3B2781',
-    botaoMeio: '#3B2781',
+    fundoCerta: '#E3F3EA',
+    fundoErrada: '#FBE6E6',
+    relevoDoBotao: '#24105A',
+    // Botões com degradê, como no escuro: do roxo vivo, em cima, ao roxo da marca, embaixo. O
+    // secundário é o card branco com relevo.
+    botaoTopo: '#5A3FB2',
+    botaoMeio: '#47309C',
     botaoBase: '#3B2781',
     haloDoBotao: '#3B2781',
     secundarioTopo: '#FFFFFF',
     secundarioBase: '#FFFFFF',
-    bordaDoSecundario: '#E4E0EE',
+    bordaDoSecundario: '#D9D1EB',
     placaDaCarta: '#F1EDF8',
-    caixaDaCarta: '#FFFFFF',
+    caixaDaCarta: '#F5F3FA',
     bordaDaCaixa: '#E4E0EE',
     textoDoPe: '#5E5873',
-    // Direção estética: nomes novos, ainda sem uso nas telas. Os valores que já existem só mudam
-    // quando os componentes passarem a usar estes.
+    // Direção estética: nomes novos, que as telas passam a usar aos poucos.
+    relevoDoSecundario: '#C2B6DD', // a borda de baixo do botão secundário
     textoDeApoio: '#5E5873', // explicação e nota sob um título; no claro, igual ao textSecondary
     realce: '#E9E3F5', // anel do lobinho, selo da fase e esqueleto de carregamento
     fundoApagado: '#F5F3FA', // alternativa que não é a certa, depois do veredito
@@ -105,6 +105,7 @@ export const Colors = {
     caixaDaCarta: '#120F22',
     bordaDaCaixa: '#33285F',
     textoDoPe: '#9D92C4',
+    relevoDoSecundario: '#4C1D95', // no escuro, repete a borda do secundário
     textoDeApoio: '#C9C6D6',
     realce: '#2A2152',
     fundoApagado: '#14121F',
@@ -118,10 +119,10 @@ export const Colors = {
   },
 } as const;
 
-// O relevo dos cards: a espessura que a borda de baixo ganha a mais (1,5 + 3,5 = 5 no escuro) e
-// quanto o card desce quando fica apertado (selecionado). No claro não há relevo.
+// O relevo dos cards: a espessura que a borda de baixo ganha a mais (1,5 + 3,5 = 5 no escuro e
+// 1,5 + 2,5 = 4 no claro) e quanto o card desce quando fica apertado (selecionado).
 export const Relevo = {
-  light: { espessura: 0, afunda: 0 },
+  light: { espessura: 2.5, afunda: 2 },
   dark: { espessura: 3.5, afunda: 3 },
 } as const;
 
