@@ -6,8 +6,8 @@ import { escolherTema } from '@/lib/tema';
 
 import { FundoDaMarca } from '../fundo-da-marca';
 
-// O fundo das telas: no escuro, o padrão da Beast Maragames repetido atrás do conteúdo; no claro,
-// só a cor de fundo, como era antes. O ladrilho tem 300 pt e é repetido em grade até cobrir a
+// O fundo das telas: o padrão da Beast Maragames repetido atrás do conteúdo, nos dois temas, sobre
+// a cor de fundo de cada um. O ladrilho tem 300 pt e é repetido em grade até cobrir a
 // tela: o `resizeMode="repeat"` do iOS desenhava um ladrilho só.
 async function abrir() {
     await render(
@@ -54,27 +54,30 @@ describe('o fundo da marca', () => {
         expect(ladrilhos()).toHaveLength(5 * 3);
     });
 
-    it('no claro, é só a cor de fundo, sem padrão', async () => {
+    it('no claro, cobre a tela com o mesmo ladrilho, sobre o fundo lilás', async () => {
         await act(() => escolherTema('claro'));
         await abrir();
 
         await medir();
 
-        expect(padrao()).not.toBeOnTheScreen();
-        expect(ladrilhos()).toHaveLength(0);
+        expect(padrao()).toBeOnTheScreen();
+        expect(ladrilhos()).toHaveLength(6);
+        expect(ladrilhos()[0]).toHaveStyle({ width: 300, height: 300 });
         expect(screen.getByTestId('fundo')).toHaveStyle({ backgroundColor: Colors.light.background });
         expect(screen.getByText('conteúdo')).toBeOnTheScreen();
     });
 
-    it('a troca de tema com a tela aberta põe e tira o padrão', async () => {
+    it('a troca de tema com a tela aberta mantém o padrão e troca só a cor de fundo', async () => {
         await act(() => escolherTema('claro'));
         await abrir();
         await medir();
 
         await act(() => escolherTema('escuro'));
         expect(ladrilhos()).toHaveLength(6);
+        expect(screen.getByTestId('fundo')).toHaveStyle({ backgroundColor: Colors.dark.background });
 
         await act(() => escolherTema('claro'));
-        expect(padrao()).not.toBeOnTheScreen();
+        expect(ladrilhos()).toHaveLength(6);
+        expect(screen.getByTestId('fundo')).toHaveStyle({ backgroundColor: Colors.light.background });
     });
 });
