@@ -216,6 +216,21 @@ describe('a carta de jogador', () => {
         expect(screen.getByText('Responda uma questão para começar a sequência.')).toBeOnTheScreen();
     });
 
+    it('no primeiro acesso, nenhuma medalha: 0/6, que leva às Conquistas', async () => {
+        await abrirEm('/');
+
+        expect(await screen.findByText('0/6')).toBeOnTheScreen();
+        expect(screen.getByRole('link', { name: '0 de 6 medalhas' })).toBeOnTheScreen();
+    });
+
+    it('a primeira lição feita vale a primeira medalha', async () => {
+        respondidaHoje();
+        await abrirEm('/');
+
+        expect(await screen.findByRole('link', { name: '1 de 6 medalhas' })).toBeOnTheScreen();
+        expect(screen.getByText('1/6')).toBeOnTheScreen();
+    });
+
     it('se as lições não carregam, a tela aparece sem a carta e o Jogar continua funcionando', async () => {
         jest.spyOn(repo, 'getTopicos').mockRejectedValue(new Error('sem rede'));
         await abrirEm('/');
@@ -224,6 +239,64 @@ describe('a carta de jogador', () => {
         await waitFor(() => expect(repo.getTopicos).toHaveBeenCalled());
         expect(screen.queryByText('Pessoa jogadora')).toBeNull();
         expect(screen.getByRole('link', { name: 'Regras do jogo' })).toBeOnTheScreen();
+    });
+});
+
+describe('as Conquistas', () => {
+    it('abrem pelo número de medalhas da carta, com as seis medalhas e a contagem', async () => {
+        respondidaHoje();
+        const rotas = await abrirEm('/');
+
+        await userEvent.setup().press(await screen.findByRole('link', { name: '1 de 6 medalhas' }));
+
+        expect(await screen.findByRole('header', { name: 'Conquistas' })).toBeOnTheScreen();
+        expect(rotas.caminho()).toBe('/conquistas');
+        expect(screen.getByText('1 de 6')).toBeOnTheScreen();
+        for (const nome of ['Primeira lição', '3 dias seguidos', 'Um módulo inteiro', 'Revisão em dia', 'Ciclo completo', '5 lições']) {
+            expect(screen.getByText(nome)).toBeOnTheScreen();
+        }
+    });
+
+    it('a medalha da primeira lição mostra o dia em que foi ganha; as outras seguem bloqueadas', async () => {
+        respondidaHoje();
+        await abrirEm('/conquistas');
+
+        const primeira = within(await screen.findByTestId('medalha-primeira_licao'));
+        expect(primeira.getByText(/^Ganhou em \d{2}\/\d{2}$/)).toBeOnTheScreen();
+        expect(within(screen.getByTestId('medalha-cinco_licoes')).getByText('Bloqueada · 1 de 5')).toBeOnTheScreen();
+        expect(within(screen.getByTestId('medalha-ciclo_completo')).getByText('Bloqueada')).toBeOnTheScreen();
+    });
+
+    it('o voltar leva de volta à boas-vindas', async () => {
+        const rotas = await abrirEm('/');
+        const usuario = userEvent.setup();
+
+        await usuario.press(await screen.findByRole('link', { name: '0 de 6 medalhas' }));
+        await usuario.press(await screen.findByRole('button', { name: 'Voltar' }));
+
+        expect(await screen.findByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
+        expect(rotas.caminho()).toBe('/');
+    });
+
+    it('quem abre a URL direto e volta cai na boas-vindas', async () => {
+        const rotas = await abrirEm('/conquistas');
+
+        await userEvent.setup().press(await screen.findByRole('button', { name: 'Voltar' }));
+
+        expect(await screen.findByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
+        expect(rotas.caminho()).toBe('/');
+    });
+
+    it('se as lições não carregam, diz que não deu e deixa tentar de novo', async () => {
+        jest.spyOn(repo, 'getTopicos').mockRejectedValueOnce(new Error('sem rede'));
+        await abrirEm('/conquistas');
+
+        const tentar = await screen.findByRole('button', { name: 'Tentar de novo' });
+        expect(screen.queryByText('Primeira lição')).toBeNull();
+
+        await userEvent.setup().press(tentar);
+
+        expect(await screen.findByText('Primeira lição')).toBeOnTheScreen();
     });
 });
 

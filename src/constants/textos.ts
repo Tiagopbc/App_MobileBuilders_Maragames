@@ -18,6 +18,7 @@ import type {
     SituacaoDeEstudo,
     TempoPorSemana,
 } from '../types/domain';
+import type { Conquista, IdDaMedalha } from '../lib/conquistas';
 import type { EstadoDaLicao, EtapaDaLicao, SituacaoDaEtapa } from '../lib/licao';
 import type { Falta } from '../lib/pergunta';
 import type { Taxa } from '../lib/resultado';
@@ -677,6 +678,35 @@ export const TEXTOS_DE_BOAS_VINDAS = {
 /** O XP em número grande, na carta de jogador: "+18"; sem XP, "0". */
 export function xpNaCarta(xp: number): string {
     return xp > 0 ? `+${xp}` : '0';
+}
+
+// --- Conquistas: as medalhas, que a carta de jogador abre. ---
+// Nenhuma frase fala em certeza, acerto ou comparação: a medalha mostra o que a pessoa fez.
+
+export const TEXTOS_DAS_CONQUISTAS = {
+    titulo: 'Conquistas',
+    apoio: 'Medalhas só suas. Elas mostram o que você fez, sem comparar com ninguém.',
+    medalhas: 'medalhas', // a legenda do 3º número da carta
+} as const;
+
+export const MEDALHAS_DO_APP: Record<IdDaMedalha, { nome: string; descricao: string }> = {
+    primeira_licao: { nome: 'Primeira lição', descricao: 'Terminar a primeira lição, até a verificação.' },
+    tres_dias: { nome: '3 dias seguidos', descricao: 'Responder em 3 dias seguidos.' },
+    modulo_inteiro: { nome: 'Um módulo inteiro', descricao: 'Terminar todas as lições de um módulo.' },
+    revisao_em_dia: { nome: 'Revisão em dia', descricao: 'Fazer a revisão no dia em que ela abre.' },
+    ciclo_completo: { nome: 'Ciclo completo', descricao: 'Terminar uma lição com a revisão feita.' },
+    cinco_licoes: { nome: '5 lições', descricao: 'Terminar 5 lições.' },
+};
+
+/** "2 de 6": quantas medalhas já foram ganhas, no alto da tela. */
+export function contagemDeMedalhas(ganhas: number, total: number): string {
+    return `${ganhas} de ${total}`;
+}
+
+/** "Ganhou em 12/11" (fuso de São Luís), ou "Bloqueada · 1 de 5" quando a medalha conta lições. */
+export function estadoDaMedalha(conquista: Pick<Conquista, 'ganhaEm' | 'progresso'>): string {
+    if (conquista.ganhaEm !== null) return `Ganhou em ${diaEMes(dataEmSaoLuis(conquista.ganhaEm))}`;
+    return conquista.progresso ? `Bloqueada · ${conquista.progresso.feito} de ${conquista.progresso.total}` : 'Bloqueada';
 }
 
 // As legendas da matriz 2×2: a das Regras do jogo e a do Progresso são a mesma.

@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 
 import { TelaDeBoasVindas } from '@/components/boas-vindas/tela-de-boas-vindas';
 import { useLicoes } from '@/hooks/use-licoes';
+import { conquistasDoAluno, medalhasGanhas } from '@/lib/conquistas';
 import { participanteDoRoteiro } from '@/lib/participante';
 import { useSession } from '@/lib/session';
 
@@ -22,9 +23,18 @@ export default function BoasVindasScreen() {
         }, [recarregar])
     );
 
+    const conquistas =
+        estado.tipo === 'pronto'
+            ? conquistasDoAluno({ licoes: estado.licoes, respostas: estado.respostas, questoes: estado.questoes, formaPre })
+            : [];
     const carta =
         estado.tipo === 'pronto' && perfil?.apelido
-            ? { apelido: perfil.apelido, sequencia: estado.sequencia, xp: estado.xp ?? 0 }
+            ? {
+                  apelido: perfil.apelido,
+                  sequencia: estado.sequencia,
+                  xp: estado.xp ?? 0,
+                  medalhas: { ganhas: medalhasGanhas(conquistas), total: conquistas.length },
+              }
             : null;
 
     return (
@@ -33,6 +43,7 @@ export default function BoasVindasScreen() {
             // Troca a boas-vindas pela home: a home vira a base, e o gesto de voltar não a reabre.
             aoJogar={() => router.replace('/home')}
             aoAbrirRegras={() => router.push('/regras')}
+            aoAbrirConquistas={() => router.push('/conquistas')}
         />
     );
 }

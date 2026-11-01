@@ -6,6 +6,7 @@ export default function AppLayout() {
       <Stack.Screen name="index" />
       <Stack.Screen name="home" />
       <Stack.Screen name="regras" />
+      <Stack.Screen name="conquistas" />
       <Stack.Screen name="consentimento" />
       <Stack.Screen name="licoes/index" />
       <Stack.Screen name="licoes/[topicId]/index" />

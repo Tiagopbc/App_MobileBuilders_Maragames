@@ -58,6 +58,9 @@ const PARES_DE_TEXTO: [ThemeColor, ThemeColor][] = [
     // A carta de jogador da boas-vindas: o tipo na placa e a legenda dos números sobre o card.
     ['textoDoPe', 'placaDaCarta'],
     ['textSecondary', 'cartao'],
+    // A medalha ganha: o disco da primaria com o ícone na cor do fundo, sobre o card selecionado.
+    ['background', 'primaria'],
+    ['textSecondary', 'cartaoSelecionado'],
     // Texto de apoio, realce, fundo apagado e botão desativado.
     ['textoDeApoio', 'background'],
     ['textoDeApoio', 'cartao'],
@@ -89,6 +92,9 @@ const PARES_DE_CONTORNO: [ThemeColor, ThemeColor][] = [
     ['bordaSelecionada', 'backgroundSelected'],
     ['bordaSelecionada', 'cartao'],
     ['bordaSelecionada', 'cartaoSelecionado'],
+    ['sucesso', 'cartaoSelecionado'], // o ✓ da medalha ganha
+    ['textSecondary', 'background'], // o contorno tracejado da medalha bloqueada
+    ['textSecondary', 'cartao'],
 ];
 
 describe.each(['light', 'dark'] as const)('tema %s', (tema) => {
