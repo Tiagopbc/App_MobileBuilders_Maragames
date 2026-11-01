@@ -55,6 +55,9 @@ const PARES_DE_TEXTO: [ThemeColor, ThemeColor][] = [
     ['text', 'placaDaCarta'],
     ['text', 'caixaDaCarta'],
     ['textoDoPe', 'cartao'],
+    // A carta de jogador da boas-vindas: o tipo na placa e a legenda dos números sobre o card.
+    ['textoDoPe', 'placaDaCarta'],
+    ['textSecondary', 'cartao'],
     // Texto de apoio, realce, fundo apagado e botão desativado.
     ['textoDeApoio', 'background'],
     ['textoDeApoio', 'cartao'],

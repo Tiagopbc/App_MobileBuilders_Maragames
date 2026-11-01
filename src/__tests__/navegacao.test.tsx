@@ -168,7 +168,7 @@ describe('a navegação de quem está logado', () => {
 
         await userEvent.setup().press(await screen.findByRole('button', { name: 'Voltar ao início' }));
 
-        expect(await screen.findByRole('button', { name: 'Iniciar' })).toBeOnTheScreen();
+        expect(await screen.findByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
         expect(rotas.caminho()).toBe('/');
     });
 

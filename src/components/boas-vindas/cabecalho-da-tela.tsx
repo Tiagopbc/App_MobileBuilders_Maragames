@@ -6,7 +6,7 @@ import { Spacing } from '@/constants/theme';
 import { TEXTOS } from '@/constants/textos';
 import { useTheme } from '@/hooks/use-theme';
 
-// O topo da Configuração e das Regras do jogo: a seta de voltar e o título da tela.
+// O topo das Regras do jogo: a seta de voltar e o título da tela.
 export function CabecalhoDaTela({ titulo, aoVoltar }: { titulo: string; aoVoltar: () => void }) {
     const theme = useTheme();
 
