@@ -1,6 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CartaDeJogador } from '@/components/boas-vindas/carta-de-jogador';
@@ -29,55 +29,59 @@ export function TelaDeBoasVindas({ carta, aoJogar, aoAbrirRegras }: TelaDeBoasVi
     return (
         <FundoDaMarca style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
-                <View style={styles.topo}>
-                    <LogoBeast tamanho={32} variante="app" />
-                    <ThemedText type="smallBold" style={styles.nome}>
-                        {TEXTOS_DE_BOAS_VINDAS.nome}
-                    </ThemedText>
-                </View>
-
-                <View style={styles.palco}>
-                    {/* Os anéis e a sombra no chão: o lobinho não flutua no padrão do fundo. */}
-                    <View testID="anel-externo" style={[styles.anel, styles.anelExterno, { backgroundColor: theme.realce }]} />
-                    <View testID="anel-interno" style={[styles.anel, styles.anelInterno, { backgroundColor: theme.realce }]} />
-                    <View style={[styles.sombra, { backgroundColor: theme.veu }]} />
-                    <Image
-                        accessible
-                        accessibilityRole="image"
-                        accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.mascote}
-                        source={require('@/assets/images/mascote-beast.png')}
-                        contentFit="contain"
-                        style={styles.mascote}
-                    />
-                </View>
-
-                <View style={styles.texto}>
-                    <ThemedText type="title" accessibilityRole="header">
-                        {TEXTOS_DE_BOAS_VINDAS.titulo}
-                    </ThemedText>
-                    <ThemedText themeColor="textSecondary">{TEXTOS_DE_BOAS_VINDAS.apoio}</ThemedText>
-                </View>
-
-                {carta && <CartaDeJogador apelido={carta.apelido} sequencia={carta.sequencia} xp={carta.xp} />}
-
-                <View style={styles.acoes}>
-                    <BotaoPrincipal rotulo={TEXTOS_DE_BOAS_VINDAS.jogar} onPress={aoJogar} />
-                    <Pressable
-                        accessibilityRole="link"
-                        accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.regras}
-                        hitSlop={Spacing.two}
-                        onPress={aoAbrirRegras}
-                        style={styles.link}>
-                        <Ionicons name="help-circle-outline" size={20} color={theme.primaria} />
-                        <ThemedText type="smallBold" themeColor="primaria">
-                            {TEXTOS_DE_BOAS_VINDAS.regras}
+                {/* Rola, para o Jogar não ficar fora de alcance num celular baixo; em tela alta o
+                    conteúdo cresce até a altura toda, e o palco do lobinho ocupa a folga. */}
+                <ScrollView testID="rolagem-da-boas-vindas" contentContainerStyle={styles.conteudo}>
+                    <View style={styles.topo}>
+                        <LogoBeast tamanho={32} variante="app" />
+                        <ThemedText type="smallBold" style={styles.nome}>
+                            {TEXTOS_DE_BOAS_VINDAS.nome}
                         </ThemedText>
-                    </Pressable>
-                </View>
+                    </View>
 
-                <ThemedText type="small" themeColor="textSecondary" style={styles.assinatura}>
-                    {TEXTOS_DE_BOAS_VINDAS.assinatura}
-                </ThemedText>
+                    <View style={styles.palco}>
+                        {/* Os anéis e a sombra no chão: o lobinho não flutua no padrão do fundo. */}
+                        <View testID="anel-externo" style={[styles.anel, styles.anelExterno, { backgroundColor: theme.realce }]} />
+                        <View testID="anel-interno" style={[styles.anel, styles.anelInterno, { backgroundColor: theme.realce }]} />
+                        <View style={[styles.sombra, { backgroundColor: theme.veu }]} />
+                        <Image
+                            accessible
+                            accessibilityRole="image"
+                            accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.mascote}
+                            source={require('@/assets/images/mascote-beast.png')}
+                            contentFit="contain"
+                            style={styles.mascote}
+                        />
+                    </View>
+
+                    <View style={styles.texto}>
+                        <ThemedText type="title" accessibilityRole="header">
+                            {TEXTOS_DE_BOAS_VINDAS.titulo}
+                        </ThemedText>
+                        <ThemedText themeColor="textSecondary">{TEXTOS_DE_BOAS_VINDAS.apoio}</ThemedText>
+                    </View>
+
+                    {carta && <CartaDeJogador apelido={carta.apelido} sequencia={carta.sequencia} xp={carta.xp} />}
+
+                    <View style={styles.acoes}>
+                        <BotaoPrincipal rotulo={TEXTOS_DE_BOAS_VINDAS.jogar} onPress={aoJogar} />
+                        <Pressable
+                            accessibilityRole="link"
+                            accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.regras}
+                            hitSlop={Spacing.two}
+                            onPress={aoAbrirRegras}
+                            style={styles.link}>
+                            <Ionicons name="help-circle-outline" size={20} color={theme.primaria} />
+                            <ThemedText type="smallBold" themeColor="primaria">
+                                {TEXTOS_DE_BOAS_VINDAS.regras}
+                            </ThemedText>
+                        </Pressable>
+                    </View>
+
+                    <ThemedText type="small" themeColor="textSecondary" style={styles.assinatura}>
+                        {TEXTOS_DE_BOAS_VINDAS.assinatura}
+                    </ThemedText>
+                </ScrollView>
             </SafeAreaView>
         </FundoDaMarca>
     );
@@ -85,7 +89,8 @@ export function TelaDeBoasVindas({ carta, aoJogar, aoAbrirRegras }: TelaDeBoasVi
 
 const styles = StyleSheet.create({
     container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: LarguraDoFormulario, paddingHorizontal: Spacing.four, paddingBottom: Spacing.three },
+    safeArea: { flex: 1, maxWidth: LarguraDoFormulario },
+    conteudo: { flexGrow: 1, paddingHorizontal: Spacing.four, paddingBottom: Spacing.three },
     topo: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, paddingTop: Spacing.two },
     nome: { flex: 1 },
     palco: { flex: 1, minHeight: 120, alignItems: 'center', justifyContent: 'flex-end', paddingBottom: Spacing.two },

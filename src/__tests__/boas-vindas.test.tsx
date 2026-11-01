@@ -1,5 +1,6 @@
 import { userEvent, waitFor, within } from '@testing-library/react-native';
 import { useFonts } from 'expo-font';
+import { StyleSheet } from 'react-native';
 import { renderRouter, screen } from 'expo-router/testing-library';
 
 import {
@@ -148,6 +149,25 @@ describe('a tela de boas-vindas', () => {
         for (const anel of ['anel-externo', 'anel-interno']) {
             expect(await screen.findByTestId(anel)).toHaveStyle({ backgroundColor: Colors.light.realce });
         }
+    });
+
+    // Num celular baixo (320×568), o lobinho, a carta e as ações passam da altura da tela: o conteúdo
+    // rola, para o Jogar nunca ficar fora de alcance.
+    it('o conteúdo todo rola: o lobinho, a carta, o Jogar e o link ficam dentro da rolagem', async () => {
+        await abrirEm('/');
+
+        const rolagem = within(await screen.findByTestId('rolagem-da-boas-vindas'));
+        expect(rolagem.getByRole('image', { name: 'O lobinho da Beast Maragames segurando um controle' })).toBeOnTheScreen();
+        expect(await rolagem.findByText('Pessoa jogadora')).toBeOnTheScreen();
+        expect(rolagem.getByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
+        expect(rolagem.getByRole('link', { name: 'Regras do jogo' })).toBeOnTheScreen();
+    });
+
+    it('em tela alta o conteúdo ocupa a altura toda; em tela baixa, cresce e rola', async () => {
+        await abrirEm('/');
+
+        const estilo = StyleSheet.flatten((await screen.findByTestId('rolagem-da-boas-vindas')).props.contentContainerStyle);
+        expect(estilo).toMatchObject({ flexGrow: 1 });
     });
 
     it('a logo é a mesma nos dois temas', async () => {
