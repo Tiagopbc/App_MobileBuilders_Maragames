@@ -352,6 +352,20 @@ describe('o Para hoje da home', () => {
         jest.restoreAllMocks();
     });
 
+    it('enquanto as lições demoram, o Para hoje mostra o esqueleto, depois de uma pequena espera', async () => {
+        jest.spyOn(repo, 'getTopicos').mockReturnValue(new Promise(() => {}));
+        try {
+            await abrirEm('/home');
+
+            expect(await screen.findByTestId('esqueleto-da-home', {}, { timeout: 2000 })).toBeOnTheScreen();
+            expect(screen.getByTestId('esqueleto-da-sequencia')).toBeOnTheScreen();
+            expect(screen.getByText('Olá, Paulo')).toBeOnTheScreen();
+            expect(screen.queryByRole('button', { name: 'Começar' })).toBeNull();
+        } finally {
+            jest.restoreAllMocks();
+        }
+    });
+
     it('se a leitura falha, avisa e deixa tentar de novo', async () => {
         jest.spyOn(console, 'warn').mockImplementation(() => {});
         repo.falhaAoCarregar = true;

@@ -1,10 +1,11 @@
 import { useCallback, useMemo } from 'react';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useFocusEffect, useRouter } from 'expo-router';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
+import { EsqueletoDaSequencia, EsqueletoDoParaHoje } from '@/components/esqueleto/esqueleto-da-home';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { CartaoDaSequencia } from '@/components/home/cartao-da-sequencia';
 import { EtapasDoParaHoje } from '@/components/home/etapas-do-para-hoje';
@@ -23,6 +24,7 @@ import {
   tituloDaSugestao,
 } from '@/constants/textos';
 import { useAoVoltarAoApp } from '@/hooks/use-ao-voltar-ao-app';
+import { useAposAtraso } from '@/hooks/use-apos-atraso';
 import { useLicoes, type LicaoDoAluno } from '@/hooks/use-licoes';
 import { useTheme } from '@/hooks/use-theme';
 import { destinoDaLicao, licaoFeita, segmentosDoParaHoje } from '@/lib/licao';
@@ -66,6 +68,7 @@ export default function HomeScreen() {
   // app aberto e volta no dia dela não troca de tela.
   useAoVoltarAoApp(recarregar);
 
+  const mostraEsqueleto = useAposAtraso(estado.tipo === 'carregando');
   const pronto = estado.tipo === 'pronto' ? estado : null;
   const sugestao = pronto?.sugestao;
   // A lição que o Para hoje aponta: a da revisão, a que ficou pela metade ou a próxima nova.
@@ -138,7 +141,8 @@ export default function HomeScreen() {
               )}
             </View>
 
-            {estado.tipo === 'carregando' && <ActivityIndicator />}
+            {/* Só depois de uma pequena espera: com rede rápida, o conteúdo chega antes e nada pisca. */}
+            {mostraEsqueleto && <EsqueletoDoParaHoje />}
 
             {estado.tipo === 'erro' && (
               <>
@@ -181,6 +185,11 @@ export default function HomeScreen() {
           </Superficie>
 
           {pronto && doDia && <CartaoDaSequencia sequencia={pronto.sequencia} semana={doDia.semana} />}
+          {mostraEsqueleto && (
+            <Superficie tamanho="pequeno" style={styles.cartaoDaSequencia}>
+              <EsqueletoDaSequencia />
+            </Superficie>
+          )}
 
           {/* Sem botão: a revisão que vence sobe sozinha para o Para hoje. */}
           {agendadas.map((licao) => (
@@ -252,6 +261,10 @@ const styles = StyleSheet.create({
   cartao: {
     gap: Spacing.three - 4,
     padding: Spacing.three,
+  },
+  cartaoDaSequencia: {
+    paddingVertical: 14,
+    paddingHorizontal: Spacing.three,
   },
   titulo: {
     fontSize: 22,

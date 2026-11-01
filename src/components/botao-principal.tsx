@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { ActivityIndicator, Pressable, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -9,12 +10,13 @@ type BotaoPrincipalProps = {
     onPress: () => void;
     desabilitado?: boolean;
     carregando?: boolean; // mostra o indicador e ignora toques
+    icone?: keyof typeof Ionicons.glyphMap; // antes do rótulo, na cor dele
 };
 
 // A ação principal da tela: uma por tela, no roxo da marca. É um degradê do roxo vivo ao roxo
 // profundo, com uma linha de luz no topo, uma sombra roxa embaixo e o relevo, nos dois temas.
 // Desativado, o botão perde tudo isso e ganha a cor própria dele, sem opacidade.
-export function BotaoPrincipal({ rotulo, onPress, desabilitado = false, carregando = false }: BotaoPrincipalProps) {
+export function BotaoPrincipal({ rotulo, onPress, desabilitado = false, carregando = false, icone }: BotaoPrincipalProps) {
     const theme = useTheme();
     const relevo = useRelevo();
     const parado = desabilitado || carregando;
@@ -47,9 +49,12 @@ export function BotaoPrincipal({ rotulo, onPress, desabilitado = false, carregan
             {carregando ? (
                 <ActivityIndicator color={theme.textoDoBotao} />
             ) : (
-                <ThemedText themeColor={desabilitado ? 'textSecondary' : 'textoDoBotao'} style={styles.rotulo}>
-                    {rotulo}
-                </ThemedText>
+                <>
+                    {icone && <Ionicons name={icone} size={18} color={desabilitado ? theme.textSecondary : theme.textoDoBotao} />}
+                    <ThemedText themeColor={desabilitado ? 'textSecondary' : 'textoDoBotao'} style={styles.rotulo}>
+                        {rotulo}
+                    </ThemedText>
+                </>
             )}
         </Pressable>
     );
@@ -61,6 +66,8 @@ const styles = StyleSheet.create({
         paddingVertical: Spacing.three,
         paddingHorizontal: Spacing.four,
         minHeight: 52,
+        flexDirection: 'row',
+        gap: Spacing.two,
         alignItems: 'center',
         justifyContent: 'center',
     },
