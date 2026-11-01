@@ -39,7 +39,9 @@ function extremos(fundoHex) {
 }
 
 // Texto (4,5:1) e contorno de seleção (3:1), como no teste do tema.
-const TEXTOS = ['text', 'textSecondary', 'textoDeApoio', 'primaria', 'lacuna'];
+// `sucesso`, `aviso` e `erro` entram porque as mensagens de formulário (erro, "salvo") ficam direto
+// sobre o padrão, fora de card.
+const TEXTOS = ['text', 'textSecondary', 'textoDeApoio', 'primaria', 'lacuna', 'sucesso', 'aviso', 'erro'];
 const CONTORNOS = ['bordaSelecionada'];
 
 describe.each([

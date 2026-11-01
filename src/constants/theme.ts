@@ -25,10 +25,12 @@ export const Colors = {
     fundoDaLogo: '#FFFFFF',
     veu: '#000000', // o fundo escurecido atrás de uma lista aberta por cima da tela, com opacidade
     // Estado e quadrante: sucesso = Firme, aviso = Frágil, lacuna = Lacuna, erro = Ponto cego.
-    sucesso: '#1E7A4C',
-    aviso: '#8A6100',
+    // No claro, os três passam de 4,5:1 até sobre o ponto mais difícil do padrão do fundo
+    // (contraste-do-padrao.test.js): as mensagens de formulário ficam direto sobre ele, fora de card.
+    sucesso: '#196841',
+    aviso: '#785400',
     lacuna: '#1F3C86',
-    erro: '#B91E1E',
+    erro: '#B21D1D',
     // Cards com relevo e carta de jogo, com a mesma estrutura do escuro: o card branco com borda
     // lilás e o relevo lilás embaixo.
     cartao: '#FFFFFF',
