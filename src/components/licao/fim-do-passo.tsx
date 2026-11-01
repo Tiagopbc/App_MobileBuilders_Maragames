@@ -3,24 +3,30 @@ import { useEffect } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
+import { BotaoSecundario } from '@/components/botao-secundario';
+import { ICONE_DA_MEDALHA } from '@/components/conquistas/icone-da-medalha';
+import { AntesEDepois } from '@/components/licao/antes-e-depois';
 import { Mascote } from '@/components/mascote';
 import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { ResultadoDoBloco } from '@/components/resultado/resultado-do-bloco';
-import { Superficie } from '@/components/superficie';
+import { Superficie, SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import {
+    MEDALHAS_DO_APP,
     TEXTOS,
     acertosDoTopico,
-    antesEDepois,
-    diasSeguidos,
+    botaoDaSugestao,
     formatarXp,
-    quandoARevisaoAbre,
-    verificacaoEHoje,
+    quandoARevisaoAbreComQuestoes,
+    variacaoDaRevisao,
+    variacaoDoFim,
 } from '@/constants/textos';
 import type { Relatorio } from '@/hooks/use-bloco';
-import { useLicao } from '@/hooks/use-licao';
+import { useLicoes } from '@/hooks/use-licoes';
 import { useTheme } from '@/hooks/use-theme';
+import { conquistasDoAluno, medalhasNovasDoPasso, type IdDaMedalha } from '@/lib/conquistas';
+import { FASE_DO_PASSO, type PassoComQuestoes, type ResultadoDaLicao } from '@/lib/licao';
 import type { FormaPre } from '@/types/domain';
 
 // O fim de cada passo de uma lição (item 30). Entram no lugar do resultado do bloco, dentro da
@@ -70,19 +76,32 @@ type FimDaLicaoProps = {
     uid: string;
     topicId: string;
     formaPre: FormaPre | null;
-    aoSair: () => void; // volta para a página da lição; quem navega é a rota
+    passo: PassoComQuestoes; // o passo que acabou: dele vêm as medalhas novas
+    aoVoltarAoInicio: () => void;
+    aoAbrirLicao: (topicId: string) => void; // a próxima lição, que o botão principal abre
+    aoAbrirConquistas: () => void;
     relogio?: () => number; // ms; trocável em teste
 };
 
 /**
- * Fim da verificação, da revisão ou, no ciclo curto, da prática: a sequência de dias e o
- * resultado da lição. Nada por questão: a revisão repete as questões da verificação, e dizer
- * quais a pessoa errou ensinaria o que vai ser medido de novo (item 27).
+ * Fim da verificação, da revisão ou, no ciclo curto, da prática: o resultado da lição, as medalhas
+ * que o passo trouxe e o caminho adiante. Nada por questão: a revisão repete as questões da
+ * verificação, e dizer quais a pessoa errou ensinaria o que vai ser medido de novo (item 27).
  */
-export function FimDaLicao({ uid, topicId, formaPre, aoSair, relogio }: FimDaLicaoProps) {
+export function FimDaLicao({
+    uid,
+    topicId,
+    formaPre,
+    passo,
+    aoVoltarAoInicio,
+    aoAbrirLicao,
+    aoAbrirConquistas,
+    relogio,
+}: FimDaLicaoProps) {
     const theme = useTheme();
-    // A mesma conta da página da lição, refeita agora que o passo terminou.
-    const { estado, recarregar } = useLicao({ uid, topicId, formaPre, relogio });
+    // A mesma conta da lista de lições, refeita agora que o passo terminou: dela saem também a
+    // próxima lição sugerida e as medalhas.
+    const { estado, recarregar } = useLicoes({ uid, formaPre, relogio });
 
     useEffect(() => {
         recarregar();
@@ -96,7 +115,8 @@ export function FimDaLicao({ uid, topicId, formaPre, aoSair, relogio }: FimDaLic
         );
     }
 
-    if (estado.tipo !== 'pronto' || estado.resultado === null) {
+    const licao = estado.tipo === 'pronto' ? estado.licoes.find((l) => l.topicId === topicId) : undefined;
+    if (estado.tipo !== 'pronto' || !licao || licao.resultado === null) {
         return (
             <View style={styles.centro}>
                 <ThemedText style={styles.textoCentral}>{TEXTOS.erroAoCarregarLicao}</ThemedText>
@@ -105,92 +125,154 @@ export function FimDaLicao({ uid, topicId, formaPre, aoSair, relogio }: FimDaLic
         );
     }
 
-    const { licao, resultado, sequencia, titulo } = estado;
-    const concluida = licao.estado.tipo === 'concluida';
+    const { resultado, titulo } = licao;
+    const conquistas = conquistasDoAluno({
+        licoes: estado.licoes,
+        respostas: estado.respostas,
+        questoes: estado.questoes,
+        formaPre,
+    });
+    const medalhasNovas = medalhasNovasDoPasso(conquistas, estado.respostas, topicId, FASE_DO_PASSO[passo]);
+    const proximaId = 'topicId' in estado.sugestao ? estado.sugestao.topicId : null;
+    const proxima = estado.licoes.find((l) => l.topicId === proximaId);
+    const rotuloDaProxima = botaoDaSugestao(estado.sugestao, proxima?.titulo ?? null);
 
     return (
         <>
-            <ScrollView contentContainerStyle={[styles.conteudo, styles.aoCentro]}>
-                <Mascote altura={120} />
-
-                <View
-                    accessible
-                    accessibilityLabel={`${sequencia} ${diasSeguidos(sequencia)}`}
-                    style={[styles.circulo, { backgroundColor: theme.backgroundSelected, borderColor: theme.bordaSelecionada }]}>
-                    <ThemedText themeColor="primaria" style={styles.numero}>
-                        {sequencia}
+            <ScrollView contentContainerStyle={styles.conteudo}>
+                <View style={styles.heroi}>
+                    <View style={styles.palco}>
+                        <View style={[styles.anel, { backgroundColor: theme.realce }]} />
+                        <Mascote altura={140} />
+                    </View>
+                    <ThemedText type="title" accessibilityRole="header" style={styles.textoCentral}>
+                        {resultado.ciclo === 'completo' && resultado.revisao ? TEXTOS.revisaoFeita : TEXTOS.licaoConcluida}
                     </ThemedText>
-                    <ThemedText type="smallBold" themeColor="primaria">
-                        {diasSeguidos(sequencia)}
+                    <ThemedText themeColor="textSecondary" style={styles.textoCentral}>
+                        {titulo}
                     </ThemedText>
                 </View>
 
-                <ThemedText type="subtitle" style={styles.textoCentral}>
-                    {concluida ? TEXTOS.licaoConcluida : TEXTOS.verificacaoFeita}
-                </ThemedText>
-
                 {resultado.ciclo === 'curto' ? (
-                    <ThemedText themeColor="textSecondary" style={styles.textoCentral}>
+                    <ThemedText style={styles.textoCentral}>
                         {acertosDoTopico(resultado.pratica.acertos, resultado.pratica.total, titulo, resultado.xp)}
                     </ThemedText>
                 ) : (
-                    <>
-                        <Superficie style={styles.cartao}>
-                            <ThemedText type="small" themeColor="textSecondary">
-                                {TEXTOS.xpDaLicao}
-                            </ThemedText>
+                    <Superficie style={styles.cartao}>
+                        {resultado.revisao ? (
+                            <AntesEDepois
+                                rotuloAntes={TEXTOS.naVerificacao}
+                                antes={resultado.depois}
+                                rotuloDepois={TEXTOS.hoje}
+                                depois={resultado.revisao}
+                            />
+                        ) : (
+                            <AntesEDepois
+                                rotuloAntes={TEXTOS.antesDiagnostico}
+                                antes={resultado.antes}
+                                rotuloDepois={TEXTOS.depoisVerificacao}
+                                depois={resultado.depois}
+                            />
+                        )}
+                        <VariacaoDoFim resultado={resultado} />
+                        <ThemedText type="small" themeColor="textSecondary">
                             {/* O saldo aparece como é, inclusive negativo (item 14). */}
-                            <ThemedText style={styles.xp}>{formatarXp(resultado.xp)}</ThemedText>
-                            <ThemedText style={styles.textoCentral}>
-                                {resultado.revisao
-                                    ? verificacaoEHoje(resultado.depois, resultado.revisao)
-                                    : antesEDepois(resultado.antes, resultado.depois)}
-                            </ThemedText>
-                            {licao.estado.tipo === 'aguardando_revisao' && (
-                                <ThemedText type="small" themeColor="textSecondary" style={styles.textoCentral}>
-                                    {quandoARevisaoAbre(licao.estado.liberaEm)}
-                                </ThemedText>
-                            )}
-                        </Superficie>
+                            {`${TEXTOS.xpDaLicao}: ${formatarXp(resultado.xp)}`}
+                        </ThemedText>
+                    </Superficie>
+                )}
 
-                        <View style={styles.secao}>
-                            <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
-                            <MatrizDeQuadrantes quadrantes={resultado.quadrantes} />
-                        </View>
-                    </>
+                <View style={styles.secao}>
+                    <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeuNaLicao}</ThemedText>
+                    <MatrizDeQuadrantes quadrantes={resultado.quadrantes} />
+                </View>
+
+                {medalhasNovas.map((medalha) => (
+                    <MedalhaNova key={medalha.id} id={medalha.id} aoAbrir={aoAbrirConquistas} />
+                ))}
+
+                {licao.estado.tipo === 'aguardando_revisao' && resultado.ciclo === 'completo' && (
+                    <View style={styles.aviso}>
+                        <Ionicons name="calendar-outline" size={18} color={theme.textSecondary} style={styles.iconeDoAviso} />
+                        <ThemedText type="small" style={styles.cresce}>
+                            {quandoARevisaoAbreComQuestoes(licao.estado.liberaEm, resultado.depois.total)}
+                        </ThemedText>
+                    </View>
                 )}
             </ScrollView>
 
             <View style={[styles.rodape, { borderTopColor: theme.borda }]}>
-                <BotaoPrincipal rotulo={TEXTOS.voltarParaALicao} onPress={aoSair} />
+                {rotuloDaProxima && proximaId && (
+                    <BotaoPrincipal rotulo={rotuloDaProxima} onPress={() => aoAbrirLicao(proximaId)} />
+                )}
+                <BotaoSecundario rotulo={TEXTOS.voltarAoInicio} onPress={aoVoltarAoInicio} />
             </View>
         </>
+    );
+}
+
+/** A linha sob o antes e o depois: o que mudou no resultado. Só a melhora ganha a cor de sucesso. */
+function VariacaoDoFim({ resultado }: { resultado: Extract<ResultadoDaLicao, { ciclo: 'completo' }> }) {
+    const theme = useTheme();
+
+    if (resultado.revisao) {
+        return <ThemedText type="smallBold">{variacaoDaRevisao(resultado.revisao)}</ThemedText>;
+    }
+
+    const { texto, melhorou } = variacaoDoFim(resultado.antes, resultado.depois);
+    return (
+        <View style={styles.variacao}>
+            {melhorou && <Ionicons name="trending-up" size={18} color={theme.sucesso} />}
+            <ThemedText type="smallBold" themeColor={melhorou ? 'sucesso' : 'text'}>
+                {texto}
+            </ThemedText>
+        </View>
+    );
+}
+
+/** O aviso de medalha ganha neste passo: leva às Conquistas. */
+function MedalhaNova({ id, aoAbrir }: { id: IdDaMedalha; aoAbrir: () => void }) {
+    const theme = useTheme();
+    const { nome } = MEDALHAS_DO_APP[id];
+
+    return (
+        <SuperficieQueLevaToque
+            accessibilityRole="link"
+            accessibilityLabel={`${TEXTOS.medalhaNova}: ${nome}`}
+            onPress={aoAbrir}
+            style={styles.medalha}>
+            <View style={[styles.disco, { backgroundColor: theme.primaria }]}>
+                <Ionicons name={ICONE_DA_MEDALHA[id]} size={22} color={theme.background} />
+            </View>
+            <View style={styles.cresce}>
+                <ThemedText type="small" themeColor="textSecondary">
+                    {TEXTOS.medalhaNova}
+                </ThemedText>
+                <ThemedText style={styles.nomeDaMedalha}>{nome}</ThemedText>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+        </SuperficieQueLevaToque>
     );
 }
 
 const styles = StyleSheet.create({
     centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.three, padding: Spacing.four },
     textoCentral: { textAlign: 'center' },
-    conteudo: { gap: Spacing.four, paddingHorizontal: Spacing.four, paddingBottom: Spacing.four },
-    aoCentro: { alignItems: 'center', gap: Spacing.three },
-    circulo: {
-        width: 132,
-        height: 132,
-        borderRadius: 66,
-        borderWidth: 2,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    numero: { fontSize: 48, lineHeight: 54, fontWeight: 700 },
-    cartao: {
-        alignSelf: 'stretch',
-        alignItems: 'center',
-        gap: Spacing.one,
-        padding: Spacing.three,
-    },
-    xp: { fontSize: 40, lineHeight: 48, fontWeight: 700 },
+    conteudo: { gap: Spacing.three, paddingHorizontal: Spacing.four, paddingBottom: Spacing.four },
+    heroi: { alignItems: 'center', gap: Spacing.one },
+    palco: { width: 180, height: 140, alignItems: 'center', justifyContent: 'flex-end' },
+    anel: { position: 'absolute', top: 6, width: 130, height: 130, borderRadius: 65 },
+    cartao: { alignSelf: 'stretch', gap: Spacing.two, padding: Spacing.three },
+    variacao: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one + Spacing.half },
     secao: { alignSelf: 'stretch', gap: Spacing.two },
+    medalha: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, paddingVertical: 10, paddingHorizontal: 14 },
+    disco: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+    nomeDaMedalha: { fontSize: 16, lineHeight: 22, fontWeight: 600 },
+    cresce: { flex: 1 },
+    aviso: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.two },
+    iconeDoAviso: { marginTop: 1 },
     rodape: {
+        gap: Spacing.two,
         paddingHorizontal: Spacing.four,
         paddingVertical: Spacing.three,
         borderTopWidth: StyleSheet.hairlineWidth,

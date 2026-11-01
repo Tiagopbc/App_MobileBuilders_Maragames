@@ -2,6 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { ICONE_DA_MEDALHA } from '@/components/conquistas/icone-da-medalha';
 import { CabecalhoDaTela } from '@/components/boas-vindas/cabecalho-da-tela';
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
@@ -15,7 +16,7 @@ import {
 } from '@/constants/textos';
 import { LarguraDoFormulario, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { medalhasGanhas, type Conquista, type IdDaMedalha } from '@/lib/conquistas';
+import { medalhasGanhas, type Conquista } from '@/lib/conquistas';
 
 export type EstadoDasConquistas = { tipo: 'carregando' } | { tipo: 'erro' } | { tipo: 'pronto'; conquistas: Conquista[] };
 
@@ -23,15 +24,6 @@ type TelaDeConquistasProps = {
     estado: EstadoDasConquistas;
     aoVoltar: () => void;
     aoTentarDeNovo: () => void;
-};
-
-const ICONE_DA_MEDALHA: Record<IdDaMedalha, keyof typeof Ionicons.glyphMap> = {
-    primeira_licao: 'ribbon',
-    tres_dias: 'flame',
-    modulo_inteiro: 'layers-outline',
-    revisao_em_dia: 'refresh-outline',
-    ciclo_completo: 'sync-outline',
-    cinco_licoes: 'albums-outline',
 };
 
 // As Conquistas, que o terceiro número da carta de jogador abre: as medalhas só da pessoa, sem

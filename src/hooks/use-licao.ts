@@ -14,7 +14,6 @@ import {
     type Licao,
     type ResultadoDaLicao,
 } from '@/lib/licao';
-import { sequenciaDeDias } from '@/lib/sequencia';
 import type { FormaPre } from '@/types/domain';
 
 export interface EntradaDaLicaoDoAluno {
@@ -36,7 +35,6 @@ export type EstadoDaLicaoDoAluno =
           temCartao: boolean;
           questoesPorEtapa: Record<EtapaDaLicao, number>; // o tamanho de cada etapa
           resultado: ResultadoDaLicao | null; // null enquanto não há o que mostrar
-          sequencia: number; // dias seguidos com resposta
       };
 
 export function useLicao({ uid, topicId, formaPre, relogio = Date.now }: EntradaDaLicaoDoAluno) {
@@ -82,7 +80,6 @@ export function useLicao({ uid, topicId, formaPre, relogio = Date.now }: Entrada
                         revisao: daForma,
                     },
                     resultado: resultadoDaLicao({ licao, respostas, questoes, formaPre }),
-                    sequencia: sequenciaDeDias(respostas, agora),
                 };
             }
         } catch (e) {
