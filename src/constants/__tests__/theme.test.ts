@@ -58,6 +58,13 @@ const PARES_DE_TEXTO: [ThemeColor, ThemeColor][] = [
     // A carta de jogador da boas-vindas: o tipo na placa e a legenda dos números sobre o card.
     ['textoDoPe', 'placaDaCarta'],
     ['textSecondary', 'cartao'],
+    // A home: a sequência da semana, a carta selada e os selos.
+    ['aviso', 'cartao'],
+    ['cartao', 'aviso'], // o ✓ do dia com resposta, sobre o círculo de aviso
+    ['text', 'fundoApagado'],
+    ['textoDeApoio', 'fundoApagado'],
+    ['primaria', 'fundoApagado'],
+    ['primaria', 'realce'],
     // A medalha ganha: o disco da primaria com o ícone na cor do fundo, sobre o card selecionado.
     ['background', 'primaria'],
     ['textSecondary', 'cartaoSelecionado'],

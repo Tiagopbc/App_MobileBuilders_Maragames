@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,49 +6,45 @@ import { useFocusEffect, useRouter } from 'expo-router';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
+import { CartaoDaSequencia } from '@/components/home/cartao-da-sequencia';
+import { EtapasDoParaHoje } from '@/components/home/etapas-do-para-hoje';
+import { RevisaoSelada } from '@/components/home/revisao-selada';
+import { SeloDeXp } from '@/components/home/selo-de-xp';
 import { Superficie, SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import {
   TEXTOS,
   detalheDaSugestao,
-  emQuantosDias,
-  formatarSequencia,
-  formatarXpTotal,
-  licoesFeitas,
+  linhaDoModulo,
   proximaRevisao,
+  quandoARevisaoAbre,
   rotuloDoBotaoDaLicao,
   tituloDaSugestao,
 } from '@/constants/textos';
 import { useAoVoltarAoApp } from '@/hooks/use-ao-voltar-ao-app';
-import { useLicoes, type EstadoDasLicoes, type LicaoDoAluno } from '@/hooks/use-licoes';
+import { useLicoes, type LicaoDoAluno } from '@/hooks/use-licoes';
 import { useTheme } from '@/hooks/use-theme';
-import { destinoDaLicao, licaoFeita } from '@/lib/licao';
+import { destinoDaLicao, licaoFeita, segmentosDoParaHoje } from '@/lib/licao';
 import { participanteDoRoteiro } from '@/lib/participante';
+import { semanaDaSequencia } from '@/lib/sequencia';
 import { useSession } from '@/lib/session';
-
-type LicoesProntas = Extract<EstadoDasLicoes, { tipo: 'pronto' }>;
+import { xpDeHoje } from '@/lib/xp';
 
 type Atalho = {
   id: string;
   titulo: string;
   icone: keyof typeof Ionicons.glyphMap;
   rota: '/licoes' | '/progresso' | '/perfil';
-  // Um número pequeno que resume a área, quando há o que dizer.
-  resumo?: (licoes: LicoesProntas) => string;
+  // Só o ícone: o título vira o nome do botão para o leitor de tela.
+  soIcone?: boolean;
 };
 
 // Os atalhos são dados: acrescentar ou reordenar é mexer nesta lista, sem tocar no layout (item 6).
 const ATALHOS: Atalho[] = [
-  {
-    id: 'licoes',
-    titulo: 'Lições',
-    icone: 'book',
-    rota: '/licoes',
-    resumo: ({ licoes }) => licoesFeitas(licoes.filter(licaoFeita).length, licoes.length),
-  },
+  { id: 'licoes', titulo: 'Lições', icone: 'book', rota: '/licoes' },
   { id: 'progresso', titulo: 'Progresso', icone: 'stats-chart', rota: '/progresso' },
-  { id: 'perfil', titulo: 'Perfil', icone: 'person', rota: '/perfil' },
+  { id: 'perfil', titulo: 'Perfil', icone: 'person', rota: '/perfil', soIcone: true },
 ];
 
 export default function HomeScreen() {
@@ -81,6 +77,28 @@ export default function HomeScreen() {
     .flatMap((l) => (l.estado.tipo === 'aguardando_revisao' ? [{ ...l, estado: l.estado }] : []))
     .sort((a, b) => a.estado.liberaEm - b.estado.liberaEm);
 
+  // O "+7 hoje" e a semana saem das mesmas respostas, no instante em que a home foi desenhada.
+  const doDia = useMemo(() => {
+    if (!pronto) return null;
+    // O instante da leitura: o mesmo da sequência e da sugestão.
+    const { agora } = pronto;
+    return {
+      xp: xpDeHoje({
+        respostas: pronto.respostas,
+        questoes: pronto.questoes,
+        topicos: pronto.licoes.map((l) => l.topicId),
+        formaPre,
+        agora,
+      }),
+      semana: semanaDaSequencia(pronto.respostas, agora),
+    };
+  }, [pronto, formaPre]);
+
+  // O módulo da lição sugerida e quantas lições dele já estão feitas.
+  const doModulo = sugerida?.modulo
+    ? pronto?.licoes.filter((l) => l.modulo === sugerida.modulo)
+    : undefined;
+
   function abrirSugerida(licao: LicaoDoAluno) {
     const { topicId } = licao;
     const destino = destinoDaLicao(licao, formaPre !== null);
@@ -99,34 +117,24 @@ export default function HomeScreen() {
     <FundoDaMarca style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
         <ScrollView contentContainerStyle={styles.conteudo} showsVerticalScrollIndicator={false}>
-          <View style={styles.saudacao}>
-            <View style={styles.topo}>
-              <ThemedText type="title" style={styles.ola}>
-                Olá, {perfil?.apelido}
-              </ThemedText>
-              {pronto && pronto.xp !== null && (
-                <View style={[styles.selo, { backgroundColor: theme.backgroundSelected }]}>
-                  <ThemedText type="smallBold" themeColor="primaria">
-                    {formatarXpTotal(pronto.xp)}
-                  </ThemedText>
-                </View>
-              )}
+          <View style={styles.topo}>
+            <View style={styles.saudacao}>
+              <ThemedText type="title">Olá, {perfil?.apelido}</ThemedText>
+              <ThemedText themeColor="textSecondary">O que vamos estudar hoje?</ThemedText>
             </View>
-            <ThemedText themeColor="textSecondary">O que vamos estudar hoje?</ThemedText>
+            {pronto && pronto.xp !== null && doDia && <SeloDeXp xp={pronto.xp} deHoje={doDia.xp} />}
           </View>
 
           {/* Para hoje: a trilha diária como sugestão, um passo só, sem limite por dia (item 30). */}
-          <Superficie style={styles.cartao}>
+          <Superficie tamanho="grande" style={styles.cartao}>
             <View style={styles.topo}>
               <ThemedText type="smallBold" themeColor="primaria" style={styles.ola}>
                 {TEXTOS.paraHoje}
               </ThemedText>
-              {pronto && pronto.sequencia > 0 && (
-                <View style={[styles.selo, { backgroundColor: theme.backgroundSelected }]}>
-                  <ThemedText type="smallBold" themeColor="primaria">
-                    {formatarSequencia(pronto.sequencia)}
-                  </ThemedText>
-                </View>
+              {sugerida && doModulo && sugerida.modulo && (
+                <ThemedText type="small" themeColor="textoDeApoio" style={styles.modulo}>
+                  {linhaDoModulo(sugerida.modulo, doModulo.filter(licaoFeita).length, doModulo.length)}
+                </ThemedText>
               )}
             </View>
 
@@ -144,9 +152,13 @@ export default function HomeScreen() {
             {sugerida && (
               <>
                 <ThemedText style={styles.titulo}>{tituloDaSugestao(sugerida.titulo, sugerida.estado)}</ThemedText>
-                <ThemedText type="small" themeColor="textSecondary">
-                  {detalheDaSugestao(sugerida.estado)}
-                </ThemedText>
+                {/* Pela metade, a barra da etapa já diz onde a pessoa parou: o detalhe só repetiria. */}
+                {(sugerida.estado.tipo === 'nova' || sugerida.estado.tipo === 'revisao') && (
+                  <ThemedText type="small" themeColor="textSecondary">
+                    {detalheDaSugestao(sugerida.estado)}
+                  </ThemedText>
+                )}
+                <EtapasDoParaHoje segmentos={segmentosDoParaHoje(sugerida)} />
                 <BotaoPrincipal rotulo={rotuloDoBotaoDaLicao(sugerida.estado)} onPress={() => abrirSugerida(sugerida)} />
               </>
             )}
@@ -168,53 +180,31 @@ export default function HomeScreen() {
             )}
           </Superficie>
 
-          {agendadas.length > 0 && (
-            <View style={styles.secao}>
-              <ThemedText type="small" themeColor="textSecondary">
-                {TEXTOS.revisoesAgendadas}
-              </ThemedText>
-              {/* Sem botão: a revisão que vence sobe sozinha para o Para hoje. */}
-              {agendadas.map((licao) => {
-                const quando = emQuantosDias(licao.estado.diasRestantes);
-                return (
-                  <View
-                    key={licao.topicId}
-                    accessible
-                    accessibilityLabel={`${licao.titulo}, ${quando}`}
-                    style={styles.agendada}>
-                    <Ionicons name="time-outline" size={18} color={theme.textSecondary} />
-                    <ThemedText style={styles.ola}>{licao.titulo}</ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary">
-                      {quando}
-                    </ThemedText>
-                  </View>
-                );
-              })}
-            </View>
-          )}
+          {pronto && doDia && <CartaoDaSequencia sequencia={pronto.sequencia} semana={doDia.semana} />}
+
+          {/* Sem botão: a revisão que vence sobe sozinha para o Para hoje. */}
+          {agendadas.map((licao) => (
+            <RevisaoSelada
+              key={licao.topicId}
+              titulo={licao.titulo}
+              quandoAbre={quandoARevisaoAbre(licao.estado.liberaEm)}
+              diasRestantes={licao.estado.diasRestantes}
+            />
+          ))}
 
           <View style={styles.grade}>
-            {ATALHOS.map((item) => {
-              const resumo = pronto && item.resumo ? item.resumo(pronto) : null;
-              return (
-                <SuperficieQueLevaToque
-                  key={item.id}
-                  accessibilityRole="button"
-                  accessibilityLabel={resumo ? `${item.titulo}, ${resumo}` : item.titulo}
-                  onPress={() => router.push(item.rota)}
-                  style={styles.card}>
-                  <Ionicons name={item.icone} size={32} color={theme.primaria} />
-                  <ThemedText type="smallBold" style={styles.noCentro}>
-                    {item.titulo}
-                  </ThemedText>
-                  {resumo && (
-                    <ThemedText type="small" themeColor="textSecondary" style={styles.noCentro}>
-                      {resumo}
-                    </ThemedText>
-                  )}
-                </SuperficieQueLevaToque>
-              );
-            })}
+            {ATALHOS.map((item) => (
+              <SuperficieQueLevaToque
+                key={item.id}
+                tamanho="pequeno"
+                accessibilityRole="button"
+                accessibilityLabel={item.titulo}
+                onPress={() => router.push(item.rota)}
+                style={[styles.atalho, item.soIcone && styles.soIcone]}>
+                <Ionicons name={item.icone} size={20} color={theme.primaria} />
+                {!item.soIcone && <ThemedText type="smallBold">{item.titulo}</ThemedText>}
+              </SuperficieQueLevaToque>
+            ))}
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -241,58 +231,51 @@ const styles = StyleSheet.create({
     gap: Spacing.three,
   },
   saudacao: {
+    flex: 1,
     gap: Spacing.one,
   },
   topo: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: Spacing.two,
+    gap: Spacing.three,
   },
-  // Texto comprido quebra a linha em vez de empurrar o selo para fora da tela.
+  // Texto comprido quebra a linha em vez de empurrar o que está ao lado para fora da tela.
   ola: {
     flexShrink: 1,
     flexGrow: 1,
   },
-  selo: {
-    paddingVertical: Spacing.one,
-    paddingHorizontal: Spacing.two,
-    borderRadius: 999,
+  modulo: {
+    flexShrink: 1,
+    textAlign: 'right',
   },
   cartao: {
-    gap: Spacing.two,
+    gap: Spacing.three - 4,
     padding: Spacing.three,
-    borderWidth: 1,
   },
   titulo: {
-    fontSize: 20,
-    lineHeight: 26,
-    fontWeight: 600,
-  },
-  secao: {
-    gap: Spacing.two,
-  },
-  agendada: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Spacing.two,
-    minHeight: 28,
+    fontSize: 22,
+    lineHeight: 28,
+    fontWeight: 700,
   },
   grade: {
     flexDirection: 'row',
     gap: Spacing.two,
+    marginTop: Spacing.two,
   },
-  noCentro: {
-    textAlign: 'center',
-  },
-  // Três atalhos lado a lado, com a mesma largura.
-  card: {
+  // Lições e Progresso dividem a largura; o Perfil é só o ícone, num botão estreito.
+  atalho: {
     flex: 1,
-    minHeight: 112,
-    paddingVertical: Spacing.three,
-    paddingHorizontal: Spacing.one,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: Spacing.one,
+    gap: Spacing.two,
+    minHeight: 52,
+    paddingHorizontal: Spacing.three - 4,
+  },
+  soIcone: {
+    flex: 0,
+    width: 52,
+    paddingHorizontal: 0,
   },
 });

@@ -34,6 +34,7 @@ export type EstadoDasLicoes =
           sugestao: Sugestao; // o passo único do "Para hoje"
           xp: number | null; // total à vista; null enquanto nada conta (item 14)
           sequencia: number; // dias seguidos com resposta
+          agora: number; // ms; o instante da leitura, de que saem o "hoje" da home e a semana
           aVista: Answer[]; // as respostas que já podem virar número na tela
           respostas: Answer[]; // todas, para o que não é número: o histórico de passos feitos
           questoes: Question[]; // para dar enunciado ao que a prática deixa citar
@@ -80,6 +81,7 @@ export function useLicoes({ uid, formaPre, relogio = Date.now }: EntradaDasLicoe
                 sugestao: sugestaoDoDia(licoes),
                 xp: xpDasLicoes(respostas, licoes),
                 sequencia: sequenciaDeDias(respostas, agora),
+                agora,
                 aVista,
                 respostas,
                 questoes,

@@ -9,6 +9,7 @@ import {
     podeAbrirNaLicao,
     respostasAVista,
     resultadoDaLicao,
+    segmentosDoParaHoje,
     type Ciclo,
     type EstadoDaLicao,
     type PassoDaLicao,
@@ -628,6 +629,69 @@ describe('licaoFeita', () => {
 
     it.each(['nova', 'diagnostico', 'estudo', 'verificacao'])('%s: ainda não', (tipo) => {
         expect(licaoFeita({ estado: { tipo } })).toBe(false);
+    });
+});
+
+// As barras de etapa do Para hoje da home: uma por etapa da lição, com a situação e, na da vez, o
+// quanto já foi respondido.
+describe('segmentosDoParaHoje', () => {
+    const progresso = (respondidas: number, total: number) => ({ respondidas, total, proximaQuestaoId: 'q' });
+    const situacoes = (licao: Parameters<typeof segmentosDoParaHoje>[0]) =>
+        segmentosDoParaHoje(licao).map((s) => `${s.etapa}:${s.situacao}`);
+
+    it('uma lição nova do ciclo completo começa pelo diagnóstico, e a revisão fica selada', () => {
+        expect(situacoes({ ciclo: 'completo', estado: { tipo: 'nova' } })).toEqual([
+            'diagnostico:agora',
+            'estudo:depois',
+            'verificacao:depois',
+            'revisao:selada',
+        ]);
+    });
+
+    it('a etapa da vez mostra o quanto já foi respondido', () => {
+        const segmentos = segmentosDoParaHoje({ ciclo: 'completo', estado: { tipo: 'estudo', ...progresso(1, 4) } });
+
+        expect(segmentos.map((s) => s.situacao)).toEqual(['feito', 'agora', 'depois', 'selada']);
+        expect(segmentos[1].progresso).toEqual({ respondidas: 1, total: 4 });
+        expect(segmentos[0].progresso).toBeNull();
+    });
+
+    it('sem nenhuma resposta na etapa da vez, não há contagem', () => {
+        const segmentos = segmentosDoParaHoje({ ciclo: 'completo', estado: { tipo: 'estudo', ...progresso(0, 4) } });
+
+        expect(segmentos[1]).toMatchObject({ situacao: 'agora', progresso: null });
+    });
+
+    it('esperando a revisão, as três primeiras estão feitas e a revisão segue selada', () => {
+        const estado = { tipo: 'aguardando_revisao', liberaEm: 1, diasRestantes: 3 } as const;
+
+        expect(situacoes({ ciclo: 'completo', estado })).toEqual([
+            'diagnostico:feito',
+            'estudo:feito',
+            'verificacao:feito',
+            'revisao:selada',
+        ]);
+    });
+
+    it('com a revisão aberta, ela é a da vez, com o que já foi respondido', () => {
+        const segmentos = segmentosDoParaHoje({
+            ciclo: 'completo',
+            estado: { tipo: 'revisao', liberadaEm: 1, ...progresso(1, 3) },
+        });
+
+        expect(segmentos.map((s) => s.situacao)).toEqual(['feito', 'feito', 'feito', 'agora']);
+        expect(segmentos[3].progresso).toEqual({ respondidas: 1, total: 3 });
+    });
+
+    it('lição concluída: tudo feito', () => {
+        const segmentos = segmentosDoParaHoje({ ciclo: 'completo', estado: { tipo: 'concluida', concluidaEm: 1 } });
+
+        expect(segmentos.every((s) => s.situacao === 'feito')).toBe(true);
+    });
+
+    it('o ciclo curto tem uma barra só, a do cartão e prática', () => {
+        expect(situacoes({ ciclo: 'curto', estado: { tipo: 'nova' } })).toEqual(['estudo:agora']);
+        expect(situacoes({ ciclo: 'curto', estado: { tipo: 'concluida', concluidaEm: 1 } })).toEqual(['estudo:feito']);
     });
 });
 

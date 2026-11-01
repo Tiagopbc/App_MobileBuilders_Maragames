@@ -26,6 +26,14 @@ import {
     xpNaCarta,
     respostasDeMinimas,
     botaoDaSugestao,
+    diasAbreviados,
+    LETRAS_DA_SEMANA,
+    linhaDoModulo,
+    rotuloDaEtapaDoParaHoje,
+    rotuloDoDiaDaSemana,
+    rotuloDoSeloDeXp,
+    tituloDaSequencia,
+    xpDeHojeNoSelo,
     contagemDeMedalhas,
     quandoARevisaoAbreComQuestoes,
     variacaoDaRevisao,
@@ -295,6 +303,55 @@ describe('o fim da lição', () => {
         expect(botaoDaSugestao({ tipo: 'revisao', topicId: 'mda' }, 'Framework MDA')).toBe('Fazer a revisão de Framework MDA');
         expect(botaoDaSugestao({ tipo: 'em_dia', topicId: 'mda', liberaEm: 1, diasRestantes: 3 }, 'Framework MDA')).toBeNull();
         expect(botaoDaSugestao({ tipo: 'tudo_concluido' }, null)).toBeNull();
+    });
+});
+
+describe('os textos da home', () => {
+    it('a linha do módulo diz quantas lições dele estão feitas, no singular e no plural', () => {
+        expect(linhaDoModulo('Fundamentos', 2, 5)).toBe('Fundamentos · 2 de 5 feitas');
+        expect(linhaDoModulo('Fundamentos', 1, 5)).toBe('Fundamentos · 1 de 5 feita');
+    });
+
+    it('o rótulo da etapa leva o progresso só quando há resposta', () => {
+        const base = { etapa: 'estudo' } as const;
+
+        expect(rotuloDaEtapaDoParaHoje({ ...base, progresso: { respondidas: 1, total: 4 } })).toBe('Cartão e prática 1/4');
+        expect(rotuloDaEtapaDoParaHoje({ ...base, progresso: null })).toBe('Cartão e prática');
+        expect(rotuloDaEtapaDoParaHoje({ etapa: 'revisao', progresso: null })).toBe('Revisão');
+    });
+
+    it('o XP do dia leva o sinal, e não aparece quando é zero', () => {
+        expect(xpDeHojeNoSelo(7)).toBe('+7 hoje');
+        expect(xpDeHojeNoSelo(-2)).toBe('−2 hoje');
+        expect(xpDeHojeNoSelo(0)).toBeNull();
+    });
+
+    it('o leitor de tela ouve o total e o do dia juntos', () => {
+        expect(rotuloDoSeloDeXp(18, 7)).toBe('XP: +18, +7 hoje');
+        expect(rotuloDoSeloDeXp(18, 0)).toBe('XP: +18');
+        expect(rotuloDoSeloDeXp(0, 0)).toBe('XP: 0');
+    });
+
+    it('o título da sequência concorda no singular, e o zero é só um número', () => {
+        expect(tituloDaSequencia(3)).toBe('3 dias seguidos');
+        expect(tituloDaSequencia(1)).toBe('1 dia seguido');
+        expect(tituloDaSequencia(0)).toBe('0 dias seguidos');
+    });
+
+    it('a semana começa na segunda, com a letra de cada dia', () => {
+        expect(LETRAS_DA_SEMANA).toEqual(['S', 'T', 'Q', 'Q', 'S', 'S', 'D']);
+    });
+
+    it('o leitor de tela ouve o nome do dia e se houve resposta, sem cobrar', () => {
+        expect(rotuloDoDiaDaSemana(2, { feito: true, hoje: false })).toBe('quarta, com resposta');
+        expect(rotuloDoDiaDaSemana(0, { feito: false, hoje: false })).toBe('segunda, sem resposta');
+        expect(rotuloDoDiaDaSemana(4, { feito: false, hoje: true })).toBe('sexta, hoje, sem resposta');
+        expect(rotuloDoDiaDaSemana(6, { feito: true, hoje: true })).toBe('domingo, hoje, com resposta');
+    });
+
+    it('a revisão selada conta os dias de forma curta', () => {
+        expect(diasAbreviados(5)).toBe('5 d');
+        expect(diasAbreviados(1)).toBe('1 d');
     });
 });
 
