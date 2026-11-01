@@ -1,5 +1,5 @@
 import type { Confianca, Fase } from '../../types/domain';
-import { historicoDoTopico, resumoDasRespostas, revisaoPorTopico } from '../progresso';
+import { AMOSTRA_MINIMA, historicoDoTopico, resumoDasRespostas, revisaoPorTopico, vereditoDoProgresso } from '../progresso';
 
 const r = (fase: Fase, questionId: string, correta: boolean, confianca: Confianca, respondidaEm = 1_000) => ({
     fase,
@@ -131,5 +131,30 @@ describe('revisaoPorTopico', () => {
 
     it('tópico sem resposta fica de fora', () => {
         expect(revisaoPorTopico([], ORDEM)).toEqual([]);
+    });
+});
+
+describe('vereditoDoProgresso', () => {
+    const q = (firme: number, fragil: number, ponto_cego: number, lacuna: number) => ({ firme, fragil, ponto_cego, lacuna });
+
+    it('a amostra mínima é a mesma do relatório: 10 respostas', () => {
+        expect(AMOSTRA_MINIMA).toBe(10);
+    });
+
+    it('conta o total, as firmes e os pontos cegos', () => {
+        expect(vereditoDoProgresso(q(9, 3, 2, 1))).toEqual({ total: 15, firmes: 9, pontosCegos: 2, poucas: false });
+    });
+
+    it('com menos de 10 respostas, a leitura é "poucas"', () => {
+        expect(vereditoDoProgresso(q(2, 0, 1, 1)).poucas).toBe(true);
+        expect(vereditoDoProgresso(q(5, 2, 1, 1)).poucas).toBe(true); // 9
+    });
+
+    it('com 10 respostas ou mais, deixa de ser "poucas"', () => {
+        expect(vereditoDoProgresso(q(6, 2, 1, 1)).poucas).toBe(false); // 10
+    });
+
+    it('sem respostas, é "poucas" e tudo zero', () => {
+        expect(vereditoDoProgresso(q(0, 0, 0, 0))).toEqual({ total: 0, firmes: 0, pontosCegos: 0, poucas: true });
     });
 });

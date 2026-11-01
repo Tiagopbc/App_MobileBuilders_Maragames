@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 
-import { GradeDeQuadrantes } from '@/components/resultado/grade-de-quadrantes';
+import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { SeloQuadrante } from '@/components/selo-quadrante';
 import { Superficie } from '@/components/superficie';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
@@ -47,7 +47,7 @@ export function ResultadoDoBloco({ relatorio, medido, rotuloDoXp = TEXTOS.xpDoBl
             </Superficie>
 
             <Secao titulo={TEXTOS.comoVoceRespondeu}>
-                <GradeDeQuadrantes quadrantes={resultado.quadrantes} />
+                <MatrizDeQuadrantes quadrantes={resultado.quadrantes} />
             </Secao>
 
             {medido && (

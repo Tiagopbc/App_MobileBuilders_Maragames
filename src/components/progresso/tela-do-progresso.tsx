@@ -5,30 +5,35 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BarraDeProgresso } from '@/components/barra-de-progresso';
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
-import { GradeDeQuadrantes } from '@/components/resultado/grade-de-quadrantes';
+import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { Superficie, SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { MaxContentWidth, Raio, Spacing } from '@/constants/theme';
 import {
     NIVEIS_DE_CONFIANCA,
     ROTULO_CONFIANCA,
     TEXTOS,
     antesEDepois,
+    comecarLicao,
     contarDias,
     dominioEmContagem,
     formatarTaxa,
     formatarXp,
+    leituraMaisFirme,
+    partesDoResumo,
     resumirQuadrantes,
+    respostasDeMinimas,
     verificacaoEHoje,
 } from '@/constants/textos';
 import type { EstadoDasLicoes } from '@/hooks/use-licoes';
 import { useTheme } from '@/hooks/use-theme';
-import { resumoDasRespostas, revisaoPorTopico } from '@/lib/progresso';
+import { AMOSTRA_MINIMA, resumoDasRespostas, revisaoPorTopico, vereditoDoProgresso } from '@/lib/progresso';
 import { ORDEM_DE_REVISAO } from '@/lib/resultado';
 
 type TelaDoProgressoProps = {
     estado: EstadoDasLicoes; // chega do `useLicoes`; quem lê e recarrega é a rota
     aoAbrir: (topicId: string) => void; // abre o detalhe do tópico; quem navega é a rota
+    aoComecar: (topicId: string) => void; // abre a lição, quando ainda não há nada a mostrar
     aoTentarDeNovo: () => void;
     aoSair: () => void;
 };
@@ -37,7 +42,7 @@ const QUANTAS_A_REVISAR = 3;
 
 // O Progresso (Fase 5 do plano): o que o aluno sabe e se ele sabe que sabe. Só entra o que já
 // pode aparecer: a prática sempre, e os blocos sem feedback depois de concluídos (item 30).
-export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: TelaDoProgressoProps) {
+export function TelaDoProgresso({ estado, aoAbrir, aoComecar, aoTentarDeNovo, aoSair }: TelaDoProgressoProps) {
     const theme = useTheme();
     const pronto = estado.tipo === 'pronto' ? estado : null;
     const resumo = pronto ? resumoDasRespostas(pronto.aVista) : null;
@@ -52,6 +57,8 @@ export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: Tel
           })
         : [];
     // O que revisar primeiro: as três mais fracas. Lição em que tudo está firme não entra.
+    const veredito = resumo ? vereditoDoProgresso(resumo.quadrantes) : null;
+    const primeiraLicao = pronto?.licoes[0];
     const aRevisar = porRevisao.filter((l) => ORDEM_DE_REVISAO.some((q) => l.quadrantes[q] > 0)).slice(0, QUANTAS_A_REVISAR);
 
     return (
@@ -84,35 +91,69 @@ export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: Tel
                 )}
 
                 {pronto && pronto.aVista.length === 0 && (
-                    <View style={styles.centro}>
-                        <ThemedText type="subtitle" style={styles.textoCentral}>
-                            {TEXTOS.semRespostasAVista}
-                        </ThemedText>
-                        <ThemedText themeColor="textSecondary" style={styles.textoCentral}>
+                    <ScrollView contentContainerStyle={styles.conteudo}>
+                        <View style={styles.vazio}>
+                            <ThemedText type="subtitle" style={styles.textoCentral}>
+                                {TEXTOS.semRespostasAVista}
+                            </ThemedText>
+                            <ThemedText themeColor="textSecondary" style={styles.textoCentral}>
+                                {TEXTOS.cadaRespostaCai}
+                            </ThemedText>
+                        </View>
+                        <MatrizDeQuadrantes />
+                        <ThemedText type="small" themeColor="textSecondary" style={styles.textoCentral}>
                             {TEXTOS.quandoOsNumerosAparecem}
                         </ThemedText>
-                    </View>
+                        {primeiraLicao && (
+                            <BotaoPrincipal
+                                rotulo={comecarLicao(primeiraLicao.titulo)}
+                                onPress={() => aoComecar(primeiraLicao.topicId)}
+                            />
+                        )}
+                    </ScrollView>
                 )}
 
                 {pronto && resumo && pronto.aVista.length > 0 && (
                     <ScrollView contentContainerStyle={styles.conteudo}>
-                        <View style={styles.linha}>
-                            <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
-                                <ThemedText type="small" themeColor="textSecondary">
-                                    {TEXTOS.xpTotal}
+                        {veredito && (
+                            <Superficie style={styles.cartao}>
+                                <ThemedText style={styles.frase}>
+                                    {partesDoResumo(veredito.total, veredito.firmes, veredito.pontosCegos).map((parte, i) => (
+                                        <ThemedText key={i} themeColor={parte.cor} style={parte.cor ? styles.numeroDaFrase : styles.frase}>
+                                            {parte.texto}
+                                        </ThemedText>
+                                    ))}
                                 </ThemedText>
-                                {/* O total tem piso em 0 (item 14). */}
-                                <ThemedText style={styles.numero}>{formatarXp(pronto.xp ?? 0)}</ThemedText>
+                                {veredito.poucas && (
+                                    <View style={[styles.aviso, { backgroundColor: theme.fundoFragil, borderColor: theme.aviso }]}>
+                                        <ThemedText type="small">
+                                            <ThemedText type="smallBold" themeColor="aviso">
+                                                {TEXTOS.poucasRespostas}
+                                            </ThemedText>{' '}
+                                            {leituraMaisFirme(AMOSTRA_MINIMA)}
+                                        </ThemedText>
+                                        <BarraDeProgresso
+                                            rotulo={TEXTOS.respostasAteALeituraFirme}
+                                            feitas={veredito.total}
+                                            total={AMOSTRA_MINIMA}
+                                        />
+                                        <ThemedText type="small" themeColor="textoDeApoio">
+                                            {respostasDeMinimas(veredito.total, AMOSTRA_MINIMA)}
+                                        </ThemedText>
+                                    </View>
+                                )}
                             </Superficie>
-                            <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
-                                <ThemedText type="small" themeColor="textSecondary">
-                                    {TEXTOS.sequencia}
-                                </ThemedText>
-                                <ThemedText style={styles.numero}>{contarDias(pronto.sequencia)}</ThemedText>
-                            </Superficie>
+                        )}
+
+                        <View style={styles.secao}>
+                            <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
+                            <MatrizDeQuadrantes
+                                quadrantes={resumo.quadrantes}
+                                destaque={resumo.quadrantes.ponto_cego > 0 ? 'ponto_cego' : undefined}
+                            />
                         </View>
 
-                        {/* Vem antes dos quadrantes: "em que assunto eu preciso melhorar" é a primeira pergunta. */}
+                        {/* Depois da matriz: ela diz como a pessoa respondeu; aqui, em que assunto agir primeiro. */}
                         <View style={styles.secao}>
                             <ThemedText type="smallBold">{TEXTOS.revisarPrimeiro}</ThemedText>
                             {aRevisar.length === 0 && (
@@ -141,9 +182,20 @@ export function TelaDoProgresso({ estado, aoAbrir, aoTentarDeNovo, aoSair }: Tel
                             })}
                         </View>
 
-                        <View style={styles.secao}>
-                            <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
-                            <GradeDeQuadrantes quadrantes={resumo.quadrantes} />
+                        <View style={styles.linha}>
+                            <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
+                                <ThemedText type="small" themeColor="textSecondary">
+                                    {TEXTOS.xpTotal}
+                                </ThemedText>
+                                {/* O total tem piso em 0 (item 14). */}
+                                <ThemedText style={styles.numero}>{formatarXp(pronto.xp ?? 0)}</ThemedText>
+                            </Superficie>
+                            <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
+                                <ThemedText type="small" themeColor="textSecondary">
+                                    {TEXTOS.sequencia}
+                                </ThemedText>
+                                <ThemedText style={styles.numero}>{contarDias(pronto.sequencia)}</ThemedText>
+                            </Superficie>
                         </View>
 
                         <View style={styles.secao}>
@@ -227,6 +279,10 @@ const styles = StyleSheet.create({
     secao: { gap: Spacing.two },
     cartao: { gap: Spacing.two, padding: Spacing.three },
     numeroDoTopo: { flex: 1, gap: Spacing.one },
+    vazio: { gap: Spacing.two, paddingTop: Spacing.two },
+    frase: { fontSize: 17, lineHeight: 25, fontWeight: 600 },
+    numeroDaFrase: { fontSize: 20, lineHeight: 25, fontWeight: 700 },
+    aviso: { gap: Spacing.two, padding: Spacing.three, borderRadius: Raio.medio, borderWidth: 1.5 },
     numero: { fontSize: 22, lineHeight: 28, fontWeight: 700 },
     par: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, minHeight: 32 },
     cresce: { flex: 1 },

@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
-import { GradeDeQuadrantes } from '@/components/resultado/grade-de-quadrantes';
+import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { SeloQuadrante } from '@/components/selo-quadrante';
 import { Superficie } from '@/components/superficie';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
@@ -131,7 +131,7 @@ export function TelaDoTopico({ estado, topicId, aoAbrirLicao, aoTentarDeNovo, ao
 
                                     <View style={styles.secao}>
                                         <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
-                                        <GradeDeQuadrantes quadrantes={resumo.quadrantes} />
+                                        <MatrizDeQuadrantes quadrantes={resumo.quadrantes} />
                                     </View>
 
                                     <View style={styles.secao}>

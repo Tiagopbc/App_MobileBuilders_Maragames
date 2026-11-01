@@ -33,6 +33,7 @@ export default function ProgressoScreen() {
         <TelaDoProgresso
             estado={estado}
             aoAbrir={(topicId) => router.push({ pathname: '/progresso/[topicId]', params: { topicId } })}
+            aoComecar={(topicId) => router.push({ pathname: '/licoes/[topicId]', params: { topicId } })}
             aoTentarDeNovo={recarregar}
             aoSair={sair}
         />

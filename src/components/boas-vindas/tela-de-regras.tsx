@@ -4,28 +4,19 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CabecalhoDaTela } from '@/components/boas-vindas/cabecalho-da-tela';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
-import { APARENCIA_DO_QUADRANTE } from '@/components/selo-quadrante';
+import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import {
-    DESCRICAO_QUADRANTE,
     NIVEIS_DE_CONFIANCA,
     ROTULO_CONFIANCA,
-    ROTULO_QUADRANTE,
     TEXTOS_DAS_REGRAS,
     TEXTOS_DE_BOAS_VINDAS,
     formatarPontos,
 } from '@/constants/textos';
 import { LarguraDoFormulario, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import type { Quadrante } from '@/lib/quadrante';
 import { xpDaResposta } from '@/lib/xp';
-
-// As linhas da matriz: acertou e errou; em cada uma, com certeza e sem certeza.
-const LINHAS_DA_MATRIZ: readonly { rotulo: 'acertou' | 'errou'; quadrantes: readonly [Quadrante, Quadrante] }[] = [
-    { rotulo: 'acertou', quadrantes: ['firme', 'fragil'] },
-    { rotulo: 'errou', quadrantes: ['ponto_cego', 'lacuna'] },
-];
 
 // As Regras do jogo, que o ? da boas-vindas e o link da pergunta abrem: só leitura, em cards
 // curtos. Os pontos saem da conta do XP, e os quadrantes das mesmas listas do resultado.
@@ -130,52 +121,6 @@ function TabelaDePontos() {
     );
 }
 
-// Acertou e errou nas linhas, com e sem certeza nas colunas: os quatro quadrantes do resultado.
-function MatrizDeQuadrantes() {
-    const { comCerteza, semCerteza, acertou, errou } = TEXTOS_DAS_REGRAS.resultado;
-    const rotulos = { acertou, errou };
-
-    return (
-        <View testID="matriz-de-quadrantes" style={styles.matriz}>
-            <View style={styles.linhaDaMatriz}>
-                <View style={styles.cabecaDaLinha} />
-                <ThemedText type="small" themeColor="textSecondary" style={[styles.celula, styles.centro]}>
-                    {comCerteza}
-                </ThemedText>
-                <ThemedText type="small" themeColor="textSecondary" style={[styles.celula, styles.centro]}>
-                    {semCerteza}
-                </ThemedText>
-            </View>
-            {LINHAS_DA_MATRIZ.map(({ rotulo, quadrantes }) => (
-                <View key={rotulo} style={styles.linhaDaMatriz}>
-                    <ThemedText type="small" themeColor="textSecondary" style={styles.cabecaDaLinha}>
-                        {rotulos[rotulo]}
-                    </ThemedText>
-                    {quadrantes.map((quadrante) => (
-                        <CelulaDoQuadrante key={quadrante} quadrante={quadrante} />
-                    ))}
-                </View>
-            ))}
-        </View>
-    );
-}
-
-function CelulaDoQuadrante({ quadrante }: { quadrante: Quadrante }) {
-    const theme = useTheme();
-    const { cor, fundo } = APARENCIA_DO_QUADRANTE[quadrante];
-
-    return (
-        <View style={[styles.celula, styles.quadrante, { backgroundColor: theme[fundo], borderColor: theme[cor] }]}>
-            <ThemedText type="smallBold" themeColor={cor}>
-                {ROTULO_QUADRANTE[quadrante]}
-            </ThemedText>
-            <ThemedText type="small" themeColor="textoDeApoio">
-                {DESCRICAO_QUADRANTE[quadrante]}
-            </ThemedText>
-        </View>
-    );
-}
-
 const styles = StyleSheet.create({
     container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
     safeArea: { flex: 1, maxWidth: LarguraDoFormulario },
@@ -190,9 +135,4 @@ const styles = StyleSheet.create({
     comFio: { borderTopWidth: StyleSheet.hairlineWidth },
     rotuloDoNivel: { flex: 1 },
     valor: { width: 64, textAlign: 'right' },
-    matriz: { gap: Spacing.two },
-    linhaDaMatriz: { flexDirection: 'row', alignItems: 'stretch', gap: Spacing.two },
-    cabecaDaLinha: { width: 64, alignSelf: 'center' },
-    celula: { flex: 1 },
-    quadrante: { gap: Spacing.half, padding: Spacing.two, borderRadius: Raio.medio, borderWidth: 1.5 },
 });
