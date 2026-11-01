@@ -143,6 +143,9 @@ export const TEXTOS = {
     perfil: 'Perfil',
     progresso: 'Progresso',
     semRespostasAVista: 'Ainda não há respostas para mostrar.',
+    cadaRespostaCai: 'Cada resposta cai em um destes quatro lugares, conforme você acerta e quanto confia:',
+    poucasRespostas: 'Ainda são poucas respostas.',
+    respostasAteALeituraFirme: 'Respostas até a leitura firme',
     quandoOsNumerosAparecem: 'Os números aparecem quando você termina a prática ou a verificação de uma lição.',
     xpTotal: 'XP total',
     sequencia: 'Sequência',
@@ -178,6 +181,39 @@ export const TEXTOS = {
 /** "Game Engines · Em breve": o título de um módulo que ainda não tem questões. */
 export function moduloEmBreve(modulo: string): string {
     return `${modulo} · Em breve`;
+}
+
+/** O botão do Progresso vazio: leva à primeira lição. */
+export function comecarLicao(titulo: string): string {
+    return `Começar ${titulo}`;
+}
+
+/** O aviso de poucas respostas: de onde a leitura passa a ser firme. */
+export function leituraMaisFirme(minima: number): string {
+    return `Os números mudam rápido; a leitura fica mais firme a partir de ${minima}.`;
+}
+
+/** Quantas respostas já há, até a amostra mínima. */
+export function respostasDeMinimas(total: number, minima: number): string {
+    return `${total} de ${minima} respostas`;
+}
+
+/** A frase de abertura do Progresso, em pedaços: os números ganham a cor do quadrante. */
+export function partesDoResumo(total: number, firmes: number, pontosCegos: number): { texto: string; cor?: 'sucesso' | 'erro' }[] {
+    const partes: { texto: string; cor?: 'sucesso' | 'erro' }[] = [
+        { texto: `De ${total} ${total === 1 ? 'resposta' : 'respostas'}, ` },
+    ];
+    if (firmes === 0) partes.push({ texto: 'nenhuma', cor: 'sucesso' }, { texto: ' está firme.' });
+    else if (firmes === 1) partes.push({ texto: '1', cor: 'sucesso' }, { texto: ' está firme.' });
+    else partes.push({ texto: String(firmes), cor: 'sucesso' }, { texto: ' estão firmes.' });
+    if (pontosCegos > 0) {
+        partes.push({ texto: ' Em ' }, { texto: String(pontosCegos), cor: 'erro' }, { texto: ', você achou que sabia.' });
+    }
+    return partes;
+}
+
+export function resumoDoProgresso(total: number, firmes: number, pontosCegos: number): string {
+    return partesDoResumo(total, firmes, pontosCegos).map((p) => p.texto).join('');
 }
 
 /** O que o leitor de tela diz de uma lição de módulo em breve. */
@@ -637,6 +673,14 @@ export const TEXTOS_DE_BOAS_VINDAS = {
     regras: 'Regras do jogo',
 } as const;
 
+// As legendas da matriz 2×2: a das Regras do jogo e a do Progresso são a mesma.
+export const LEGENDAS_DA_MATRIZ = {
+    comCerteza: 'Com certeza',
+    semCerteza: 'Sem certeza',
+    acertou: 'Acertou',
+    errou: 'Errou',
+} as const;
+
 // As regras só explicam o que o app já faz: os nomes da certeza e dos quadrantes saem das mesmas
 // listas que as telas de resposta e de resultado usam, e os pontos de cada nível saem da conta do
 // XP (`src/lib/xp.ts`), na tela das regras.
@@ -659,10 +703,7 @@ export const TEXTOS_DAS_REGRAS = {
     resultado: {
         titulo: 'O resultado',
         texto: 'No fim de cada bloco, cada resposta cai em um destes quadrantes:',
-        comCerteza: 'Com certeza',
-        semCerteza: 'Sem certeza',
-        acertou: 'Acertou',
-        errou: 'Errou',
+        ...LEGENDAS_DA_MATRIZ,
     },
     licao: {
         titulo: 'A lição',

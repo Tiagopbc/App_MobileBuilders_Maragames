@@ -17,6 +17,7 @@ import {
 import type { Question, Topico } from '../types/domain';
 import { ganhoNormalizado, type Agregados, type Exportacao, type Linha } from './exportacao';
 import { PERFIS_DE_RESPOSTA, perfilDeResposta, type PerfilDeResposta } from './perfis-de-resposta';
+import { AMOSTRA_MINIMA } from './progresso';
 import type { Quadrante } from './quadrante';
 import type { Taxa } from './resultado';
 import {
@@ -28,8 +29,9 @@ import {
     type TesteDeSinais,
 } from './estatistica';
 
-/** Com menos respostas que isto, um percentual engana: a página mostra só a contagem. */
-export const AMOSTRA_MINIMA = 10;
+// A mesma amostra mínima do Progresso do app: com menos respostas que isto, um percentual engana
+// e a página mostra só a contagem.
+export { AMOSTRA_MINIMA };
 
 /**
  * Com menos pessoas que isto, um grupo do bloco "Por perfil" mostra só a contagem: com uma ou duas

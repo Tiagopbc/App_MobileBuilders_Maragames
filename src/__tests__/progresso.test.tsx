@@ -1,4 +1,4 @@
-import { userEvent } from '@testing-library/react-native';
+import { userEvent, within } from '@testing-library/react-native';
 import { useFonts } from 'expo-font';
 import { renderRouter, screen } from 'expo-router/testing-library';
 
@@ -111,6 +111,66 @@ describe('a tela de Progresso', () => {
         expect(screen.queryByText(/XP/)).toBeNull();
     });
 
+    it('sem nada para mostrar, a matriz explica os quatro lugares, sem número, e convida a começar a primeira lição', async () => {
+        const rotas = await abrirEm('/progresso');
+
+        expect(await screen.findByText(/Cada resposta cai em um destes quatro lugares/)).toBeOnTheScreen();
+        const matriz = within(screen.getByTestId('matriz-de-quadrantes'));
+        for (const rotulo of ['Firme', 'Frágil', 'Ponto cego', 'Lacuna']) expect(matriz.getByText(rotulo)).toBeOnTheScreen();
+        expect(screen.queryByLabelText(/^Firme: /)).toBeNull();
+        expect(screen.queryByText(/respostas, /)).toBeNull();
+
+        await userEvent.setup().press(botao('Começar Framework MDA'));
+
+        expect(rotas.caminho()).toBe('/licoes/mda');
+    });
+
+    it('o veredito abre a tela: quantas respostas, quantas firmes e em quantas a pessoa achou que sabia', async () => {
+        mdaAteAVerificacao();
+        respondida('pratica', 'gdd_p1');
+        await abrirEm('/progresso');
+
+        // Quatro respostas: três firmes e o ponto cego do diagnóstico.
+        expect(await screen.findByText('De 4 respostas, 3 estão firmes. Em 1, você achou que sabia.')).toBeOnTheScreen();
+    });
+
+    it('com menos de 10 respostas, avisa que são poucas e conta quantas faltam para a leitura firme', async () => {
+        mdaAteAVerificacao();
+        respondida('pratica', 'gdd_p1');
+        await abrirEm('/progresso');
+
+        expect(await screen.findByText('Ainda são poucas respostas.')).toBeOnTheScreen();
+        expect(screen.getByText('4 de 10 respostas')).toBeOnTheScreen();
+        expect(screen.getByRole('progressbar', { name: 'Respostas até a leitura firme' })).toBeOnTheScreen();
+    });
+
+    it('com 10 respostas ou mais, o aviso de poucas respostas some', async () => {
+        for (let n = 1; n <= 10; n++) {
+            repo.questoes.push(questao(`gdd_x${n}`, 'pratica', 10 + n));
+            respondida('pratica', `gdd_x${n}`);
+        }
+        await abrirEm('/progresso');
+
+        expect(await screen.findByText('De 10 respostas, 10 estão firmes.')).toBeOnTheScreen();
+        expect(screen.queryByText('Ainda são poucas respostas.')).toBeNull();
+        expect(screen.queryByRole('progressbar', { name: 'Respostas até a leitura firme' })).toBeNull();
+    });
+
+    it('o ponto cego ganha destaque na matriz quando existe; sem ele, nenhum quadrante é destacado', async () => {
+        mdaAteAVerificacao();
+        await abrirEm('/progresso');
+
+        expect(await screen.findByLabelText('Ponto cego: 1')).toHaveStyle({ borderWidth: 2.5 });
+        expect(screen.getByLabelText('Lacuna: 0')).toHaveStyle({ borderWidth: 1.5 });
+    });
+
+    it('com tudo firme, a matriz não destaca nada', async () => {
+        respondida('pratica', 'gdd_p1');
+        await abrirEm('/progresso');
+
+        expect(await screen.findByLabelText('Ponto cego: 0')).toHaveStyle({ borderWidth: 1.5 });
+    });
+
     it('diagnóstico feito e lição pela metade: nada do diagnóstico vira número', async () => {
         respondida('pre', 'mda_a1', Date.now(), false);
         await abrirEm('/progresso');
@@ -145,7 +205,7 @@ describe('a tela de Progresso', () => {
         expect(botao('GDD, domínio 1 de 1')).toBeOnTheScreen();
     });
 
-    it('O que revisar primeiro vem antes dos quadrantes e diz em que assunto a pessoa está pior', async () => {
+    it('a matriz vem antes de O que revisar primeiro, que diz em que assunto a pessoa está pior', async () => {
         mdaAteAVerificacao();
         respondida('pratica', 'gdd_p1');
         await abrirEm('/progresso');
@@ -154,7 +214,7 @@ describe('a tela de Progresso', () => {
         expect(await screen.findByRole('button', { name: 'Revisar Framework MDA, 1 ponto cego' })).toBeOnTheScreen();
         expect(screen.queryByRole('button', { name: /^Revisar GDD/ })).toBeNull();
         const titulos = screen.getAllByText(/^(O que revisar primeiro|Como você respondeu|Meu domínio)$/).map((t) => t.props.children);
-        expect(titulos).toEqual(['O que revisar primeiro', 'Como você respondeu', 'Meu domínio']);
+        expect(titulos).toEqual(['Como você respondeu', 'O que revisar primeiro', 'Meu domínio']);
     });
 
     it('tocar numa lição a revisar abre o detalhe dela', async () => {

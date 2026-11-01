@@ -6,6 +6,9 @@ import type { Answer, Confianca, Fase } from '../types/domain';
 import { quadranteDe, type Quadrante } from './quadrante';
 import { ORDEM_DE_REVISAO, type Taxa } from './resultado';
 
+/** Com menos respostas que isto, um percentual engana: o Progresso avisa e o relatório mostra só a contagem. */
+export const AMOSTRA_MINIMA = 10;
+
 type RespostaDoResumo = Pick<Answer, 'fase' | 'questionId' | 'correta' | 'confianca' | 'respondidaEm'>;
 
 export interface ResumoDasRespostas {
@@ -91,4 +94,17 @@ export function revisaoPorTopico(
             }
             return 0;
         });
+}
+
+export interface VereditoDoProgresso {
+    total: number; // as questões com resposta à vista, uma vez cada
+    firmes: number;
+    pontosCegos: number;
+    poucas: boolean; // abaixo da amostra mínima: os números mudam rápido
+}
+
+/** A frase de abertura do Progresso, calculada dos quadrantes que o resumo já contou. */
+export function vereditoDoProgresso(quadrantes: Record<Quadrante, number>): VereditoDoProgresso {
+    const total = quadrantes.firme + quadrantes.fragil + quadrantes.lacuna + quadrantes.ponto_cego;
+    return { total, firmes: quadrantes.firme, pontosCegos: quadrantes.ponto_cego, poucas: total < AMOSTRA_MINIMA };
 }

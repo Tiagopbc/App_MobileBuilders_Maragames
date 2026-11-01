@@ -4,7 +4,7 @@ import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { Mascote } from '@/components/mascote';
-import { GradeDeQuadrantes } from '@/components/resultado/grade-de-quadrantes';
+import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { ResultadoDoBloco } from '@/components/resultado/resultado-do-bloco';
 import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
@@ -155,7 +155,7 @@ export function FimDaLicao({ uid, topicId, formaPre, aoSair, relogio }: FimDaLic
 
                         <View style={styles.secao}>
                             <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
-                            <GradeDeQuadrantes quadrantes={resultado.quadrantes} />
+                            <MatrizDeQuadrantes quadrantes={resultado.quadrantes} />
                         </View>
                     </>
                 )}

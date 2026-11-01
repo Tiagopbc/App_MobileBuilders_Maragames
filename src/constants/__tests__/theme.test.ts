@@ -62,6 +62,10 @@ const PARES_DE_TEXTO: [ThemeColor, ThemeColor][] = [
     ['textoDeApoio', 'fundoFragil'],
     ['textoDeApoio', 'fundoPontoCego'],
     ['textoDeApoio', 'fundoLacuna'],
+    // O veredito do Progresso: o número colorido no card.
+    ['sucesso', 'cartao'],
+    ['erro', 'cartao'],
+    ['lacuna', 'cartao'],
     ['text', 'realce'],
     ['textSecondary', 'fundoApagado'],
     ['textSecondary', 'botaoDesabilitado'],
