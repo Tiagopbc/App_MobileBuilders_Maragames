@@ -71,5 +71,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    rotulo: { fontWeight: 600, textAlign: 'center' },
+    // `flexShrink`: na linha com o ícone, o rótulo comprido quebra dentro do botão em vez de passar dele.
+    rotulo: { flexShrink: 1, fontWeight: 600, textAlign: 'center' },
 });
