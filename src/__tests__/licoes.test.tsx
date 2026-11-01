@@ -344,7 +344,7 @@ describe('a revisão', () => {
 
         expect(await screen.findByText('Revisão feita')).toBeOnTheScreen();
         expect(screen.getByLabelText('Na verificação: 1 de 1')).toBeOnTheScreen();
-        expect(screen.getByLabelText('Hoje, 7 dias depois: 1 de 1')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Hoje: 1 de 1')).toBeOnTheScreen();
         expect(screen.getByText('Você lembrou 1 de 1. A revisão mostra o que ficou.')).toBeOnTheScreen();
         // Os +2 de antes, mais o acerto com dúvida da revisão (+2).
         expect(screen.getByText('XP da lição: +4 XP')).toBeOnTheScreen();
@@ -353,6 +353,24 @@ describe('a revisão', () => {
         expect(screen.getByRole('link', { name: 'Medalha nova: Ciclo completo' })).toBeOnTheScreen();
         expect(screen.queryByRole('link', { name: 'Medalha nova: Primeira lição' })).toBeNull();
         expect(repo.attempts.find((a) => a.fase === 'reteste')).toMatchObject({ lessonId: 'licao_mda' });
+    });
+});
+
+describe('a revisão feita depois dos 7 dias', () => {
+    // A revisão abre 7 dias depois e não fecha: o fim dela não pode dizer que passaram 7 dias.
+    it('o rótulo é só "Hoje", sem prometer o intervalo', async () => {
+        ateAVerificacao(Date.now() - 14 * DIA);
+        await abrirEm('/licoes/mda');
+        const user = userEvent.setup();
+        repo.acertarRelogio(Date.now());
+
+        await user.press(await screen.findByRole('button', { name: 'Fazer a revisão' }));
+        await responderNaTela(user, /Certa/, 'Tenho dúvida');
+
+        expect(await screen.findByText('Revisão feita')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Hoje: 1 de 1')).toBeOnTheScreen();
+        expect(screen.queryByText(/7 dias depois/)).toBeNull();
+        expect(screen.queryByLabelText(/7 dias depois/)).toBeNull();
     });
 });
 

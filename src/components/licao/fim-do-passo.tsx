@@ -163,7 +163,7 @@ export function FimDaLicao({
                             <AntesEDepois
                                 rotuloAntes={TEXTOS.naVerificacao}
                                 antes={resultado.depois}
-                                rotuloDepois={TEXTOS.hojeSeteDias}
+                                rotuloDepois={TEXTOS.hoje}
                                 depois={resultado.revisao}
                             />
                         ) : (

@@ -144,7 +144,7 @@ export const TEXTOS = {
     antesDiagnostico: 'Antes · diagnóstico',
     depoisVerificacao: 'Depois · verificação',
     naVerificacao: 'Na verificação',
-    hojeSeteDias: 'Hoje, 7 dias depois',
+    hoje: 'Hoje', // sem o intervalo: a revisão não fecha, e a distância real fica para a análise
     comoVoceRespondeuNaLicao: 'Como você respondeu nesta lição',
     medalhaNova: 'Medalha nova',
     licoes: 'Lições',
