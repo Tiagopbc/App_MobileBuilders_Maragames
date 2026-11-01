@@ -8,7 +8,7 @@
 // A exceção é "3 dias seguidos": conta dias com qualquer resposta, como a sequência da carta, porque
 // um dia com resposta não diz nada sobre acerto.
 
-import type { Answer, FormaPre } from '../types/domain';
+import type { Answer, Fase, FormaPre } from '../types/domain';
 import { questoesDoBlocoMedido } from './bloco';
 import { diaDeCalendario } from './calendario';
 import { DIAS_ATE_A_REVISAO, licaoFeita, type Licao, type QuestaoDaLicao } from './licao';
@@ -124,4 +124,22 @@ export function conquistasDoAluno(entrada: EntradaDasConquistas): Conquista[] {
 /** Quantas medalhas já têm data: o "2/6" da carta e o "2 de 6" da tela. */
 export function medalhasGanhas(conquistas: readonly Pick<Conquista, 'ganhaEm'>[]): number {
     return conquistas.filter((c) => c.ganhaEm !== null).length;
+}
+
+/**
+ * As medalhas ganhas durante o passo que acabou de terminar, para o aviso do fim da lição: as que
+ * têm data a partir da primeira resposta do passo (`fase` do `topicId`). A medalha de um passo
+ * anterior não repete, e o passo sem resposta não tem medalha nova.
+ */
+export function medalhasNovasDoPasso(
+    conquistas: readonly Conquista[],
+    respostas: readonly Pick<Answer, 'topicId' | 'fase' | 'respondidaEm'>[],
+    topicId: string,
+    fase: Fase
+): Conquista[] {
+    const horarios = respostas.filter((r) => r.topicId === topicId && r.fase === fase).map((r) => r.respondidaEm);
+    if (horarios.length === 0) return [];
+
+    const desde = Math.min(...horarios);
+    return conquistas.filter((c) => c.ganhaEm !== null && c.ganhaEm >= desde);
 }

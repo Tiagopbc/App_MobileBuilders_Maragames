@@ -246,16 +246,58 @@ describe('uma lição de ciclo completo, do começo à espera da revisão', () =
         await responderNaTela(user, /Certa/, 'Tenho certeza');
 
         // Fim da lição: o antes só aparece agora, ao lado do depois.
-        expect(await screen.findByText('Verificação feita')).toBeOnTheScreen();
-        expect(screen.getByText('Antes 0 de 1 → Depois 1 de 1')).toBeOnTheScreen();
-        expect(screen.getByText('+2 XP')).toBeOnTheScreen();
-        expect(screen.getByLabelText('1 dia seguido')).toBeOnTheScreen();
-        expect(screen.getByText(/^A revisão abre n[ao] .+, \d\d\/\d\d\.$/)).toBeOnTheScreen();
+        expect(await screen.findByText('Lição concluída')).toBeOnTheScreen();
+        expect(screen.getByText('Framework MDA')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Antes · diagnóstico: 0 de 1')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Depois · verificação: 1 de 1')).toBeOnTheScreen();
+        expect(screen.getByText('Você acertou 1 a mais na verificação')).toBeOnTheScreen();
+        expect(screen.getByText('XP da lição: +2 XP')).toBeOnTheScreen();
+        expect(screen.getByTestId('matriz-de-quadrantes')).toBeOnTheScreen();
+        expect(screen.getByText(/^A revisão abre n[ao] .+, \d\d\/\d\d\. É 1 questão para ver o quanto ficou\.$/)).toBeOnTheScreen();
+        // A sequência de dias é da carta de jogador, não do fim da lição.
+        expect(screen.queryByLabelText('1 dia seguido')).toBeNull();
         expect(screen.queryByText('Enunciado de mda_b1')).toBeNull();
 
-        await user.press(botao('Voltar para a lição'));
-        expect(await screen.findByLabelText('Revisão, em espera, Abre em 7 dias')).toBeOnTheScreen();
-        expect(rotas.caminho()).toBe('/licoes/mda');
+        // A primeira lição feita vale a primeira medalha, que leva às Conquistas.
+        expect(screen.getByRole('link', { name: 'Medalha nova: Primeira lição' })).toBeOnTheScreen();
+        // O botão principal é a próxima lição que o app sugere; o outro volta ao início.
+        expect(botao('Começar GDD')).toBeOnTheScreen();
+        expect(screen.queryByRole('button', { name: 'Voltar para a lição' })).toBeNull();
+
+        await user.press(botao('Voltar ao início'));
+        expect(await screen.findByText('Olá, Paulo')).toBeOnTheScreen();
+        expect(rotas.caminho()).toBe('/home');
+    });
+
+    it('no fim da verificação, a medalha abre as Conquistas e o botão principal abre a próxima lição', async () => {
+        respondida('pre', 'mda_a1', Date.now() - 2000, false);
+        respondida('pratica', 'mda_p1', Date.now() - 1000);
+        const rotas = await abrirEm('/licoes/mda/verificacao');
+        const user = userEvent.setup();
+        repo.acertarRelogio(Date.now());
+
+        await responderNaTela(user, /Certa/, 'Tenho certeza');
+        await user.press(await screen.findByRole('link', { name: 'Medalha nova: Primeira lição' }));
+        expect(await screen.findByRole('header', { name: 'Conquistas' })).toBeOnTheScreen();
+        expect(rotas.caminho()).toBe('/conquistas');
+
+        await user.press(botao('Voltar'));
+        await user.press(await screen.findByRole('button', { name: 'Começar GDD' }));
+        expect(await screen.findByText('GDD')).toBeOnTheScreen();
+        expect(rotas.caminho()).toBe('/licoes/gdd');
+    });
+
+    it('quando o depois não melhora, a frase é neutra: o mesmo resultado, sem "a mais"', async () => {
+        respondida('pre', 'mda_a1', Date.now() - 2000, true);
+        respondida('pratica', 'mda_p1', Date.now() - 1000);
+        await abrirEm('/licoes/mda/verificacao');
+        const user = userEvent.setup();
+        repo.acertarRelogio(Date.now());
+
+        await responderNaTela(user, /Certa/, 'Tenho certeza');
+
+        expect(await screen.findByText('Mesmo resultado do diagnóstico')).toBeOnTheScreen();
+        expect(screen.queryByText(/a mais na verificação/)).toBeNull();
     });
 });
 
@@ -300,10 +342,16 @@ describe('a revisão', () => {
         expect(rotas.caminho()).toBe('/licoes/mda/revisao');
         await responderNaTela(user, /Certa/, 'Tenho dúvida');
 
-        expect(await screen.findByText('Lição concluída')).toBeOnTheScreen();
-        expect(screen.getByText('Na verificação 1 de 1 → Hoje 1 de 1')).toBeOnTheScreen();
+        expect(await screen.findByText('Revisão feita')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Na verificação: 1 de 1')).toBeOnTheScreen();
+        expect(screen.getByLabelText('Hoje, 7 dias depois: 1 de 1')).toBeOnTheScreen();
+        expect(screen.getByText('Você lembrou 1 de 1. A revisão mostra o que ficou.')).toBeOnTheScreen();
         // Os +2 de antes, mais o acerto com dúvida da revisão (+2).
-        expect(screen.getByText('+4 XP')).toBeOnTheScreen();
+        expect(screen.getByText('XP da lição: +4 XP')).toBeOnTheScreen();
+        // A revisão feita no dia em que abre e o ciclo completo são medalhas novas; a Primeira lição, de 7 dias antes, não.
+        expect(screen.getByRole('link', { name: 'Medalha nova: Revisão em dia' })).toBeOnTheScreen();
+        expect(screen.getByRole('link', { name: 'Medalha nova: Ciclo completo' })).toBeOnTheScreen();
+        expect(screen.queryByRole('link', { name: 'Medalha nova: Primeira lição' })).toBeNull();
         expect(repo.attempts.find((a) => a.fase === 'reteste')).toMatchObject({ lessonId: 'licao_mda' });
     });
 });
@@ -321,10 +369,13 @@ describe('uma lição de ciclo curto', () => {
 
         expect(await screen.findByText('Lição concluída')).toBeOnTheScreen();
         expect(screen.getByText('Você acertou 1 de 1 questões de GDD · +3 XP')).toBeOnTheScreen();
-        expect(screen.getByLabelText('1 dia seguido')).toBeOnTheScreen();
+        expect(screen.getByRole('link', { name: 'Medalha nova: Primeira lição' })).toBeOnTheScreen();
+        // Sem antes e depois: o ciclo curto não tem diagnóstico nem verificação.
+        expect(screen.queryByTestId('barras-antes')).toBeNull();
 
-        await user.press(botao('Voltar para a lição'));
-        expect(await screen.findByLabelText('Cartão e prática, feito, 1 questão')).toBeOnTheScreen();
+        // A próxima lição sugerida é a MDA, que ainda é nova.
+        await user.press(botao('Começar Framework MDA'));
+        expect(await screen.findByText('Framework MDA')).toBeOnTheScreen();
     });
 });
 

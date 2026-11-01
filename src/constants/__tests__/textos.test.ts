@@ -25,7 +25,11 @@ import {
     resumoDoProgresso,
     xpNaCarta,
     respostasDeMinimas,
+    botaoDaSugestao,
     contagemDeMedalhas,
+    quandoARevisaoAbreComQuestoes,
+    variacaoDaRevisao,
+    variacaoDoFim,
     estadoDaMedalha,
     MEDALHAS_DO_APP,
     TEXTOS_DAS_CONQUISTAS,
@@ -236,6 +240,61 @@ describe('os textos das Conquistas', () => {
     it('a medalha bloqueada diz que está bloqueada, com a contagem quando há', () => {
         expect(estadoDaMedalha({ ganhaEm: null, progresso: null })).toBe('Bloqueada');
         expect(estadoDaMedalha({ ganhaEm: null, progresso: { feito: 1, total: 5 } })).toBe('Bloqueada · 1 de 5');
+    });
+});
+
+describe('o fim da lição', () => {
+    it('quando o depois melhora, diz quantos acertos a mais, sem dizer a causa', () => {
+        expect(variacaoDoFim({ acertos: 1, total: 3 }, { acertos: 3, total: 3 })).toEqual({
+            texto: 'Você acertou 2 a mais na verificação',
+            melhorou: true,
+        });
+    });
+
+    it('quando o depois é igual, diz que o resultado é o mesmo, sem tom de derrota', () => {
+        expect(variacaoDoFim({ acertos: 2, total: 3 }, { acertos: 2, total: 3 })).toEqual({
+            texto: 'Mesmo resultado do diagnóstico',
+            melhorou: false,
+        });
+    });
+
+    it('quando o depois é menor, diz quantos a menos, em tom neutro', () => {
+        expect(variacaoDoFim({ acertos: 3, total: 3 }, { acertos: 2, total: 3 })).toEqual({
+            texto: 'Você acertou 1 a menos que no diagnóstico',
+            melhorou: false,
+        });
+    });
+
+    it('nenhuma frase atribui o ganho ao estudo', () => {
+        const frases = [
+            variacaoDoFim({ acertos: 0, total: 3 }, { acertos: 3, total: 3 }).texto,
+            variacaoDoFim({ acertos: 2, total: 3 }, { acertos: 2, total: 3 }).texto,
+            variacaoDoFim({ acertos: 3, total: 3 }, { acertos: 0, total: 3 }).texto,
+            variacaoDaRevisao({ acertos: 2, total: 3 }),
+        ];
+        for (const frase of frases) expect(frase).not.toMatch(/estud|graças|por causa/i);
+    });
+
+    it('a revisão diz o que a pessoa lembrou, sem comparar com a verificação', () => {
+        expect(variacaoDaRevisao({ acertos: 2, total: 3 })).toBe('Você lembrou 2 de 3. A revisão mostra o que ficou.');
+    });
+
+    it('avisa quando a revisão abre e quantas questões tem', () => {
+        // 06/11/2026 é sexta-feira.
+        expect(quandoARevisaoAbreComQuestoes(Date.UTC(2026, 10, 6, 15), 3)).toBe(
+            'A revisão abre na sexta, 06/11. São 3 questões para ver o quanto ficou.'
+        );
+        expect(quandoARevisaoAbreComQuestoes(Date.UTC(2026, 10, 7, 15), 1)).toBe(
+            'A revisão abre no sábado, 07/11. É 1 questão para ver o quanto ficou.'
+        );
+    });
+
+    it('o botão principal leva à próxima lição que o app sugere, e some quando não há', () => {
+        expect(botaoDaSugestao({ tipo: 'nova', topicId: 'gdd' }, 'GDD')).toBe('Começar GDD');
+        expect(botaoDaSugestao({ tipo: 'continuar', topicId: 'gdd' }, 'GDD')).toBe('Continuar GDD');
+        expect(botaoDaSugestao({ tipo: 'revisao', topicId: 'mda' }, 'Framework MDA')).toBe('Fazer a revisão de Framework MDA');
+        expect(botaoDaSugestao({ tipo: 'em_dia', topicId: 'mda', liberaEm: 1, diasRestantes: 3 }, 'Framework MDA')).toBeNull();
+        expect(botaoDaSugestao({ tipo: 'tudo_concluido' }, null)).toBeNull();
     });
 });
 

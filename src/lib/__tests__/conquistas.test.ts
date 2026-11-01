@@ -1,6 +1,6 @@
 import type { BlocoQuestao, Fase } from '../../types/domain';
 import { licoesDoAluno, type QuestaoDaLicao, type RespostaDaLicao } from '../licao';
-import { conquistasDoAluno, medalhasGanhas, ORDEM_DAS_MEDALHAS, type IdDaMedalha } from '../conquistas';
+import { conquistasDoAluno, medalhasGanhas, medalhasNovasDoPasso, ORDEM_DAS_MEDALHAS, type IdDaMedalha } from '../conquistas';
 
 const HORA = 60 * 60 * 1000;
 const DIA = 24 * HORA;
@@ -268,3 +268,52 @@ describe('medalhasGanhas', () => {
         expect(medalhasGanhas(conquistas(respostas, DIA_1 + 2 * DIA))).toBe(2);
     });
 });
+
+describe('medalhasNovasDoPasso', () => {
+    const doTopico = (respostas: RespostaDaLicao[]) => respostas.map((r) => ({ ...r, topicId: r.questionId.split('_')[0] }));
+
+    it('são as ganhas a partir da primeira resposta do passo que acabou: o módulo fechado agora, não a Primeira lição de antes', () => {
+        const respostas = [...gddFeita(DIA_1), ...ateAVerificacao(DIA_1 + DIA)];
+        const todas = conquistas(respostas, DIA_1 + DIA);
+
+        // GDD feita no dia 1 deu a Primeira lição; a verificação do MDA, no dia 2, fecha o módulo Fundamentos.
+        expect(medalhasNovasDoPasso(todas, doTopico(respostas), 'mda', 'pos').map((m) => m.id)).toEqual(['modulo_inteiro']);
+    });
+
+    it('a Primeira lição é nova no fim da verificação da primeira lição de ciclo completo', () => {
+        const respostas = ateAVerificacao(DIA_1);
+        const todas = conquistas(respostas, DIA_1);
+
+        expect(medalhasNovasDoPasso(todas, doTopico(respostas), 'mda', 'pos').map((m) => m.id)).toEqual(['primeira_licao']);
+    });
+
+    it('no fim da revisão, o Ciclo completo é novo; a Primeira lição, de sete dias antes, não', () => {
+        const fim = DIA_1 + 7 * DIA;
+        const respostas = [...ateAVerificacao(DIA_1), ...revisao(fim)];
+        const todas = conquistas(respostas, fim);
+
+        const novas = medalhasNovasDoPasso(todas, doTopico(respostas), 'mda', 'reteste').map((m) => m.id);
+        expect(novas).toEqual(['revisao_em_dia', 'ciclo_completo']);
+    });
+
+    it('uma medalha ganha antes do passo, como os 3 dias seguidos do diagnóstico, não repete', () => {
+        const respostas = [
+            r('pre', 'mda_a1', DIA_1),
+            r('pre', 'mda_a2', DIA_1 + DIA),
+            r('pre', 'mda_a2', DIA_1 + 2 * DIA - 2 * HORA),
+            ...varias('pratica', PRATICA, DIA_1 + 2 * DIA),
+            ...varias('pos', FORMA_B, DIA_1 + 2 * DIA + HORA),
+        ];
+        const todas = conquistas(respostas, DIA_1 + 2 * DIA + HORA);
+
+        expect(medalhasNovasDoPasso(todas, doTopico(respostas), 'mda', 'pos').map((m) => m.id)).toEqual(['primeira_licao']);
+        expect(todas.find((c) => c.id === 'tres_dias')!.ganhaEm).not.toBeNull();
+    });
+
+    it('sem resposta do passo, não há medalha nova', () => {
+        const respostas = gddFeita(DIA_1);
+
+        expect(medalhasNovasDoPasso(conquistas(respostas), doTopico(respostas), 'mda', 'pos')).toEqual([]);
+    });
+});
+

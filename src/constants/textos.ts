@@ -21,6 +21,7 @@ import type {
 import type { Conquista, IdDaMedalha } from '../lib/conquistas';
 import type { EstadoDaLicao, EtapaDaLicao, SituacaoDaEtapa } from '../lib/licao';
 import type { Falta } from '../lib/pergunta';
+import type { Sugestao } from '../lib/sugestao';
 import type { Taxa } from '../lib/resultado';
 import type { PreferenciaDeTema } from '../lib/tema';
 import type { Quadrante } from '../lib/quadrante';
@@ -137,9 +138,15 @@ export const TEXTOS = {
     irParaOCartao: 'Ir para o cartão',
     fazerVerificacao: 'Fazer a verificação',
     voltarParaALicao: 'Voltar para a lição',
-    verificacaoFeita: 'Verificação feita',
     licaoConcluida: 'Lição concluída',
+    revisaoFeita: 'Revisão feita',
     xpDaLicao: 'XP da lição',
+    antesDiagnostico: 'Antes · diagnóstico',
+    depoisVerificacao: 'Depois · verificação',
+    naVerificacao: 'Na verificação',
+    hojeSeteDias: 'Hoje, 7 dias depois',
+    comoVoceRespondeuNaLicao: 'Como você respondeu nesta lição',
+    medalhaNova: 'Medalha nova',
     licoes: 'Lições',
     perfil: 'Perfil',
     progresso: 'Progresso',
@@ -421,6 +428,44 @@ export function termoAceitoEm(consentiuEm: number): string {
 export function quandoARevisaoAbre(liberaEm: number): string {
     const abre = dataEmSaoLuis(liberaEm);
     return `A revisão abre ${noOuNa(abre.diaDaSemana)} ${DIAS_DA_SEMANA[abre.diaDaSemana]}, ${diaEMes(abre)}.`;
+}
+
+/** "A revisão abre na sexta, 06/11. São 3 questões para ver o quanto ficou.": o aviso do fim da verificação. */
+export function quandoARevisaoAbreComQuestoes(liberaEm: number, questoes: number): string {
+    const quantas = questoes === 1 ? 'É 1 questão' : `São ${questoes} questões`;
+    return `${quandoARevisaoAbre(liberaEm)} ${quantas} para ver o quanto ficou.`;
+}
+
+/**
+ * A linha sob o antes e o depois do fim da verificação. Só diz o que mudou no resultado: o app
+ * não mede o que causou a mudança, então nenhuma frase atribui o ganho ao estudo. Só a melhora
+ * ganha a cor de sucesso; igual ou menor fica em tom neutro, sem cara de derrota.
+ */
+export function variacaoDoFim(antes: Taxa, depois: Taxa): { texto: string; melhorou: boolean } {
+    const diferenca = depois.acertos - antes.acertos;
+    if (diferenca > 0) return { texto: `Você acertou ${diferenca} a mais na verificação`, melhorou: true };
+    if (diferenca < 0) return { texto: `Você acertou ${-diferenca} a menos que no diagnóstico`, melhorou: false };
+    return { texto: 'Mesmo resultado do diagnóstico', melhorou: false };
+}
+
+/** A linha do fim da revisão: o que a pessoa lembrou, sem comparar com a verificação. */
+export function variacaoDaRevisao(revisao: Taxa): string {
+    return `Você lembrou ${formatarTaxa(revisao.acertos, revisao.total)}. A revisão mostra o que ficou.`;
+}
+
+/** O botão principal do fim da lição: a próxima lição que o app sugere. Null quando não há o que abrir já. */
+export function botaoDaSugestao(sugestao: Sugestao, titulo: string | null): string | null {
+    if (titulo === null) return null;
+    switch (sugestao.tipo) {
+        case 'nova':
+            return comecarLicao(titulo);
+        case 'continuar':
+            return `Continuar ${titulo}`;
+        case 'revisao':
+            return `Fazer a revisão de ${titulo}`;
+        default:
+            return null;
+    }
 }
 
 /** "+3", "−4", "0": os pontos de um nível de certeza na tabela das regras, sem a unidade. */

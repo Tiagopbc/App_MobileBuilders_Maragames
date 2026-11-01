@@ -27,6 +27,8 @@ export default function PassoDaLicaoScreen() {
 
     const { formaPre } = participanteDoRoteiro(perfil);
     const uid = user.uid;
+    // Fixado aqui, depois da checagem: dentro de `fim` (uma declaração içada), `passo` voltaria a ser texto.
+    const passoDaLicao: PassoComQuestoes = passo;
 
     function sair() {
         // Na web, quem abre a URL direto não tem para onde voltar.
@@ -62,7 +64,20 @@ export default function PassoDaLicaoScreen() {
             }
         }
         // Verificação, revisão e, no ciclo curto, a prática: é o fim da lição (por ora, ou de vez).
-        return <FimDaLicao uid={uid} topicId={topicId} formaPre={formaPre} aoSair={sair} />;
+        return (
+            <FimDaLicao
+                uid={uid}
+                topicId={topicId}
+                formaPre={formaPre}
+                passo={passoDaLicao}
+                aoVoltarAoInicio={() => router.dismissTo('/home')}
+                // `replace`: a próxima lição toma o lugar do fim, então voltar dela não reabre o resultado.
+                aoAbrirLicao={(proximoId) =>
+                    router.replace({ pathname: '/licoes/[topicId]', params: { topicId: proximoId } })
+                }
+                aoAbrirConquistas={() => router.push('/conquistas')}
+            />
+        );
     }
 
     const chave = `${topicId}|${passo}`;
