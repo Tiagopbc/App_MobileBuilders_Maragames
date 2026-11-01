@@ -6,8 +6,8 @@ import { Spacing } from '@/constants/theme';
 import { TEXTOS } from '@/constants/textos';
 import { useTheme } from '@/hooks/use-theme';
 
-// O topo das Regras do jogo: a seta de voltar e o título da tela.
-export function CabecalhoDaTela({ titulo, aoVoltar }: { titulo: string; aoVoltar: () => void }) {
+// O topo das Regras do jogo e das Conquistas: a seta de voltar, o título e, se houver, um detalhe à direita.
+export function CabecalhoDaTela({ titulo, aoVoltar, detalhe }: { titulo: string; aoVoltar: () => void; detalhe?: string }) {
     const theme = useTheme();
 
     return (
@@ -18,6 +18,11 @@ export function CabecalhoDaTela({ titulo, aoVoltar }: { titulo: string; aoVoltar
             <ThemedText type="subtitle" accessibilityRole="header" style={styles.titulo}>
                 {titulo}
             </ThemedText>
+            {detalhe !== undefined && (
+                <ThemedText type="smallBold" themeColor="textSecondary">
+                    {detalhe}
+                </ThemedText>
+            )}
         </View>
     );
 }

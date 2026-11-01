@@ -15,15 +15,16 @@ import { useTheme } from '@/hooks/use-theme';
 type TelaDeBoasVindasProps = {
     // A carta de jogador. Null enquanto as lições não chegaram, ou se não puderam ser lidas: a tela
     // aparece sem ela, e o Jogar funciona do mesmo jeito.
-    carta: { apelido: string; sequencia: number; xp: number } | null;
+    carta: { apelido: string; sequencia: number; xp: number; medalhas: { ganhas: number; total: number } } | null;
     aoJogar: () => void;
     aoAbrirRegras: () => void;
+    aoAbrirConquistas: () => void;
 };
 
 // A primeira tela de quem já entrou. No alto, a logo e o nome; no meio, o lobinho sobre dois anéis;
 // embaixo, a chamada, a carta de jogador, o Jogar (o único botão) e o link das Regras do jogo. A
 // saudação ("Olá") é da home; a Configuração não existe aqui: o tema é do Perfil.
-export function TelaDeBoasVindas({ carta, aoJogar, aoAbrirRegras }: TelaDeBoasVindasProps) {
+export function TelaDeBoasVindas({ carta, aoJogar, aoAbrirRegras, aoAbrirConquistas }: TelaDeBoasVindasProps) {
     const theme = useTheme();
 
     return (
@@ -61,7 +62,15 @@ export function TelaDeBoasVindas({ carta, aoJogar, aoAbrirRegras }: TelaDeBoasVi
                         <ThemedText themeColor="textSecondary">{TEXTOS_DE_BOAS_VINDAS.apoio}</ThemedText>
                     </View>
 
-                    {carta && <CartaDeJogador apelido={carta.apelido} sequencia={carta.sequencia} xp={carta.xp} />}
+                    {carta && (
+                        <CartaDeJogador
+                            apelido={carta.apelido}
+                            sequencia={carta.sequencia}
+                            xp={carta.xp}
+                            medalhas={carta.medalhas}
+                            aoAbrirConquistas={aoAbrirConquistas}
+                        />
+                    )}
 
                     <View style={styles.acoes}>
                         <BotaoPrincipal rotulo={TEXTOS_DE_BOAS_VINDAS.jogar} onPress={aoJogar} />

@@ -1,3 +1,4 @@
+import { ORDEM_DAS_MEDALHAS } from '../../lib/conquistas';
 import {
     acertosDoTopico,
     antesEDepois,
@@ -24,6 +25,10 @@ import {
     resumoDoProgresso,
     xpNaCarta,
     respostasDeMinimas,
+    contagemDeMedalhas,
+    estadoDaMedalha,
+    MEDALHAS_DO_APP,
+    TEXTOS_DAS_CONQUISTAS,
     AUTOR,
     TEXTOS_DE_BOAS_VINDAS,
     TEXTOS_DO_LOGIN,
@@ -193,6 +198,44 @@ describe('xpNaCarta', () => {
         expect(xpNaCarta(18)).toBe('+18');
         expect(xpNaCarta(3)).toBe('+3');
         expect(xpNaCarta(0)).toBe('0');
+    });
+});
+
+describe('os textos das Conquistas', () => {
+    it('cada medalha tem nome e uma frase do que fazer, na ordem da tela', () => {
+        expect(ORDEM_DAS_MEDALHAS.map((id) => MEDALHAS_DO_APP[id].nome)).toEqual([
+            'Primeira lição',
+            '3 dias seguidos',
+            'Um módulo inteiro',
+            'Revisão em dia',
+            'Ciclo completo',
+            '5 lições',
+        ]);
+        expect(MEDALHAS_DO_APP.modulo_inteiro.descricao).toBe('Terminar todas as lições de um módulo.');
+        expect(MEDALHAS_DO_APP.ciclo_completo.descricao).toBe('Terminar uma lição com a revisão feita.');
+    });
+
+    it('nenhuma medalha fala em certeza, em acerto ou em ranking', () => {
+        for (const id of ORDEM_DAS_MEDALHAS) {
+            const { nome, descricao } = MEDALHAS_DO_APP[id];
+            expect(`${nome} ${descricao}`).not.toMatch(/certeza|acert|errad|erro|ranking|melhor/i);
+        }
+        expect(TEXTOS_DAS_CONQUISTAS.apoio).toBe('Medalhas só suas. Elas mostram o que você fez, sem comparar com ninguém.');
+    });
+
+    it('conta as medalhas: "2 de 6"', () => {
+        expect(contagemDeMedalhas(2, 6)).toBe('2 de 6');
+        expect(contagemDeMedalhas(0, 6)).toBe('0 de 6');
+    });
+
+    it('a medalha ganha diz o dia, no fuso de São Luís', () => {
+        // 01:30 UTC de 13/11 ainda é 12/11 em São Luís.
+        expect(estadoDaMedalha({ ganhaEm: Date.UTC(2026, 10, 13, 1, 30), progresso: null })).toBe('Ganhou em 12/11');
+    });
+
+    it('a medalha bloqueada diz que está bloqueada, com a contagem quando há', () => {
+        expect(estadoDaMedalha({ ganhaEm: null, progresso: null })).toBe('Bloqueada');
+        expect(estadoDaMedalha({ ganhaEm: null, progresso: { feito: 1, total: 5 } })).toBe('Bloqueada · 1 de 5');
     });
 });
 
