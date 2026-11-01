@@ -22,6 +22,7 @@ import {
     formatarXpTotal,
     resumirQuadrantes,
     resumoDoProgresso,
+    xpNaCarta,
     respostasDeMinimas,
     AUTOR,
     TEXTOS_DE_BOAS_VINDAS,
@@ -184,6 +185,14 @@ describe('resumoDoProgresso', () => {
     it('concorda com o singular e com o zero', () => {
         expect(resumoDoProgresso(1, 1, 0)).toBe('De 1 resposta, 1 está firme.');
         expect(resumoDoProgresso(4, 0, 1)).toBe('De 4 respostas, nenhuma está firme. Em 1, você achou que sabia.');
+    });
+});
+
+describe('xpNaCarta', () => {
+    it('é o número grande da carta: com sinal quando há XP, e 0 quando não há', () => {
+        expect(xpNaCarta(18)).toBe('+18');
+        expect(xpNaCarta(3)).toBe('+3');
+        expect(xpNaCarta(0)).toBe('0');
     });
 });
 

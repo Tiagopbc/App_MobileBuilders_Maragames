@@ -3,6 +3,7 @@ import { Image } from 'expo-image';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { CartaDeJogador } from '@/components/boas-vindas/carta-de-jogador';
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { LogoBeast } from '@/components/logo-beast';
@@ -12,15 +13,17 @@ import { LarguraDoFormulario, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type TelaDeBoasVindasProps = {
-    aoIniciar: () => void;
-    aoAbrirConfiguracao: () => void;
+    // A carta de jogador. Null enquanto as lições não chegaram, ou se não puderam ser lidas: a tela
+    // aparece sem ela, e o Jogar funciona do mesmo jeito.
+    carta: { apelido: string; sequencia: number; xp: number } | null;
+    aoJogar: () => void;
     aoAbrirRegras: () => void;
 };
 
-// A primeira tela de quem já entrou. Só apresenta o app: no alto, a logo e o nome, com a
-// Configuração (⚙) e as Regras do jogo (?); no meio, o lobinho; embaixo, a chamada, uma frase e o
-// Iniciar. Não diz o nome da pessoa nem lê nada do banco: a saudação é da home.
-export function TelaDeBoasVindas({ aoIniciar, aoAbrirConfiguracao, aoAbrirRegras }: TelaDeBoasVindasProps) {
+// A primeira tela de quem já entrou. No alto, a logo e o nome; no meio, o lobinho sobre dois anéis;
+// embaixo, a chamada, a carta de jogador, o Jogar (o único botão) e o link das Regras do jogo. A
+// saudação ("Olá") é da home; a Configuração não existe aqui: o tema é do Perfil.
+export function TelaDeBoasVindas({ carta, aoJogar, aoAbrirRegras }: TelaDeBoasVindasProps) {
     const theme = useTheme();
 
     return (
@@ -31,12 +34,12 @@ export function TelaDeBoasVindas({ aoIniciar, aoAbrirConfiguracao, aoAbrirRegras
                     <ThemedText type="smallBold" style={styles.nome}>
                         {TEXTOS_DE_BOAS_VINDAS.nome}
                     </ThemedText>
-                    <BotaoDeIcone icone="settings-sharp" rotulo={TEXTOS_DE_BOAS_VINDAS.configuracao} onPress={aoAbrirConfiguracao} />
-                    <BotaoDeIcone icone="help" rotulo={TEXTOS_DE_BOAS_VINDAS.regras} onPress={aoAbrirRegras} />
                 </View>
 
                 <View style={styles.palco}>
-                    {/* A sombra no chão, para o lobinho não flutuar no padrão do fundo. */}
+                    {/* Os anéis e a sombra no chão: o lobinho não flutua no padrão do fundo. */}
+                    <View testID="anel-externo" style={[styles.anel, styles.anelExterno, { backgroundColor: theme.realce }]} />
+                    <View testID="anel-interno" style={[styles.anel, styles.anelInterno, { backgroundColor: theme.realce }]} />
                     <View style={[styles.sombra, { backgroundColor: theme.veu }]} />
                     <Image
                         accessible
@@ -55,7 +58,22 @@ export function TelaDeBoasVindas({ aoIniciar, aoAbrirConfiguracao, aoAbrirRegras
                     <ThemedText themeColor="textSecondary">{TEXTOS_DE_BOAS_VINDAS.apoio}</ThemedText>
                 </View>
 
-                <BotaoPrincipal rotulo={TEXTOS_DE_BOAS_VINDAS.iniciar} onPress={aoIniciar} />
+                {carta && <CartaDeJogador apelido={carta.apelido} sequencia={carta.sequencia} xp={carta.xp} />}
+
+                <View style={styles.acoes}>
+                    <BotaoPrincipal rotulo={TEXTOS_DE_BOAS_VINDAS.jogar} onPress={aoJogar} />
+                    <Pressable
+                        accessibilityRole="link"
+                        accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.regras}
+                        hitSlop={Spacing.two}
+                        onPress={aoAbrirRegras}
+                        style={styles.link}>
+                        <Ionicons name="help-circle-outline" size={20} color={theme.primaria} />
+                        <ThemedText type="smallBold" themeColor="primaria">
+                            {TEXTOS_DE_BOAS_VINDAS.regras}
+                        </ThemedText>
+                    </Pressable>
+                </View>
 
                 <ThemedText type="small" themeColor="textSecondary" style={styles.assinatura}>
                     {TEXTOS_DE_BOAS_VINDAS.assinatura}
@@ -65,39 +83,19 @@ export function TelaDeBoasVindas({ aoIniciar, aoAbrirConfiguracao, aoAbrirRegras
     );
 }
 
-// Um botão só com o ícone, sem caixa: discreto, para nada além do Iniciar parecer o próximo passo.
-// O leitor de tela diz o rótulo, e a área de toque continua com 44 pontos.
-function BotaoDeIcone({
-    icone,
-    rotulo,
-    onPress,
-}: {
-    icone: keyof typeof Ionicons.glyphMap;
-    rotulo: string;
-    onPress: () => void;
-}) {
-    const theme = useTheme();
-
-    return (
-        <Pressable
-            accessibilityRole="button"
-            accessibilityLabel={rotulo}
-            onPress={onPress}
-            style={({ pressed }) => [styles.botaoDeIcone, { opacity: pressed ? 0.6 : 1 }]}>
-            <Ionicons name={icone} size={22} color={theme.primaria} />
-        </Pressable>
-    );
-}
-
 const styles = StyleSheet.create({
     container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
     safeArea: { flex: 1, maxWidth: LarguraDoFormulario, paddingHorizontal: Spacing.four, paddingBottom: Spacing.three },
     topo: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, paddingTop: Spacing.two },
     nome: { flex: 1 },
-    palco: { flex: 1, alignItems: 'center', justifyContent: 'flex-end', paddingBottom: Spacing.four },
-    sombra: { position: 'absolute', bottom: Spacing.three, width: 160, height: 18, borderRadius: 80, opacity: 0.5 },
-    mascote: { width: '80%', maxWidth: 280, aspectRatio: 615 / 815, maxHeight: '100%' },
-    texto: { gap: Spacing.two, marginBottom: Spacing.four },
+    palco: { flex: 1, minHeight: 120, alignItems: 'center', justifyContent: 'flex-end', paddingBottom: Spacing.two },
+    anel: { position: 'absolute', alignSelf: 'center', borderRadius: 999 },
+    anelExterno: { width: 190, height: 190, bottom: Spacing.one, opacity: 0.55 },
+    anelInterno: { width: 136, height: 136, bottom: 30, opacity: 0.9 },
+    sombra: { position: 'absolute', bottom: Spacing.one, width: 120, height: 12, borderRadius: 60, opacity: 0.4 },
+    mascote: { width: '80%', maxWidth: 220, aspectRatio: 615 / 815, maxHeight: '100%' },
+    texto: { gap: Spacing.one, marginTop: Spacing.two, marginBottom: Spacing.three },
+    acoes: { gap: Spacing.three, marginTop: Spacing.three },
+    link: { flexDirection: 'row', alignSelf: 'center', alignItems: 'center', gap: Spacing.one, minHeight: 32 },
     assinatura: { textAlign: 'center', marginTop: Spacing.three },
-    botaoDeIcone: { width: 44, height: 44, alignItems: 'center', justifyContent: 'center' },
 });

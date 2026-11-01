@@ -668,10 +668,16 @@ export const TEXTOS_DE_BOAS_VINDAS = {
     titulo: 'Solte a fera do game design',
     apoio: 'Aprenda game design em lições curtas, como quem joga.',
     mascote: 'O lobinho da Beast Maragames segurando um controle',
-    iniciar: 'Iniciar',
-    configuracao: 'Configuração',
+    jogar: 'Jogar',
     regras: 'Regras do jogo',
+    pessoaJogadora: 'Pessoa jogadora', // o tipo da carta de jogador, na placa
+    comecarASequencia: 'Responda uma questão para começar a sequência.',
 } as const;
+
+/** O XP em número grande, na carta de jogador: "+18"; sem XP, "0". */
+export function xpNaCarta(xp: number): string {
+    return xp > 0 ? `+${xp}` : '0';
+}
 
 // As legendas da matriz 2×2: a das Regras do jogo e a do Progresso são a mesma.
 export const LEGENDAS_DA_MATRIZ = {

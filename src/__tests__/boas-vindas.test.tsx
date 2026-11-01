@@ -1,4 +1,4 @@
-import { userEvent, within } from '@testing-library/react-native';
+import { userEvent, waitFor, within } from '@testing-library/react-native';
 import { useFonts } from 'expo-font';
 import { renderRouter, screen } from 'expo-router/testing-library';
 
@@ -6,12 +6,12 @@ import {
     DESCRICAO_QUADRANTE,
     NIVEIS_DE_CONFIANCA,
     ROTULO_CONFIANCA,
-    ROTULO_DO_TEMA,
     ROTULO_QUADRANTE,
     formatarPontos,
 } from '@/constants/textos';
+import { Colors } from '@/constants/theme';
 import { xpDaResposta } from '@/lib/xp';
-import { escolherTema, preferenciaDeTema } from '@/lib/tema';
+import { escolherTema } from '@/lib/tema';
 import type { RepositorioFalso } from '@/test/repositorio-falso';
 import { repositorio } from '@/data/repositorio';
 
@@ -40,7 +40,7 @@ jest.mock('@/lib/session', () => ({
     }),
 }));
 
-// A home, que o Iniciar abre, lê as lições pelo repositório; aqui ele é o da memória.
+// A home, que o Jogar abre, lê as lições pelo repositório; aqui ele é o da memória.
 jest.mock('@/data/repositorio', () => {
     const { RepositorioFalso } = require('@/test/repositorio-falso');
     return { repositorio: new RepositorioFalso() };
@@ -84,7 +84,26 @@ beforeEach(() => {
 
 afterEach(async () => {
     await escolherTema('sistema');
+    jest.restoreAllMocks();
 });
+
+// Uma prática certa, com certeza e de hoje: vale +3 de XP e abre a sequência em 1 dia.
+function respondidaHoje() {
+    repo.respostas.push({
+        id: 'r1',
+        uid: 'u1',
+        questionId: 'mda_p1',
+        topicId: 'mda',
+        attemptId: 't0',
+        fase: 'pratica',
+        escolha: 'a',
+        ordemExibida: ['a', 'b'],
+        correta: true,
+        confianca: 3,
+        tempoMs: 1,
+        respondidaEm: Date.now(),
+    });
+}
 
 async function abrirEm(url: string) {
     const rotas = await renderRouter('./src/app', { initialUrl: url });
@@ -92,14 +111,13 @@ async function abrirEm(url: string) {
 }
 
 describe('a tela de boas-vindas', () => {
-    it('é a primeira de quem já entrou: o nome do app, o Iniciar e os dois botões do rodapé', async () => {
+    it('é a primeira de quem já entrou: o nome do app, o Jogar e o link das Regras do jogo', async () => {
         const rotas = await abrirEm('/');
 
         expect(await screen.findByText('Maragames App')).toBeOnTheScreen();
         expect(screen.getByText('by Tiago Cavalcanti')).toBeOnTheScreen();
-        expect(screen.getByRole('button', { name: 'Iniciar' })).toBeOnTheScreen();
-        expect(screen.getByRole('button', { name: 'Configuração' })).toBeOnTheScreen();
-        expect(screen.getByRole('button', { name: 'Regras do jogo' })).toBeOnTheScreen();
+        expect(screen.getByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
+        expect(screen.getByRole('link', { name: 'Regras do jogo' })).toBeOnTheScreen();
         expect(rotas.caminho()).toBe('/');
     });
 
@@ -111,14 +129,25 @@ describe('a tela de boas-vindas', () => {
         expect(screen.getByRole('image', { name: 'Logo da Beast Maragames' })).toBeOnTheScreen();
     });
 
-    // A tela só apresenta o app: o lobinho, uma chamada e uma frase. Nada além do Iniciar se toca.
-    it('apresenta o app com o lobinho, o título e a frase', async () => {
+    // O Jogar é o único botão: a Configuração saiu (o tema é do Perfil) e as Regras são um link.
+    it('apresenta o app com o lobinho, o título e a frase, e só o Jogar é botão', async () => {
         await abrirEm('/');
 
         expect(await screen.findByText('Solte a fera do game design')).toBeOnTheScreen();
         expect(screen.getByText('Aprenda game design em lições curtas, como quem joga.')).toBeOnTheScreen();
         expect(screen.getByRole('image', { name: 'O lobinho da Beast Maragames segurando um controle' })).toBeOnTheScreen();
-        expect(screen.getAllByRole('button')).toHaveLength(3);
+        expect(screen.getAllByRole('button')).toHaveLength(1);
+        expect(screen.queryByRole('button', { name: 'Configuração' })).toBeNull();
+        expect(screen.queryByRole('button', { name: 'Iniciar' })).toBeNull();
+    });
+
+    it('o lobinho fica sobre dois anéis lisos, na cor de realce do tema', async () => {
+        await escolherTema('claro');
+        await abrirEm('/');
+
+        for (const anel of ['anel-externo', 'anel-interno']) {
+            expect(await screen.findByTestId(anel)).toHaveStyle({ backgroundColor: Colors.light.realce });
+        }
     });
 
     it('a logo é a mesma nos dois temas', async () => {
@@ -129,63 +158,60 @@ describe('a tela de boas-vindas', () => {
         expect(logo.props.source).toEqual([require('@/assets/images/logo-app.svg')]);
     });
 
-    it('não diz o nome de quem entrou: a saudação é da home', async () => {
+    it('a saudação continua sendo da home: a boas-vindas não diz "Olá"', async () => {
         await abrirEm('/');
         await screen.findByText('Maragames App');
 
         expect(screen.queryByText(/Olá/)).toBeNull();
-        expect(screen.queryByText(/Paulo/)).toBeNull();
     });
 
-    it('o Iniciar abre a home e tira a boas-vindas da pilha', async () => {
+    it('o Jogar abre a home e tira a boas-vindas da pilha', async () => {
         const rotas = await abrirEm('/');
 
-        await userEvent.setup().press(await screen.findByRole('button', { name: 'Iniciar' }));
+        await userEvent.setup().press(await screen.findByRole('button', { name: 'Jogar' }));
 
         expect(await screen.findByText('Olá, Paulo')).toBeOnTheScreen();
         expect(rotas.caminho()).toBe('/home');
-        expect(screen.queryByRole('button', { name: 'Iniciar' })).toBeNull();
+        expect(screen.queryByRole('button', { name: 'Jogar' })).toBeNull();
     });
 });
 
-describe('a Configuração', () => {
-    it('abre pelo ⚙ e mostra a escolha de tema', async () => {
-        const rotas = await abrirEm('/');
+describe('a carta de jogador', () => {
+    it('mostra a pessoa jogadora, pelo apelido, com a sequência e o XP', async () => {
+        respondidaHoje();
+        await abrirEm('/');
 
-        await userEvent.setup().press(await screen.findByRole('button', { name: 'Configuração' }));
-
-        expect(await screen.findByText('Aparência')).toBeOnTheScreen();
-        expect(rotas.caminho()).toBe('/configuracao');
-        for (const rotulo of Object.values(ROTULO_DO_TEMA)) {
-            expect(screen.getByRole('radio', { name: rotulo })).toBeOnTheScreen();
-        }
+        expect(await screen.findByText('Pessoa jogadora')).toBeOnTheScreen();
+        expect(screen.getByText('Paulo')).toBeOnTheScreen();
+        expect(screen.getByLabelText('1 dia seguido')).toBeOnTheScreen();
+        expect(screen.getByLabelText('XP: +3')).toBeOnTheScreen();
+        expect(screen.queryByText(/Responda uma questão/)).toBeNull();
     });
 
-    it('escolher o tema muda a preferência do aparelho, a mesma do Perfil', async () => {
-        await abrirEm('/configuracao');
+    it('no primeiro acesso, tudo em zero e a dica de como começar a sequência', async () => {
+        await abrirEm('/');
 
-        await userEvent.setup().press(await screen.findByRole('radio', { name: ROTULO_DO_TEMA.escuro }));
-
-        expect(preferenciaDeTema()).toBe('escuro');
+        expect(await screen.findByLabelText('0 dias seguidos')).toBeOnTheScreen();
+        expect(screen.getByLabelText('XP: 0')).toBeOnTheScreen();
+        expect(screen.getByText('Responda uma questão para começar a sequência.')).toBeOnTheScreen();
     });
 
-    it('o voltar leva de volta à boas-vindas', async () => {
-        const rotas = await abrirEm('/');
-        const usuario = userEvent.setup();
+    it('se as lições não carregam, a tela aparece sem a carta e o Jogar continua funcionando', async () => {
+        jest.spyOn(repo, 'getTopicos').mockRejectedValue(new Error('sem rede'));
+        await abrirEm('/');
 
-        await usuario.press(await screen.findByRole('button', { name: 'Configuração' }));
-        await usuario.press(await screen.findByRole('button', { name: 'Voltar' }));
-
-        expect(await screen.findByRole('button', { name: 'Iniciar' })).toBeOnTheScreen();
-        expect(rotas.caminho()).toBe('/');
+        expect(await screen.findByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
+        await waitFor(() => expect(repo.getTopicos).toHaveBeenCalled());
+        expect(screen.queryByText('Pessoa jogadora')).toBeNull();
+        expect(screen.getByRole('link', { name: 'Regras do jogo' })).toBeOnTheScreen();
     });
 });
 
 describe('as Regras do jogo', () => {
-    it('abrem pelo ? e têm os seis cards, com o conceito do jogo primeiro', async () => {
+    it('abrem pelo link e têm os seis cards, com o conceito do jogo primeiro', async () => {
         const rotas = await abrirEm('/');
 
-        await userEvent.setup().press(await screen.findByRole('button', { name: 'Regras do jogo' }));
+        await userEvent.setup().press(await screen.findByRole('link', { name: 'Regras do jogo' }));
 
         expect(await screen.findByText('O jogo')).toBeOnTheScreen();
         expect(rotas.caminho()).toBe('/regras');
@@ -249,10 +275,10 @@ describe('as Regras do jogo', () => {
         const rotas = await abrirEm('/');
         const usuario = userEvent.setup();
 
-        await usuario.press(await screen.findByRole('button', { name: 'Regras do jogo' }));
+        await usuario.press(await screen.findByRole('link', { name: 'Regras do jogo' }));
         await usuario.press(await screen.findByRole('button', { name: 'Voltar' }));
 
-        expect(await screen.findByRole('button', { name: 'Iniciar' })).toBeOnTheScreen();
+        expect(await screen.findByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
         expect(rotas.caminho()).toBe('/');
     });
 });
