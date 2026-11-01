@@ -1,4 +1,4 @@
-import { act, render, screen } from '@testing-library/react-native';
+import { act, render, screen, within } from '@testing-library/react-native';
 
 import { Colors, Relevo } from '@/constants/theme';
 import type { EstadoDasLicoes } from '@/hooks/use-licoes';
@@ -84,3 +84,39 @@ describe.each([
         expect(screen.getByText('Unity — Primeiros Passos')).toHaveStyle({ color: Colors[esquema].textSecondary });
     });
 });
+
+// Enquanto as lições carregam, a lista tem a forma real: cards de esqueleto no lugar dos cards.
+// O esqueleto só aparece depois de 300 ms, para não piscar quando a rede é rápida.
+describe('enquanto as lições carregam', () => {
+    beforeEach(() => jest.useFakeTimers());
+    afterEach(() => jest.useRealTimers());
+
+    const carregando = { tipo: 'carregando' } as EstadoDasLicoes;
+    const tela = () => (
+        <TelaDasLicoes estado={carregando} emBreve={[]} aoAbrir={() => {}} aoTentarDeNovo={() => {}} aoSair={() => {}} />
+    );
+
+    it('nos primeiros 300 ms, não mostra nada: o conteúdo pode chegar antes', async () => {
+        await render(tela());
+        await act(() => jest.advanceTimersByTime(299));
+
+        expect(screen.queryByTestId('esqueleto-das-licoes')).toBeNull();
+    });
+
+    it('depois de 300 ms, mostra o esqueleto com quatro cards de lição, anunciado como "Carregando"', async () => {
+        await render(tela());
+        await act(() => jest.advanceTimersByTime(300));
+
+        const esqueleto = within(screen.getByTestId('esqueleto-das-licoes'));
+        expect(esqueleto.getAllByTestId('esqueleto-de-licao')).toHaveLength(4);
+        expect(screen.getByLabelText('Carregando')).toBeOnTheScreen();
+    });
+
+    it('o título da tela e o fechar continuam à vista', async () => {
+        await render(tela());
+
+        expect(screen.getByText('Lições')).toBeOnTheScreen();
+        expect(screen.getByRole('button', { name: 'Voltar ao início' })).toBeOnTheScreen();
+    });
+});
+

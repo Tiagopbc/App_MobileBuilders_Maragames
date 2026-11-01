@@ -132,3 +132,21 @@ describe.each([
         expect(screen.getByText('Voltar')).toHaveStyle({ color: cores.textSecondary });
     });
 });
+
+// O botão principal põe o ícone e o rótulo lado a lado. Num celular estreito, um rótulo comprido
+// precisa quebrar dentro da largura do botão, e não passar dela.
+describe('o rótulo do botão principal', () => {
+    it('encolhe dentro da linha, para um rótulo comprido quebrar em vez de passar da largura', async () => {
+        await render(<BotaoPrincipal rotulo="Fazer a revisão de O que é Game Design" onPress={() => {}} />);
+
+        expect(screen.getByText('Fazer a revisão de O que é Game Design')).toHaveStyle({ flexShrink: 1 });
+    });
+
+    it('com ícone, o rótulo também encolhe, e o ícone fica antes dele', async () => {
+        await render(<BotaoPrincipal rotulo="Confirmar de novo" icone="refresh" onPress={() => {}} />);
+
+        expect(screen.getByText('Confirmar de novo')).toHaveStyle({ flexShrink: 1 });
+        expect(screen.getByRole('button', { name: 'Confirmar de novo' })).toHaveStyle({ flexDirection: 'row' });
+    });
+});
+

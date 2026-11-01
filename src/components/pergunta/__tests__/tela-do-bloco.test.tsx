@@ -1,3 +1,4 @@
+import { useNetInfo } from '@react-native-community/netinfo';
 import { render, screen, userEvent, within } from '@testing-library/react-native';
 
 import { repositorio } from '@/data/repositorio';
@@ -77,7 +78,8 @@ async function abrir(fase: Fase, opcoes: { formaPre?: FormaPre | null; topicId?:
 
 const alternativa = (texto: string) => screen.getByRole('radio', { name: new RegExp(texto) });
 const confianca = (rotulo: string) => screen.getByRole('radio', { name: rotulo });
-const confirmar = () => screen.getByRole('button', { name: 'Confirmar' });
+// Depois de uma falha ao gravar, o botão diz "Confirmar de novo".
+const confirmar = () => screen.getByRole('button', { name: /^Confirmar/ });
 
 async function responder(texto: string, rotulo: string) {
     const user = userEvent.setup();
@@ -730,3 +732,59 @@ describe('falhas', () => {
         expect(await screen.findByText('Enunciado de mda_p1')).toBeOnTheScreen();
     });
 });
+
+describe('sem conexão e erro ao gravar', () => {
+    const rede = useNetInfo as jest.Mock;
+
+    beforeEach(() => {
+        jest.spyOn(console, 'warn').mockImplementation(() => {});
+    });
+    afterEach(() => {
+        rede.mockReturnValue({ isConnected: true });
+        jest.restoreAllMocks();
+    });
+
+    it('sem rede, a faixa aparece no alto, e a escolha continua marcada', async () => {
+        rede.mockReturnValue({ isConnected: false });
+        await abrir('pratica');
+        await screen.findByText('Enunciado de mda_p1');
+        await userEvent.setup().press(alternativa('Certa'));
+
+        expect(screen.getByText('Sem conexão. Suas escolhas continuam marcadas.')).toBeOnTheScreen();
+        expect(alternativa('Certa')).toBeChecked();
+    });
+
+    it('com rede, não há faixa', async () => {
+        await abrir('pratica');
+        await screen.findByText('Enunciado de mda_p1');
+
+        expect(screen.queryByText(/Sem conexão/)).toBeNull();
+    });
+
+    it('o erro ao gravar ganha o aviso com ícone e fundo, e o botão passa a dizer "Confirmar de novo"', async () => {
+        await abrir('pratica');
+        await screen.findByText('Enunciado de mda_p1');
+        repo.falhasAoGravar = 1;
+
+        await responder('Certa', 'Tenho certeza');
+
+        const aviso = await screen.findByTestId('erro-ao-gravar');
+        expect(within(aviso).getByText('Não foi possível gravar a resposta. Confira a conexão e confirme de novo.')).toBeOnTheScreen();
+        expect(screen.getByRole('button', { name: 'Confirmar de novo' })).toBeEnabled();
+        expect(screen.queryByRole('button', { name: 'Confirmar' })).toBeNull();
+    });
+
+    it('depois de gravar, o aviso some', async () => {
+        await abrir('pratica');
+        await screen.findByText('Enunciado de mda_p1');
+        repo.falhasAoGravar = 1;
+        await responder('Certa', 'Tenho certeza');
+        await screen.findByTestId('erro-ao-gravar');
+
+        await userEvent.setup().press(screen.getByRole('button', { name: 'Confirmar de novo' }));
+
+        expect(await screen.findByText('Você acertou')).toBeOnTheScreen();
+        expect(screen.queryByTestId('erro-ao-gravar')).toBeNull();
+    });
+});
+

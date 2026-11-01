@@ -9,7 +9,7 @@ import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { ResultadoDoBloco } from '@/components/resultado/resultado-do-bloco';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { MaxContentWidth, Raio, Spacing } from '@/constants/theme';
 import { TEXTOS, TEXTO_DA_FALTA } from '@/constants/textos';
 import { useBloco, type EntradaDoBloco, type EstadoDoBloco, type Relatorio } from '@/hooks/use-bloco';
 import { useTheme } from '@/hooks/use-theme';
@@ -23,6 +23,7 @@ import {
 } from '@/lib/pergunta';
 
 import { AlternativaItem, type EstadoDaAlternativa } from './alternativa-item';
+import { FaixaSemConexao } from './faixa-sem-conexao';
 import { FeedbackQuestao } from './feedback-questao';
 import { SeletorConfianca } from './seletor-confianca';
 
@@ -77,6 +78,8 @@ export function TelaDoBloco({ aoSair, aoAbrirRegras, fim, ...entrada }: TelaDoBl
                         />
                     </View>
                 )}
+
+                <FaixaSemConexao />
 
                 {estado.tipo === 'carregando' && (
                     <View style={styles.centro}>
@@ -207,9 +210,14 @@ function Pergunta({ estado, aviso, aoConfirmar, aoAvancar, aoAbrirRegras }: Perg
                 ) : (
                     <>
                         {estado.erroAoGravar ? (
-                            <ThemedText type="small" themeColor="erro" aria-live="polite">
-                                {TEXTOS.erroAoGravar}
-                            </ThemedText>
+                            <View
+                                testID="erro-ao-gravar"
+                                style={[styles.erroAoGravar, { backgroundColor: theme.fundoPontoCego }]}>
+                                <Ionicons name="alert-circle" size={18} color={theme.erro} style={styles.iconeDoErro} />
+                                <ThemedText type="small" aria-live="polite" style={styles.textoDoErro}>
+                                    {TEXTOS.erroAoGravar}
+                                </ThemedText>
+                            </View>
                         ) : (
                             falta && (
                                 <ThemedText type="small" themeColor="textSecondary">
@@ -218,7 +226,8 @@ function Pergunta({ estado, aviso, aoConfirmar, aoAvancar, aoAbrirRegras }: Perg
                             )
                         )}
                         <BotaoPrincipal
-                            rotulo={TEXTOS.confirmar}
+                            rotulo={estado.erroAoGravar ? TEXTOS.confirmarDeNovo : TEXTOS.confirmar}
+                            icone={estado.erroAoGravar ? 'refresh' : undefined}
                             desabilitado={!podeConfirmar(selecao)}
                             carregando={estado.gravando}
                             onPress={() => {
@@ -233,6 +242,9 @@ function Pergunta({ estado, aviso, aoConfirmar, aoAvancar, aoAbrirRegras }: Perg
 }
 
 const styles = StyleSheet.create({
+    erroAoGravar: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.two, padding: 10, borderRadius: Raio.medio },
+    iconeDoErro: { marginTop: 1 },
+    textoDoErro: { flex: 1 },
     container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
     safeArea: { flex: 1, maxWidth: MaxContentWidth },
     cabecalho: {

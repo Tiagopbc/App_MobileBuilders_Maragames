@@ -1,8 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
+import { EsqueletoDasLicoes } from '@/components/esqueleto/esqueleto-das-licoes';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
@@ -10,6 +11,7 @@ import { MaxContentWidth, Spacing, type ThemeColor } from '@/constants/theme';
 import type { ModuloEmBreve } from '@/constants/em-breve';
 import { TEXTOS, dominioEmContagem, licaoEmBreve, moduloEmBreve, situacaoDaLicao } from '@/constants/textos';
 import type { EstadoDasLicoes, LicaoDoAluno } from '@/hooks/use-licoes';
+import { useAposAtraso } from '@/hooks/use-apos-atraso';
 import { useTheme } from '@/hooks/use-theme';
 import type { EstadoDaLicao } from '@/lib/licao';
 
@@ -48,6 +50,7 @@ function porModulo(licoes: readonly LicaoDoAluno[]): { modulo: string; licoes: L
 // sem abrir. Só desenha: os estados chegam prontos.
 export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair }: TelaDasLicoesProps) {
     const theme = useTheme();
+    const mostraEsqueleto = useAposAtraso(estado.tipo === 'carregando');
 
     return (
         <FundoDaMarca style={styles.container}>
@@ -65,11 +68,8 @@ export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair
                     </ThemedText>
                 </View>
 
-                {estado.tipo === 'carregando' && (
-                    <View style={styles.centro}>
-                        <ActivityIndicator />
-                    </View>
-                )}
+                {/* Só depois de uma pequena espera: com rede rápida, o conteúdo chega antes e nada pisca. */}
+                {mostraEsqueleto && <EsqueletoDasLicoes />}
 
                 {estado.tipo === 'erro' && (
                     <View style={styles.centro}>

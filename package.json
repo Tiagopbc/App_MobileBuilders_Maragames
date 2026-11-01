@@ -7,6 +7,7 @@
     "@expo/ui": "~58.0.22",
     "@expo/vector-icons": "^15.0.2",
     "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "12.0.1",
     "expo": "~58.0.17",
     "expo-constants": "~58.0.13",
     "expo-font": "~58.0.9",
@@ -70,7 +71,8 @@
         "moduleNameMapper": {
           "\\.css$": "<rootDir>/src/test/estilo-vazio.js",
           "^@/assets/(.*)$": "<rootDir>/assets/$1",
-          "^@react-native-async-storage/async-storage$": "@react-native-async-storage/async-storage/jest/async-storage-mock"
+          "^@react-native-async-storage/async-storage$": "@react-native-async-storage/async-storage/jest/async-storage-mock",
+          "^@react-native-community/netinfo$": "@react-native-community/netinfo/jest/netinfo-mock"
         },
         "testPathIgnorePatterns": [
           "/node_modules/",
@@ -100,7 +102,8 @@
           "^react-native$": "react-native-web",
           "\\.css$": "<rootDir>/src/test/estilo-vazio.js",
           "^@/assets/(.*)$": "<rootDir>/assets/$1",
-          "^@react-native-async-storage/async-storage$": "@react-native-async-storage/async-storage/jest/async-storage-mock"
+          "^@react-native-async-storage/async-storage$": "@react-native-async-storage/async-storage/jest/async-storage-mock",
+          "^@react-native-community/netinfo$": "@react-native-community/netinfo/jest/netinfo-mock"
         },
         "testMatch": [
           "<rootDir>/src/**/*.test.web.[jt]s?(x)"
