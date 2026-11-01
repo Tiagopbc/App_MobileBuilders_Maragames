@@ -19,7 +19,8 @@ import type {
     TempoPorSemana,
 } from '../types/domain';
 import type { Conquista, IdDaMedalha } from '../lib/conquistas';
-import type { EstadoDaLicao, EtapaDaLicao, SituacaoDaEtapa } from '../lib/licao';
+import type { EstadoDaLicao, EtapaDaLicao, SegmentoDoParaHoje, SituacaoDaEtapa } from '../lib/licao';
+import type { DiaDaSemana } from '../lib/sequencia';
 import type { Falta } from '../lib/pergunta';
 import type { Sugestao } from '../lib/sugestao';
 import type { Taxa } from '../lib/resultado';
@@ -262,11 +263,6 @@ export function numeroDaCarta(indice: number, total: number): string {
 /** O pé da carta lido em voz alta: "Conceito, 4 de 5". */
 export function peDaCartaParaLeitor(indice: number, total: number): string {
     return `${TEXTOS.conceito}, ${posicaoNoCartao(indice, total)}`;
-}
-
-/** "Sequência: 3 dias", para o selo da home. */
-export function formatarSequencia(dias: number): string {
-    return `Sequência: ${dias} ${dias === 1 ? 'dia' : 'dias'}`;
 }
 
 /** "dia seguido" ou "dias seguidos", sob o número grande da tela da sequência. */
@@ -752,6 +748,54 @@ export function contagemDeMedalhas(ganhas: number, total: number): string {
 export function estadoDaMedalha(conquista: Pick<Conquista, 'ganhaEm' | 'progresso'>): string {
     if (conquista.ganhaEm !== null) return `Ganhou em ${diaEMes(dataEmSaoLuis(conquista.ganhaEm))}`;
     return conquista.progresso ? `Bloqueada · ${conquista.progresso.feito} de ${conquista.progresso.total}` : 'Bloqueada';
+}
+
+// --- Home: o selo de XP, o Para hoje com as etapas, a sequência da semana e as revisões seladas. ---
+
+/** "Fundamentos · 2 de 5 feitas": o módulo da lição do Para hoje e quantas lições dele estão feitas. */
+export function linhaDoModulo(modulo: string, feitas: number, total: number): string {
+    return `${modulo} · ${licoesFeitas(feitas, total)}`;
+}
+
+/** "Cartão e prática 1/4": a etapa de uma barra do Para hoje, com o progresso quando já há resposta. */
+export function rotuloDaEtapaDoParaHoje(segmento: Pick<SegmentoDoParaHoje, 'etapa' | 'progresso'>): string {
+    const etapa = TITULO_DA_ETAPA[segmento.etapa];
+    return segmento.progresso ? `${etapa} ${segmento.progresso.respondidas}/${segmento.progresso.total}` : etapa;
+}
+
+/** "+7 hoje", sob o total do selo de XP; null quando o dia não mexeu no total. */
+export function xpDeHojeNoSelo(xpDeHoje: number): string | null {
+    return xpDeHoje === 0 ? null : `${formatarPontos(xpDeHoje)} hoje`;
+}
+
+/** "XP: +18, +7 hoje": o que o leitor de tela ouve no selo, que é um número e uma frase pequena. */
+export function rotuloDoSeloDeXp(xp: number, xpDeHoje: number): string {
+    const doDia = xpDeHojeNoSelo(xpDeHoje);
+    return doDia ? `${formatarXpTotal(xp)}, ${doDia}` : formatarXpTotal(xp);
+}
+
+/** "3 dias seguidos", "1 dia seguido": o título do card da sequência. */
+export function tituloDaSequencia(dias: number): string {
+    return `${dias} ${diasSeguidos(dias)}`;
+}
+
+export const TEXTOS_DA_SEQUENCIA = {
+    responda: 'responda 1 questão hoje', // o próximo passo do dia, sem cobrar
+} as const;
+
+// A semana do card da sequência começa na segunda.
+export const LETRAS_DA_SEMANA = ['S', 'T', 'Q', 'Q', 'S', 'S', 'D'] as const;
+const NOMES_DA_SEMANA = ['segunda', 'terça', 'quarta', 'quinta', 'sexta', 'sábado', 'domingo'] as const;
+
+/** "sexta, hoje, sem resposta": o que o leitor de tela ouve em cada dia da semana. */
+export function rotuloDoDiaDaSemana(indice: number, dia: DiaDaSemana): string {
+    const resposta = dia.feito ? 'com resposta' : 'sem resposta';
+    return dia.hoje ? `${NOMES_DA_SEMANA[indice]}, hoje, ${resposta}` : `${NOMES_DA_SEMANA[indice]}, ${resposta}`;
+}
+
+/** "5 d": quanto falta para a revisão selada abrir, em poucos caracteres. */
+export function diasAbreviados(dias: number): string {
+    return `${dias} d`;
 }
 
 // As legendas da matriz 2×2: a das Regras do jogo e a do Progresso são a mesma.

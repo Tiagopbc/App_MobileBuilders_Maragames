@@ -1,5 +1,5 @@
 import type { Fase } from '../../types/domain';
-import { sequenciaDeDias } from '../sequencia';
+import { semanaDaSequencia, sequenciaDeDias } from '../sequencia';
 
 function em(dataHora: string): number {
     return Date.parse(`${dataHora.replace(' ', 'T')}:00-03:00`);
@@ -62,3 +62,52 @@ describe('sequenciaDeDias', () => {
         expect(sequenciaDeDias(respostas, em('2026-10-31 00:31'))).toBe(2);
     });
 });
+
+// A semana do card da sequência: de segunda a domingo, a que contém o dia de hoje.
+describe('semanaDaSequencia', () => {
+    // 06/11/2026 é sexta-feira: a semana vai de 02/11 (segunda) a 08/11 (domingo).
+    const SEXTA = em('2026-11-06 10:00');
+    const feitos = (semana: ReturnType<typeof semanaDaSequencia>) => semana.map((d) => d.feito);
+
+    it('tem sete dias, de segunda a domingo, e só o de hoje é o de hoje', () => {
+        const semana = semanaDaSequencia([], SEXTA);
+
+        expect(semana).toHaveLength(7);
+        expect(semana.map((d) => d.hoje)).toEqual([false, false, false, false, true, false, false]);
+        expect(feitos(semana)).toEqual([false, false, false, false, false, false, false]);
+    });
+
+    it('marca os dias da semana em que houve resposta, de qualquer fase', () => {
+        const respostas = [r('a', '2026-11-04 09:00', 'pre'), r('b', '2026-11-05 09:00', 'pos'), r('c', '2026-11-05 15:00')];
+
+        expect(feitos(semanaDaSequencia(respostas, SEXTA))).toEqual([false, false, true, true, false, false, false]);
+    });
+
+    it('hoje respondido fica marcado, e continua sendo o de hoje', () => {
+        const semana = semanaDaSequencia([r('a', '2026-11-06 08:00')], SEXTA);
+
+        expect(semana[4]).toEqual({ feito: true, hoje: true });
+    });
+
+    it('respostas da semana anterior e da seguinte não entram', () => {
+        const respostas = [r('a', '2026-11-01 12:00'), r('b', '2026-11-09 12:00')];
+
+        expect(feitos(semanaDaSequencia(respostas, SEXTA))).toEqual([false, false, false, false, false, false, false]);
+    });
+
+    it('no domingo, a semana ainda é a que começou na segunda anterior', () => {
+        const domingo = em('2026-11-08 20:00');
+        const semana = semanaDaSequencia([r('a', '2026-11-02 12:00')], domingo);
+
+        expect(feitos(semana)).toEqual([true, false, false, false, false, false, false]);
+        expect(semana[6].hoje).toBe(true);
+    });
+
+    it('o dia vira à meia-noite de São Luís, não do UTC', () => {
+        // 23:30 de domingo, 01/11, em São Luís já é segunda no UTC: continua sendo da semana anterior.
+        const respostas = [r('a', '2026-11-01 23:30')];
+
+        expect(feitos(semanaDaSequencia(respostas, SEXTA))).toEqual([false, false, false, false, false, false, false]);
+    });
+});
+

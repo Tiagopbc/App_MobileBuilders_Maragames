@@ -290,6 +290,35 @@ export function etapasDaLicao(
     }));
 }
 
+// Uma barra do Para hoje: a etapa, em que pé está e, na da vez, o quanto já foi respondido. A
+// revisão que ainda não abriu é "selada": ela não tem o que fazer agora, só uma data.
+export type SituacaoDoSegmento = 'feito' | 'agora' | 'depois' | 'selada';
+
+export interface SegmentoDoParaHoje {
+    etapa: EtapaDaLicao;
+    situacao: SituacaoDoSegmento;
+    progresso: { respondidas: number; total: number } | null; // só na etapa da vez, com ao menos uma resposta
+}
+
+/** As barras de etapa do Para hoje, de `etapasDaLicao`, com o progresso da etapa da vez. */
+export function segmentosDoParaHoje(licao: Pick<Licao, 'ciclo' | 'estado'>): SegmentoDoParaHoje[] {
+    const { estado } = licao;
+    const temProgresso = 'respondidas' in estado && estado.respondidas > 0;
+
+    return etapasDaLicao(licao).map(({ etapa, situacao }) => {
+        if (situacao === 'feito') return { etapa, situacao, progresso: null };
+        if (situacao === 'agora') {
+            return {
+                etapa,
+                situacao,
+                progresso: temProgresso ? { respondidas: estado.respondidas, total: estado.total } : null,
+            };
+        }
+        // A revisão só abre 7 dias depois da verificação: até lá é selada, esperando ou ainda longe.
+        return { etapa, situacao: etapa === 'revisao' ? 'selada' : 'depois', progresso: null };
+    });
+}
+
 // O que a lição mostra de resultado. No ciclo completo, o antes só aparece ao lado do depois:
 // dizer o acerto do diagnóstico antes do estudo seria o feedback que a medida evita (item 19).
 export type ResultadoDaLicao =

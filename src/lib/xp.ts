@@ -1,8 +1,9 @@
 // XP pela pontuação por certeza de Gardner-Medwin, com o erro adaptado pelo grupo para 4 alternativas (item 14).
 // Função pura: sem React, sem Firebase, sem estado. O XP nunca é gravado, é calculado de `answers`.
 
-import type { Answer, Confianca } from '../types/domain';
-import { respostasAVista, type Licao } from './licao';
+import type { Answer, Confianca, FormaPre } from '../types/domain';
+import { diaDeCalendario, inicioDoDia } from './calendario';
+import { licoesDoAluno, respostasAVista, type Licao, type QuestaoDaLicao } from './licao';
 
 // Dúvida compensa a partir de 50% de chance de acerto e certeza a partir de 75%;
 // abaixo disso, palpite rende mais e nunca perde ponto.
@@ -36,3 +37,30 @@ export function xpDasLicoes(
 
     return Math.max(0, somarXp([...ultimaPorQuestao.values()]));
 }
+
+export interface EntradaDoXpDeHoje {
+    respostas: readonly Pick<Answer, 'fase' | 'questionId' | 'topicId' | 'correta' | 'confianca' | 'respondidaEm'>[]; // da mais antiga para a mais recente
+    questoes: readonly QuestaoDaLicao[];
+    topicos: readonly string[]; // ids, na ordem sugerida do conteúdo
+    formaPre: FormaPre | null;
+    agora: number; // ms; vem de fora para a função continuar pura
+}
+
+/**
+ * O "+7 hoje" da home: quanto o total mostrado ganhou desde a meia-noite de hoje (fuso de São Luís).
+ * É a diferença entre o total de agora e o total que a home mostrava às 00:00, os dois pela regra de
+ * `xpDasLicoes`. Assim a soma dos dias fecha com o total, e o diagnóstico respondido há dias só
+ * entra no dia em que a verificação termina, quando passa a poder aparecer. Pode ser negativo.
+ */
+export function xpDeHoje(entrada: EntradaDoXpDeHoje): number {
+    const { respostas, questoes, topicos, formaPre, agora } = entrada;
+    const inicioDeHoje = inicioDoDia(diaDeCalendario(agora));
+
+    const totalEm = (instante: number, ate: typeof respostas) => {
+        const licoes = licoesDoAluno({ topicos, respostas: ate, questoes, formaPre, agora: instante });
+        return xpDasLicoes(ate, licoes) ?? 0;
+    };
+
+    return totalEm(agora, respostas) - totalEm(inicioDeHoje, respostas.filter((r) => r.respondidaEm < inicioDeHoje));
+}
+

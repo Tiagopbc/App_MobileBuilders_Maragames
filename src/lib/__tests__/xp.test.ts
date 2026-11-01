@@ -1,6 +1,6 @@
 import type { Confianca, Fase } from '../../types/domain';
-import type { EstadoDaLicao } from '../licao';
-import { somarXp, xpDaResposta, xpDasLicoes } from '../xp';
+import type { EstadoDaLicao, QuestaoDaLicao } from '../licao';
+import { somarXp, xpDaResposta, xpDasLicoes, xpDeHoje } from '../xp';
 
 describe('xpDaResposta', () => {
     it.each([
@@ -145,3 +145,84 @@ describe('incentivo à sinceridade', () => {
         expect(esperado(0.9, 3)).toBeGreaterThan(esperado(0.9, 2));
     });
 });
+
+// O "+7 hoje" da home: o que o total mostrado ganhou desde a meia-noite, pela mesma regra de
+// `respostasAVista`. O diagnóstico respondido há dias entra no dia em que a verificação fecha.
+describe('xpDeHoje', () => {
+    const HORA = 60 * 60 * 1000;
+    const DIA = 24 * HORA;
+    // Meio-dia de 06/10/2026 em São Luís (UTC−3).
+    const DIA_1 = Date.UTC(2026, 9, 6, 15);
+
+    const questoes: QuestaoDaLicao[] = [
+        { id: 'mda_a1', topicId: 'mda', bloco: 'forma_a' },
+        { id: 'mda_b1', topicId: 'mda', bloco: 'forma_b' },
+        { id: 'mda_p1', topicId: 'mda', bloco: 'pratica' },
+        { id: 'gdd_p1', topicId: 'gdd', bloco: 'pratica' },
+        { id: 'gdd_p2', topicId: 'gdd', bloco: 'pratica' },
+    ];
+    const r = (fase: Fase, questionId: string, correta: boolean, confianca: Confianca, respondidaEm: number) => ({
+        fase,
+        questionId,
+        topicId: questionId.split('_')[0],
+        correta,
+        confianca,
+        respondidaEm,
+    });
+    const hoje = (respostas: ReturnType<typeof r>[], agora = DIA_1 + HORA) =>
+        xpDeHoje({ respostas, questoes, topicos: ['mda', 'gdd'], formaPre: 'A', agora });
+
+    it('sem resposta nenhuma, é zero', () => {
+        expect(hoje([])).toBe(0);
+    });
+
+    it('a prática de hoje entra na hora', () => {
+        expect(hoje([r('pratica', 'mda_p1', true, 3, DIA_1)])).toBe(3);
+    });
+
+    it('a prática de ontem não conta como de hoje', () => {
+        expect(hoje([r('pratica', 'mda_p1', true, 3, DIA_1 - DIA)])).toBe(0);
+    });
+
+    it('tudo feito hoje soma tudo: o diagnóstico, a prática e a verificação aparecem juntos', () => {
+        const respostas = [
+            r('pre', 'mda_a1', true, 3, DIA_1),
+            r('pratica', 'mda_p1', true, 3, DIA_1),
+            r('pos', 'mda_b1', true, 3, DIA_1),
+        ];
+
+        expect(hoje(respostas)).toBe(9);
+    });
+
+    it('o diagnóstico de ontem entra hoje, quando a verificação fecha', () => {
+        const respostas = [
+            r('pre', 'mda_a1', true, 3, DIA_1 - DIA),
+            r('pratica', 'mda_p1', true, 3, DIA_1 - DIA),
+            r('pos', 'mda_b1', true, 3, DIA_1),
+        ];
+
+        // A prática (+3) já estava no total de ontem; hoje chegam o diagnóstico (+3) e a verificação (+3).
+        expect(hoje(respostas)).toBe(6);
+    });
+
+    it('com a verificação pela metade, o XP dela não aparece: o total não revela o acerto', () => {
+        const respostas = [r('pre', 'mda_a1', true, 3, DIA_1 - DIA), r('pratica', 'mda_p1', true, 3, DIA_1)];
+
+        expect(hoje(respostas)).toBe(3);
+    });
+
+    it('o piso em 0 vale nos dois totais: o ganho é a diferença entre o que a home mostrava e mostra', () => {
+        // Ontem o total era −4, mostrado como 0; hoje é −1, mostrado como 0.
+        const respostas = [r('pratica', 'gdd_p1', false, 3, DIA_1 - DIA), r('pratica', 'gdd_p2', true, 3, DIA_1)];
+
+        expect(hoje(respostas)).toBe(0);
+    });
+
+    it('o dia vira à meia-noite de São Luís, não do UTC', () => {
+        // 22:00 de 06/10 em São Luís já é 07/10 no UTC, mas ainda é o dia 06 para o app.
+        const noite = Date.UTC(2026, 9, 7, 1);
+
+        expect(hoje([r('pratica', 'mda_p1', true, 3, DIA_1)], noite)).toBe(3);
+    });
+});
+

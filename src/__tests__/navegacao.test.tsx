@@ -250,7 +250,7 @@ describe('o Para hoje da home', () => {
         const rotas = await abrirEm('/home');
 
         expect(await screen.findByText('GDD')).toBeOnTheScreen();
-        expect(screen.getByText('Cartão e prática · 1 de 2')).toBeOnTheScreen();
+        expect(screen.getByText('Cartão e prática 1/2')).toBeOnTheScreen();
         await userEvent.setup().press(botao('Continuar a prática'));
 
         expect(await screen.findByText('Enunciado de gdd_p2')).toBeOnTheScreen();
@@ -278,16 +278,45 @@ describe('o Para hoje da home', () => {
 
         expect(await screen.findByText('Tudo em dia')).toBeOnTheScreen();
         expect(screen.getByText('Próxima revisão: Framework MDA, em 5 dias.')).toBeOnTheScreen();
-        expect(screen.getByText('Revisões agendadas')).toBeOnTheScreen();
-        expect(screen.getByLabelText('Framework MDA, em 5 dias')).toBeOnTheScreen();
+        // A revisão agendada é uma carta selada, sem botão: quando vence, sobe sozinha para o Para hoje.
+        expect(screen.getByText('Revisão de Framework MDA')).toBeOnTheScreen();
+        expect(screen.getByText(/^A revisão abre n[ao] .+, \d\d\/\d\d\.$/)).toBeOnTheScreen();
+        expect(screen.getByText('5 d')).toBeOnTheScreen();
+        expect(screen.getByLabelText(/^Revisão de Framework MDA, em 5 dias\./)).toBeOnTheScreen();
+        expect(screen.queryByText('Revisões agendadas')).toBeNull();
         expect(screen.queryByRole('button', { name: 'Começar' })).toBeNull();
     });
 
-    it('sem revisão agendada, a seção das revisões não aparece', async () => {
+    it('sem revisão agendada, não há carta selada', async () => {
         await abrirEm('/home');
         await screen.findByText('Para hoje');
 
-        expect(screen.queryByText('Revisões agendadas')).toBeNull();
+        expect(screen.queryByTestId('revisao-selada')).toBeNull();
+    });
+
+    it('a lição do Para hoje mostra as etapas, a da vez primeiro e a revisão selada', async () => {
+        await abrirEm('/home');
+
+        expect(
+            await screen.findByLabelText('Etapas: Diagnóstico, agora. Cartão e prática, depois. Verificação, depois. Revisão, selada.')
+        ).toBeOnTheScreen();
+    });
+
+    it('com a lição pela metade, a barra da vez diz onde a pessoa parou', async () => {
+        responder('pre', 'mda_a1');
+        await abrirEm('/home');
+
+        expect(
+            await screen.findByLabelText('Etapas: Diagnóstico, feito. Cartão e prática, agora. Verificação, depois. Revisão, selada.')
+        ).toBeOnTheScreen();
+    });
+
+    it('o módulo da lição e quantas lições dele já estão feitas ficam na linha do Para hoje', async () => {
+        for (const licao of repo.licoes) licao.modulo = 'Fundamentos de Game Design';
+        responder('pratica', 'gdd_p1');
+        await abrirEm('/home');
+
+        expect(await screen.findByText('Fundamentos de Game Design · 1 de 3 feita')).toBeOnTheScreen();
     });
 
     it('com todas as lições concluídas, diz isso', async () => {
@@ -337,21 +366,22 @@ describe('o Para hoje da home', () => {
     });
 });
 
-describe('os selos da home', () => {
-    it('sem nada à vista, não há total de XP nem sequência', async () => {
+describe('o selo de XP e a sequência da home', () => {
+    it('sem nada à vista, não há total de XP, e a sequência é só um zero, com o próximo passo', async () => {
         await abrirEm('/home');
         await screen.findByText('Para hoje');
 
-        expect(screen.queryByText(/^XP:/)).toBeNull();
-        expect(screen.queryByText(/^Sequência:/)).toBeNull();
+        expect(screen.queryByLabelText(/^XP:/)).toBeNull();
+        expect(screen.getByText('0 dias seguidos')).toBeOnTheScreen();
+        expect(screen.getByText('responda 1 questão hoje')).toBeOnTheScreen();
     });
 
     it('com o diagnóstico feito e a lição pela metade, o total continua escondido: ele revelaria o acerto', async () => {
         responder('pre', 'mda_a1');
         await abrirEm('/home');
-        await screen.findByText('Sequência: 1 dia');
+        await screen.findByText('1 dia seguido');
 
-        expect(screen.queryByText(/^XP:/)).toBeNull();
+        expect(screen.queryByLabelText(/^XP:/)).toBeNull();
     });
 
     it('a prática entra no total na hora, e a sequência conta o dia de hoje', async () => {
@@ -359,8 +389,27 @@ describe('os selos da home', () => {
         responder('pratica', 'gdd_p1');
         await abrirEm('/home');
 
-        expect(await screen.findByText('XP: +1')).toBeOnTheScreen();
-        expect(screen.getByText('Sequência: 1 dia')).toBeOnTheScreen();
+        expect(await screen.findByLabelText('XP: +1, +1 hoje')).toBeOnTheScreen();
+        expect(screen.getByText('1 dia seguido')).toBeOnTheScreen();
+        // Hoje já teve resposta: o recado some e o dia de hoje fica marcado.
+        expect(screen.queryByText('responda 1 questão hoje')).toBeNull();
+        expect(screen.getByLabelText(/, hoje, com resposta$/)).toBeOnTheScreen();
+    });
+
+    it('o "hoje" do XP é só o que o dia trouxe: a prática de ontem fica no total', async () => {
+        responder('pratica', 'gdd_p1', Date.now() - DIA);
+        responder('pratica', 'ux_p1');
+        await abrirEm('/home');
+
+        expect(await screen.findByLabelText('XP: +2, +1 hoje')).toBeOnTheScreen();
+    });
+
+    it('sem resposta hoje, o dia de hoje fica em aberto', async () => {
+        responder('pratica', 'gdd_p1', Date.now() - DIA);
+        await abrirEm('/home');
+
+        expect(await screen.findByLabelText(/, hoje, sem resposta$/)).toBeOnTheScreen();
+        expect(screen.getByText('responda 1 questão hoje')).toBeOnTheScreen();
     });
 });
 
@@ -377,11 +426,13 @@ describe('os atalhos da home', () => {
         expect(rotas.caminho()).toBe(caminho);
     });
 
-    it('Lições diz quantas já foram feitas', async () => {
+    it('o Perfil é um botão só com o ícone, e as Lições não repetem a contagem, que já está no Para hoje', async () => {
         responder('pratica', 'gdd_p1');
         await abrirEm('/home');
 
-        expect(await screen.findByRole('button', { name: 'Lições, 1 de 3 feita' })).toBeOnTheScreen();
+        expect(await screen.findByRole('button', { name: 'Perfil' })).toBeOnTheScreen();
+        expect(screen.getByRole('button', { name: 'Lições' })).toBeOnTheScreen();
+        expect(screen.queryByRole('button', { name: /Lições, / })).toBeNull();
     });
 });
 
