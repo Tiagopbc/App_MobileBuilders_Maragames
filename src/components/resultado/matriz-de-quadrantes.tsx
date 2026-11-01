@@ -86,9 +86,10 @@ function Celula({ quadrante, contagem, destacado }: { quadrante: Quadrante; cont
                     {contagem}
                 </ThemedText>
             )}
-            <View style={styles.nome}>
+            {/* O nome quebra: a 320 px a célula tem uns 60 px, e o ícone mais "Ponto cego" não cabem. */}
+            <View testID={`nome-${quadrante}`} style={styles.nome}>
                 <Ionicons name={icone} size={16} color={theme[cor]} />
-                <ThemedText type="smallBold" themeColor={cor}>
+                <ThemedText type="smallBold" themeColor={cor} style={styles.rotulo}>
                     {ROTULO_QUADRANTE[quadrante]}
                 </ThemedText>
             </View>
@@ -107,5 +108,6 @@ const styles = StyleSheet.create({
     centro: { textAlign: 'center', alignSelf: 'flex-end' },
     quadrante: { gap: Spacing.half, padding: Spacing.two, borderRadius: Raio.medio },
     contagem: { fontSize: 28, lineHeight: 34, fontWeight: 700 },
-    nome: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one },
+    nome: { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: Spacing.one, rowGap: Spacing.half },
+    rotulo: { flexShrink: 1 },
 });

@@ -85,4 +85,16 @@ describe('a matriz', () => {
         expect(screen.queryByLabelText(/: \d+$/)).toBeNull();
         expect(screen.queryByText(/^\d+$/)).toBeNull();
     });
+
+    it('em tela estreita, o nome quebra dentro da célula em vez de invadir a vizinha', async () => {
+        await render(<MatrizDeQuadrantes />);
+
+        // Nas Regras, a 320 px, sobram uns 60 px por célula: o ícone mais "Ponto cego" não cabem.
+        for (const quadrante of ['firme', 'fragil', 'ponto_cego', 'lacuna']) {
+            expect(screen.getByTestId(`nome-${quadrante}`)).toHaveStyle({ flexWrap: 'wrap' });
+        }
+        for (const rotulo of Object.values(ROTULO_QUADRANTE)) {
+            expect(screen.getByText(rotulo)).toHaveStyle({ flexShrink: 1 });
+        }
+    });
 });
