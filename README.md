@@ -1,6 +1,6 @@
 # Beast Maragames
 
-App mobile de estudo de criação de jogos com confiança declarada, feito pelo grupo Mobile Builders para a Beast Maragames, na disciplina de Programação Mobile da UNDB. Feito com Expo (React Native) e Firebase.
+App mobile de estudo de criação de jogos com confiança declarada, feito por Tiago Cavalcanti para a Beast Maragames, na disciplina de Programação Mobile da UNDB. Feito com Expo (React Native) e Firebase.
 
 O aluno percorre lições organizadas em módulos e, a cada questão, diz o quanto tem certeza da resposta. O app cruza acerto e confiança para mostrar o que a pessoa sabe de fato e o que só acha que sabe.
 
@@ -10,11 +10,13 @@ A arquitetura, o ciclo da lição e o que fica no banco estão em [docs/arquitet
 
 - **Conta:** login e cadastro com e-mail e senha, redefinição de senha e perfil completado no primeiro acesso.
 - **Termo e autoavaliação:** antes da primeira lição, a pessoa aceita o termo de consentimento, que sorteia a forma (A ou B) do diagnóstico, e dá uma nota de 1 a 5 para o quanto já sabe de cada módulo com questões (hoje, só Fundamentos de Game Design).
-- **Boas-vindas:** a primeira tela depois do login, que só apresenta o app: a logo, o lobinho da Beast Maragames, a chamada "Solte a fera do game design", o botão Iniciar, a Configuração (a escolha do tema claro ou escuro) e as Regras do jogo (lição, certeza, XP, resultado e sequência). O Iniciar leva à home.
-- **Home:** o cartão "Para hoje", com o próximo passo sugerido, o XP, a sequência de dias e as revisões agendadas.
-- **Lições:** o módulo Fundamentos de Game Design, com 5 lições. Cada lição segue o ciclo diagnóstico → cartão de conceito → prática → verificação → revisão 7 dias depois. Os outros 5 módulos aparecem como "em breve".
-- **Progresso:** domínio por tópico e as respostas divididas em quadrantes (Firme, Frágil, Ponto cego e Lacuna).
+- **Boas-vindas:** a primeira tela depois do login: a logo, o lobinho da Beast Maragames, a chamada "Solte a fera do game design" e a carta de jogador, com o apelido, os dias seguidos, o XP e as medalhas. O botão Jogar leva à home, e o link das Regras do jogo explica a lição, a certeza, o XP, o resultado e a sequência. A escolha do tema claro ou escuro fica no Perfil.
+- **Home:** o cartão "Para hoje", com o próximo passo sugerido e as etapas da lição; o XP, com o que o dia trouxe; a sequência de dias, com a semana; e as revisões agendadas, seladas até o dia em que abrem.
+- **Lições:** o módulo Fundamentos de Game Design, com 5 lições. Cada lição segue o ciclo diagnóstico → cartão de conceito → prática → verificação → revisão 7 dias depois. Ao fim da verificação e da revisão, uma tela mostra o antes e o depois, a matriz de quadrantes, as medalhas novas e a próxima lição. Os outros 5 módulos aparecem como "em breve".
+- **Progresso:** um veredito de abertura, as respostas na matriz 2×2 (Firme, Frágil, Ponto cego e Lacuna), o que revisar primeiro e o domínio por tópico.
+- **Conquistas:** seis medalhas pessoais, sem ranking nem comparação, que a carta de jogador abre.
 - **Perfil:** dados do cadastro, "Sobre você", tema claro ou escuro, o termo aceito e a saída da conta.
+- **Estados da interface:** esqueletos enquanto as telas carregam, aviso quando falta conexão e, se a resposta não grava, o botão "Confirmar de novo".
 
 ## Tecnologias
 
