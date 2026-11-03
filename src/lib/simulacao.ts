@@ -171,6 +171,9 @@ const DIAS_DE_ENTRADA = 14; // a turma chega ao longo de duas semanas
 /** Quanto tempo a turma dura: o bastante para todas as revisões abrirem. */
 export const DIAS_DA_SIMULACAO = 60;
 
+/** A chance de marcar "Tenho certeza" no cenário de confiança cega: a mesma faixa do chutador, para todos. */
+const FAIXA_DA_CONFIANCA_CEGA: Faixa = [0.1, 0.7];
+
 export type Cenario = 'base' | 'nulo' | 'confianca_cega' | 'forma_b_dificil' | 'certeza_protege';
 
 export const CENARIOS: Record<Cenario, { rotulo: string; descricao: string }> = {
@@ -442,7 +445,11 @@ export function simularTurma(conteudo: { topicos: readonly Topico[]; questoes: r
             aprendeAteARevisao = 0;
         }
         if (cenario === 'confianca_cega') {
-            certezaSabendo = (certezaSabendo + certezaSemSaber) / 2;
+            // Uma chance só, sorteada à parte e na mesma faixa para todos os tipos: a média dos traços
+            // do aluno ainda carregaria o tipo, que também define o saber, e a calibração da turma
+            // sairia negativa sem que a medida tivesse defeito.
+            const doCenario = gerador(hash(`${uid}|confianca_cega`));
+            certezaSabendo = dentro(doCenario, FAIXA_DA_CONFIANCA_CEGA);
             certezaSemSaber = certezaSabendo;
         }
 

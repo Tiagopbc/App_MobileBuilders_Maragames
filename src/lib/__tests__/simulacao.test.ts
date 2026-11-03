@@ -505,6 +505,15 @@ describe('o gerador para medir o instrumento', () => {
             expect(Math.abs(taxa(cega.firmes) - taxa(cega.frageis))).toBeLessThan(0.06);
         });
 
+        // Tirar a ligação da certeza com o saber só dentro de cada aluno deixava a ligação entre
+        // alunos (o tipo define o saber e a certeza), e a calibração da turma dava cerca de −14
+        // pontos onde o README promete zero.
+        it('confiança cega: a calibração da turma inclui o zero, também numa turma grande', () => {
+            const calibracao = ind(turma(999, 9, undefined, { cenario: 'confianca_cega' })).incerteza.calibracao!;
+
+            expect(incluiZero(calibracao)).toBe(true);
+        });
+
         // Item 37: sem o chute dentro, a diferença entre certeza e dúvida na revisão não acusa efeito
         // onde não há.
         it('nulo e confiança cega: a retenção corrigida não acusa diferença entre certeza e dúvida', () => {
