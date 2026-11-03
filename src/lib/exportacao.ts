@@ -548,7 +548,9 @@ function campo(valor: string | number | null): string {
         // Decimal com vírgula e até três casas, como o Excel em português espera.
         return Number.isInteger(valor) ? String(valor) : String(Number(valor.toFixed(3))).replace('.', ',');
     }
-    return /[;"\r\n]/.test(valor) ? `"${valor.replaceAll('"', '""')}"` : valor;
+    // O Excel lê como fórmula o texto que começa por um destes caracteres; o apóstrofo o deixa literal.
+    const texto = /^[=+\-@\t\r]/.test(valor) ? `'${valor}` : valor;
+    return /[;"\r\n]/.test(texto) ? `"${texto.replaceAll('"', '""')}"` : texto;
 }
 
 /** CSV com ponto e vírgula, para abrir direto no Excel em português. As colunas são as da primeira linha. */

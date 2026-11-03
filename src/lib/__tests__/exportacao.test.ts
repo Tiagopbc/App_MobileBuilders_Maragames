@@ -499,6 +499,25 @@ describe('paraCsv', () => {
         expect(paraCsv([{ a: null, b: 1 }])).toContain('\r\n;1\r\n');
     });
 
+    describe('texto que o Excel leria como fórmula', () => {
+        it.each(['=1+1', '+1', '-1', '@soma', '\t=1+1', '\r=1+1'])('%j sai como texto, com apóstrofo na frente', (texto) => {
+            const csv = paraCsv([{ nome: texto }]);
+
+            expect(csv).toContain(`'${texto}`);
+            expect(csv).not.toMatch(/\r\n[=+\-@\t]/);
+        });
+
+        it('o apóstrofo vem antes das aspas, quando o campo também precisa delas', () => {
+            expect(paraCsv([{ nome: '=a;b' }])).toContain('"\'=a;b"');
+        });
+
+        it('número negativo continua número, e texto comum fica como está', () => {
+            const csv = paraCsv([{ ganho: -0.5, outro: -2, nome: 'Ana-Maria', email: 'a@b.c' }]);
+
+            expect(csv).toContain('-0,5;-2;Ana-Maria;a@b.c');
+        });
+    });
+
     it('sem linhas, devolve só a marca', () => {
         expect(paraCsv([])).toBe('\uFEFF');
     });
