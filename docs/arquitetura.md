@@ -48,15 +48,15 @@ O XP segue a pontuação por certeza de Gardner-Medwin, com o erro adaptado para
 ```mermaid
 flowchart TB
     subgraph Aparelho
-        T[Telas<br/>src/app, expo-router] --> K[Componentes<br/>src/components]
-        T --> S[Sessão<br/>src/lib/session.tsx]
-        T --> H[Hooks<br/>src/hooks]
-        H --> L[Regras do app<br/>src/lib, funções puras]
-        H --> R[Contrato de dados<br/>src/data/ProgressRepository.ts]
+        T["Telas<br/>src/app (expo-router)"] --> K["Componentes<br/>src/components"]
+        T --> S["Sessão<br/>src/lib/session.tsx"]
+        T --> H["Hooks<br/>src/hooks"]
+        H --> L["Regras do app<br/>src/lib (funções puras)"]
+        H --> R["Contrato de dados<br/>src/data/ProgressRepository.ts"]
     end
-    R --> FR[Implementação Firebase<br/>src/data/FirebaseProgressRepository.ts]
-    S --> A[(Firebase Auth)]
-    FR --> F[(Cloud Firestore<br/>com firestore.rules)]
+    R --> FR["Implementação Firebase<br/>src/data/FirebaseProgressRepository.ts"]
+    S --> A[("Firebase Auth")]
+    FR --> F[("Cloud Firestore<br/>com firestore.rules")]
 ```
 
 - **Telas e componentes** só mostram e coletam. Não calculam nada.

@@ -29,8 +29,6 @@ type SessionValue = {
     isLoading: boolean;
     entrarComEmail: (email: string, senha: string) => Promise<void>;
     cadastrarComEmail: (email: string, senha: string) => Promise<void>;
-    // Só quem tem senha pode redefini-la.
-    entraComSenha: boolean;
     redefinirSenha: (email: string) => Promise<void>;
     // O núcleo do perfil. No primeiro preenchimento, o aceite de contato vai junto, em `extras`.
     salvarPerfil: (dados: DadosPerfil, extras?: ExtrasParaSalvar) => Promise<void>;
@@ -223,7 +221,6 @@ export function SessionProvider({ children }: { children: ReactNode }) {
                 isLoading,
                 entrarComEmail,
                 cadastrarComEmail,
-                entraComSenha: !!user?.providerData.some((p) => p.providerId === 'password'),
                 redefinirSenha,
                 salvarPerfil,
                 salvarExtras,

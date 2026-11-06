@@ -171,7 +171,6 @@ export const TEXTOS = {
     conta: 'Conta',
     estudo: 'Estudo',
     entraPorSenha: 'Você entra por e-mail e senha.',
-    entraPeloGoogle: 'Você entra pela sua conta do Google.',
     redefinirASenha: 'Redefinir a senha',
     linkEnviadoParaAConta: 'Enviamos um link para o e-mail da conta. Confira também o spam.',
     erroAoEnviarOLink: 'Não foi possível enviar o e-mail. Tente de novo.',

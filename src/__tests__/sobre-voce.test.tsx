@@ -33,7 +33,6 @@ jest.mock('@/lib/session', () => ({
         isLoading: false,
         salvarPerfil: jest.fn(),
         salvarExtras: mockSalvarExtras,
-        entraComSenha: true,
         redefinirSenha: jest.fn(),
         sair: jest.fn(),
     }),

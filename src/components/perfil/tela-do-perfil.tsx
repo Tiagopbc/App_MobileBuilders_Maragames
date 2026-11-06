@@ -33,8 +33,6 @@ type TelaDoPerfilProps = {
     resumo: ResumoDoPerfil | null;
     versao: string; // a do app, para a seção Sobre
     aoSalvar: (dados: DadosPerfil) => Promise<void>;
-    // Quem entra pelo Google não tem senha neste app, e não vê o botão de redefinir.
-    entraComSenha: boolean;
     aoRedefinirSenha: () => Promise<void>; // pede o e-mail com o link; rejeita se não conseguir
     aoMudarAceiteDeContato: (aceita: boolean) => Promise<void>; // grava na hora
     aoResponderSobreVoce: () => void; // abre as perguntas opcionais
@@ -54,7 +52,6 @@ export function TelaDoPerfil({
     resumo,
     versao,
     aoSalvar,
-    entraComSenha,
     aoRedefinirSenha,
     aoMudarAceiteDeContato,
     aoResponderSobreVoce,
@@ -161,17 +158,15 @@ export function TelaDoPerfil({
                             </ThemedText>
                             <ThemedText>{perfil.email}</ThemedText>
                             <ThemedText type="small" themeColor="textSecondary">
-                                {entraComSenha ? TEXTOS.entraPorSenha : TEXTOS.entraPeloGoogle}
+                                {TEXTOS.entraPorSenha}
                             </ThemedText>
                         </Superficie>
 
-                        {entraComSenha && (
-                            <BotaoSecundario
-                                rotulo={TEXTOS.redefinirASenha}
-                                desabilitado={envio === 'enviando'}
-                                onPress={redefinirSenha}
-                            />
-                        )}
+                        <BotaoSecundario
+                            rotulo={TEXTOS.redefinirASenha}
+                            desabilitado={envio === 'enviando'}
+                            onPress={redefinirSenha}
+                        />
                         {envio === 'enviado' && (
                             <ThemedText type="small" themeColor="sucesso" aria-live="polite">
                                 {TEXTOS.linkEnviadoParaAConta}

@@ -27,10 +27,9 @@ const PERFIL = {
     atualizadoEm: 1,
 };
 // O perfil muda dentro do teste (salvar), então fica num objeto que o mock lê a cada render.
-const mockSessao: { perfil: Record<string, unknown>; falhaAoSalvar: boolean; entraComSenha: boolean } = {
+const mockSessao: { perfil: Record<string, unknown>; falhaAoSalvar: boolean } = {
     perfil: {},
     falhaAoSalvar: false,
-    entraComSenha: true,
 };
 const mockSalvar = jest.fn(async (dados: Record<string, unknown>) => {
     if (mockSessao.falhaAoSalvar) throw new Error('sem rede');
@@ -51,7 +50,6 @@ jest.mock('@/lib/session', () => ({
         isLoading: false,
         salvarPerfil: mockSalvar,
         sair: mockSair,
-        entraComSenha: mockSessao.entraComSenha,
         redefinirSenha: mockRedefinirSenha,
         salvarExtras: mockSalvarExtras,
     }),
@@ -73,7 +71,6 @@ beforeEach(() => {
     mockSair.mockClear();
     mockSessao.perfil = { ...PERFIL };
     mockSessao.falhaAoSalvar = false;
-    mockSessao.entraComSenha = true;
     mockRedefinirSenha.mockReset();
     mockRedefinirSenha.mockResolvedValue(undefined);
     mockSalvarExtras.mockClear();
@@ -422,14 +419,6 @@ describe('a conta, no Perfil', () => {
 
         expect(await screen.findByText('Não foi possível enviar o e-mail. Tente de novo.')).toBeOnTheScreen();
         expect(screen.queryByText(/Enviamos um link/)).toBeNull();
-    });
-
-    it('quem entra pelo Google vê isso escrito e não tem senha para redefinir', async () => {
-        mockSessao.entraComSenha = false;
-        await abrirEm('/perfil');
-
-        expect(await screen.findByText('Você entra pela sua conta do Google.')).toBeOnTheScreen();
-        expect(screen.queryByRole('button', { name: 'Redefinir a senha' })).toBeNull();
     });
 });
 

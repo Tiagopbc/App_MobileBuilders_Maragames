@@ -10,7 +10,7 @@ import { useSession } from '@/lib/session';
 
 // O Perfil (Fase 6 do plano): /perfil. É também onde fica o Sair, que saiu da home.
 export default function PerfilScreen() {
-    const { user, perfil, salvarPerfil, salvarExtras, entraComSenha, redefinirSenha, sair } = useSession();
+    const { user, perfil, salvarPerfil, salvarExtras, redefinirSenha, sair } = useSession();
     const router = useRouter();
 
     // O XP e as lições feitas do cabeçalho são os da home: saem do mesmo hook, e não de outra conta.
@@ -43,7 +43,6 @@ export default function PerfilScreen() {
             versao={versaoDoApp()}
             // Só o núcleo: o aceite de contato é gravado à parte, na seção Conta.
             aoSalvar={(dados) => salvarPerfil(dados)}
-            entraComSenha={entraComSenha}
             // O link vai sempre para o e-mail da conta: aqui a pessoa já está dentro dela.
             aoRedefinirSenha={() => redefinirSenha(perfil.email)}
             aoMudarAceiteDeContato={(aceitaContato) => salvarExtras({ aceitaContato })}
