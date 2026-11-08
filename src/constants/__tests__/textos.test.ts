@@ -413,3 +413,17 @@ describe('os textos sem marca de gênero nem promessa que o app não cumpre', ()
         expect(TEXTOS_DO_PERFIL.alunoDoSite).toBe('Você já estuda pelo site da Beast Maragames?');
     });
 });
+
+describe('os textos da boas-vindas', () => {
+    it('o Como jogar tem um nome só: o botão, o convite e a tela das regras', () => {
+        expect(TEXTOS_DE_BOAS_VINDAS.regras).toBe('Como jogar');
+        expect(TEXTOS_DE_BOAS_VINDAS.convite).toBe('Primeira vez por aqui?');
+        expect(TEXTOS_DE_BOAS_VINDAS.conviteApoio).toBe('Veja como o jogo funciona');
+    });
+
+    it('a frase de apoio e a dica da sequência saíram: a carta e o convite dizem o que importa', () => {
+        expect(TEXTOS_DE_BOAS_VINDAS).not.toHaveProperty('apoio');
+        expect(TEXTOS_DE_BOAS_VINDAS).not.toHaveProperty('comecarASequencia');
+    });
+});
+

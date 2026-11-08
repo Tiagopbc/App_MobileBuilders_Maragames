@@ -710,12 +710,13 @@ export const TEXTOS_DE_BOAS_VINDAS = {
     nome: 'Maragames App',
     assinatura: `by ${AUTOR}`,
     titulo: 'Solte a fera do game design',
-    apoio: 'Aprenda game design em lições curtas, como quem joga.',
     mascote: 'O lobinho da Beast Maragames segurando um controle',
     jogar: 'Jogar',
-    regras: 'Regras do jogo',
+    // O nome é um só: o botão ? do topo, o convite e a tela das regras.
+    regras: 'Como jogar',
+    convite: 'Primeira vez por aqui?',
+    conviteApoio: 'Veja como o jogo funciona',
     pessoaJogadora: 'Pessoa jogadora', // o tipo da carta de jogador, na placa
-    comecarASequencia: 'Responda uma questão para começar a sequência.',
 } as const;
 
 /** O XP em número grande, na carta de jogador: "+18"; sem XP, "0". */

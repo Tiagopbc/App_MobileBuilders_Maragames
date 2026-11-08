@@ -112,13 +112,13 @@ async function abrirEm(url: string) {
 }
 
 describe('a tela de boas-vindas', () => {
-    it('é a primeira de quem já entrou: o nome do app, o Jogar e o link das Regras do jogo', async () => {
+    it('é a primeira de quem já entrou: o nome do app, o Jogar e o convite para o Como jogar', async () => {
         const rotas = await abrirEm('/');
 
         expect(await screen.findByText('Maragames App')).toBeOnTheScreen();
         expect(screen.getByText('by Tiago Cavalcanti')).toBeOnTheScreen();
         expect(screen.getByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
-        expect(screen.getByRole('link', { name: 'Regras do jogo' })).toBeOnTheScreen();
+        expect(screen.getByRole('link', { name: 'Primeira vez por aqui? Veja como o jogo funciona' })).toBeOnTheScreen();
         expect(rotas.caminho()).toBe('/');
     });
 
@@ -131,11 +131,11 @@ describe('a tela de boas-vindas', () => {
     });
 
     // O Jogar é o único botão: a Configuração saiu (o tema é do Perfil) e as Regras são um link.
-    it('apresenta o app com o lobinho, o título e a frase, e só o Jogar é botão', async () => {
+    it('apresenta o app com o lobinho e o título, e só o Jogar é botão', async () => {
         await abrirEm('/');
 
         expect(await screen.findByText('Solte a fera do game design')).toBeOnTheScreen();
-        expect(screen.getByText('Aprenda game design em lições curtas, como quem joga.')).toBeOnTheScreen();
+        expect(screen.queryByText('Aprenda game design em lições curtas, como quem joga.')).toBeNull();
         expect(screen.getByRole('image', { name: 'O lobinho da Beast Maragames segurando um controle' })).toBeOnTheScreen();
         expect(screen.getAllByRole('button')).toHaveLength(1);
         expect(screen.queryByRole('button', { name: 'Configuração' })).toBeNull();
@@ -160,7 +160,7 @@ describe('a tela de boas-vindas', () => {
         expect(rolagem.getByRole('image', { name: 'O lobinho da Beast Maragames segurando um controle' })).toBeOnTheScreen();
         expect(await rolagem.findByText('Pessoa jogadora')).toBeOnTheScreen();
         expect(rolagem.getByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
-        expect(rolagem.getByRole('link', { name: 'Regras do jogo' })).toBeOnTheScreen();
+        expect(rolagem.getByRole('link', { name: 'Primeira vez por aqui? Veja como o jogo funciona' })).toBeOnTheScreen();
     });
 
     it('em tela alta o conteúdo ocupa a altura toda; em tela baixa, cresce e rola', async () => {
@@ -208,12 +208,12 @@ describe('a carta de jogador', () => {
         expect(screen.queryByText(/Responda uma questão/)).toBeNull();
     });
 
-    it('no primeiro acesso, tudo em zero e a dica de como começar a sequência', async () => {
+    it('no primeiro acesso, tudo em zero, sem dica nem cobrança', async () => {
         await abrirEm('/');
 
         expect(await screen.findByLabelText('0 dias seguidos')).toBeOnTheScreen();
         expect(screen.getByLabelText('XP: 0')).toBeOnTheScreen();
-        expect(screen.getByText('Responda uma questão para começar a sequência.')).toBeOnTheScreen();
+        expect(screen.queryByText(/Responda uma questão/)).toBeNull();
     });
 
     it('no primeiro acesso, nenhuma medalha: 0/6, que leva às Conquistas', async () => {
@@ -231,14 +231,68 @@ describe('a carta de jogador', () => {
         expect(screen.getByText('1/6')).toBeOnTheScreen();
     });
 
-    it('se as lições não carregam, a tela aparece sem a carta e o Jogar continua funcionando', async () => {
+    it('se as lições não carregam, a carta aparece só com a arte e o apelido, e o Jogar continua funcionando', async () => {
         jest.spyOn(repo, 'getTopicos').mockRejectedValue(new Error('sem rede'));
         await abrirEm('/');
 
         expect(await screen.findByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
         await waitFor(() => expect(repo.getTopicos).toHaveBeenCalled());
-        expect(screen.queryByText('Pessoa jogadora')).toBeNull();
-        expect(screen.getByRole('link', { name: 'Regras do jogo' })).toBeOnTheScreen();
+        expect(screen.getByText('Pessoa jogadora')).toBeOnTheScreen();
+        expect(screen.getByText('Paulo')).toBeOnTheScreen();
+        expect(screen.queryByText('dias seguidos')).toBeNull();
+        expect(screen.queryByRole('link', { name: /medalhas/ })).toBeNull();
+    });
+});
+
+describe('a entrada para o Como jogar', () => {
+    const convite = () => screen.queryByRole('link', { name: /Primeira vez por aqui/ });
+    const botaoDeAjuda = () => screen.queryByRole('link', { name: 'Como jogar' });
+
+    it('quem ainda não terminou nenhuma lição vê o convite, e não o botão de ajuda', async () => {
+        await abrirEm('/');
+        await screen.findByRole('button', { name: 'Jogar' });
+        await waitFor(() => expect(convite()).not.toBeNull());
+
+        expect(botaoDeAjuda()).toBeNull();
+    });
+
+    it('depois da primeira lição, o convite some e fica o botão de ajuda fixo no topo', async () => {
+        respondidaHoje();
+        await abrirEm('/');
+
+        expect(await screen.findByRole('link', { name: 'Como jogar' })).toBeOnTheScreen();
+        expect(convite()).toBeNull();
+    });
+
+    it('o botão de ajuda abre o Como jogar, com o mesmo nome no título da tela', async () => {
+        respondidaHoje();
+        const rotas = await abrirEm('/');
+
+        await userEvent.setup().press(await screen.findByRole('link', { name: 'Como jogar' }));
+
+        expect(await screen.findByRole('header', { name: 'Como jogar' })).toBeOnTheScreen();
+        expect(rotas.caminho()).toBe('/regras');
+    });
+
+    it('enquanto as lições carregam, não mostra nenhuma das duas, para a tela não trocar de cara', async () => {
+        jest.spyOn(repo, 'getTopicos').mockReturnValue(new Promise(() => {}));
+        try {
+            await abrirEm('/');
+
+            expect(await screen.findByRole('button', { name: 'Jogar' })).toBeOnTheScreen();
+            expect(convite()).toBeNull();
+            expect(botaoDeAjuda()).toBeNull();
+        } finally {
+            jest.restoreAllMocks();
+        }
+    });
+
+    it('se as lições não carregam, a ajuda continua à mão, pelo botão', async () => {
+        jest.spyOn(repo, 'getTopicos').mockRejectedValue(new Error('sem rede'));
+        await abrirEm('/');
+
+        expect(await screen.findByRole('link', { name: 'Como jogar' })).toBeOnTheScreen();
+        expect(convite()).toBeNull();
     });
 });
 
@@ -300,11 +354,11 @@ describe('as Conquistas', () => {
     });
 });
 
-describe('as Regras do jogo', () => {
+describe('o Como jogar, a tela das regras', () => {
     it('abrem pelo link e têm os seis cards, com o conceito do jogo primeiro', async () => {
         const rotas = await abrirEm('/');
 
-        await userEvent.setup().press(await screen.findByRole('link', { name: 'Regras do jogo' }));
+        await userEvent.setup().press(await screen.findByRole('link', { name: 'Primeira vez por aqui? Veja como o jogo funciona' }));
 
         expect(await screen.findByText('O jogo')).toBeOnTheScreen();
         expect(rotas.caminho()).toBe('/regras');
@@ -368,7 +422,7 @@ describe('as Regras do jogo', () => {
         const rotas = await abrirEm('/');
         const usuario = userEvent.setup();
 
-        await usuario.press(await screen.findByRole('link', { name: 'Regras do jogo' }));
+        await usuario.press(await screen.findByRole('link', { name: 'Primeira vez por aqui? Veja como o jogo funciona' }));
         await usuario.press(await screen.findByRole('button', { name: 'Voltar' }));
 
         expect(await screen.findByRole('button', { name: 'Jogar' })).toBeOnTheScreen();

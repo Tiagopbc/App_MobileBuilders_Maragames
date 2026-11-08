@@ -65,6 +65,7 @@ const PARES_DE_TEXTO: [ThemeColor, ThemeColor][] = [
     ['textoDeApoio', 'fundoApagado'],
     ['primaria', 'fundoApagado'],
     ['primaria', 'realce'],
+    ['primaria', 'cartaoSelecionado'], // a seta do convite da boas-vindas
     // A medalha ganha: o disco da primaria com o ícone na cor do fundo, sobre o card selecionado.
     ['background', 'primaria'],
     ['textSecondary', 'cartaoSelecionado'],
