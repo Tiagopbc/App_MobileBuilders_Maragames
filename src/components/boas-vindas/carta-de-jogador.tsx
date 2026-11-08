@@ -1,4 +1,5 @@
 import { Ionicons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
@@ -13,18 +14,30 @@ import {
 import { Raio, Spacing } from '@/constants/theme';
 import { useRelevo, useTheme } from '@/hooks/use-theme';
 
-type CartaDeJogadorProps = {
-    apelido: string;
+export type NumerosDaCarta = {
     sequencia: number; // dias seguidos com resposta
     xp: number; // o total à vista, com piso em 0
     medalhas: { ganhas: number; total: number } | null; // null enquanto não foram calculadas
+};
+
+type CartaDeJogadorProps = {
+    apelido: string; // vazio, a placa mostra só o tipo da carta
+    numeros: NumerosDaCarta | null; // null enquanto as lições não chegaram: a carta mostra só a arte e a placa
     aoAbrirConquistas: () => void;
 };
 
-// A carta de jogador da boas-vindas: a mesma carta de jogo do cartão de conceito, com o tipo e o
-// apelido na placa e a sequência, o XP e as medalhas embaixo. As medalhas são o único número que
-// leva a outra tela. Só desenha: os números chegam prontos.
-export function CartaDeJogador({ apelido, sequencia, xp, medalhas, aoAbrirConquistas }: CartaDeJogadorProps) {
+// O lobinho na janela da carta: a mesma proporção do arquivo (615 por 815). O anel de dentro tem a largura
+// dele e o de fora, 1,4 vez isso, como no desenho aprovado.
+const LARGURA_DO_LOBINHO = 176;
+const ALTURA_DO_LOBINHO = Math.round((LARGURA_DO_LOBINHO * 815) / 615);
+const ALTURA_DA_ARTE = 290;
+const FOLGA_DO_CHAO = 6;
+
+// A carta de jogador: uma carta de jogo com a arte do lobinho sobre dois anéis, a placa com o apelido e o
+// tipo, e os números da pessoa: dias seguidos, XP e medalhas. Aparece na boas-vindas e vai aparecer em
+// outros momentos do app. As medalhas são o único número que leva a outra tela. Só desenha: os números
+// chegam prontos.
+export function CartaDeJogador({ apelido, numeros, aoAbrirConquistas }: CartaDeJogadorProps) {
     const theme = useTheme();
     const relevo = useRelevo();
 
@@ -40,76 +53,143 @@ export function CartaDeJogador({ apelido, sequencia, xp, medalhas, aoAbrirConqui
                     borderBottomWidth: 1.5 + relevo.espessura,
                 },
             ]}>
+            <View
+                testID="arte-da-carta"
+                style={[styles.arte, { backgroundColor: theme.caixaDaCarta, borderColor: theme.bordaDaCaixa }]}>
+                {/* Os anéis e a sombra no chão: o lobinho não flutua na janela. */}
+                <View testID="anel-externo" style={[styles.anel, styles.anelExterno, { backgroundColor: theme.realce }]} />
+                <View testID="anel-interno" style={[styles.anel, styles.anelInterno, { backgroundColor: theme.realce }]} />
+                <View style={[styles.sombra, { backgroundColor: theme.veu }]} />
+                <Image
+                    accessible
+                    accessibilityRole="image"
+                    accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.mascote}
+                    source={require('@/assets/images/mascote-beast.png')}
+                    contentFit="contain"
+                    style={styles.mascote}
+                />
+            </View>
+
             <View testID="placa-da-carta-de-jogador" style={[styles.placa, { backgroundColor: theme.placaDaCarta }]}>
+                {apelido !== '' && (
+                    <ThemedText style={styles.apelido} numberOfLines={1}>
+                        {apelido}
+                    </ThemedText>
+                )}
                 <ThemedText type="smallBold" themeColor="textoDoPe" style={styles.tipo}>
                     {TEXTOS_DE_BOAS_VINDAS.pessoaJogadora}
                 </ThemedText>
-                <ThemedText style={styles.apelido} numberOfLines={1}>
-                    {apelido}
-                </ThemedText>
             </View>
 
-            <View style={styles.numeros}>
-                {/* O número e a legenda são um só item para o leitor de tela: "3 dias seguidos". */}
-                <View accessible accessibilityLabel={`${sequencia} ${diasSeguidos(sequencia)}`} style={styles.numero}>
-                    <ThemedText style={styles.valor}>{sequencia}</ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary">
-                        {diasSeguidos(sequencia)}
-                    </ThemedText>
-                </View>
-                <View
-                    accessible
-                    accessibilityLabel={formatarXpTotal(xp)}
-                    style={[styles.numero, styles.comFio, { borderLeftColor: theme.bordaDoCartao }]}>
-                    <ThemedText style={styles.valor}>{xpNaCarta(xp)}</ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary">
-                        XP
-                    </ThemedText>
-                </View>
-                {medalhas && (
-                    <Pressable
-                        accessibilityRole="link"
-                        accessibilityLabel={`${contagemDeMedalhas(medalhas.ganhas, medalhas.total)} ${TEXTOS_DAS_CONQUISTAS.medalhas}`}
-                        hitSlop={Spacing.two}
-                        onPress={aoAbrirConquistas}
-                        style={[styles.numero, styles.comFio, { borderLeftColor: theme.bordaDoCartao }]}>
-                        <ThemedText style={styles.valor}>{`${medalhas.ganhas}/${medalhas.total}`}</ThemedText>
-                        <View style={styles.legendaComSeta}>
-                            <ThemedText type="smallBold" themeColor="primaria">
-                                {TEXTOS_DAS_CONQUISTAS.medalhas}
-                            </ThemedText>
-                            <Ionicons name="chevron-forward" size={14} color={theme.primaria} />
+            {numeros && (
+                <View style={styles.numeros}>
+                    {/* O número e a legenda são um só item para o leitor de tela: "3 dias seguidos". */}
+                    <View accessible accessibilityLabel={`${numeros.sequencia} ${diasSeguidos(numeros.sequencia)}`} style={styles.numero}>
+                        <View style={styles.valor}>
+                            <Ionicons
+                                testID="chama-da-carta"
+                                name="flame"
+                                size={18}
+                                color={numeros.sequencia > 0 ? theme.aviso : theme.textSecondary}
+                            />
+                            <ThemedText style={styles.cifra}>{numeros.sequencia}</ThemedText>
                         </View>
-                    </Pressable>
-                )}
-            </View>
+                        <ThemedText type="small" themeColor="textSecondary">
+                            {diasSeguidos(numeros.sequencia)}
+                        </ThemedText>
+                    </View>
 
-            {sequencia === 0 && (
-                <ThemedText type="small" themeColor="textSecondary" style={styles.dica}>
-                    {TEXTOS_DE_BOAS_VINDAS.comecarASequencia}
-                </ThemedText>
+                    <View style={[styles.fio, { backgroundColor: theme.bordaDoCartao }]} />
+
+                    <View accessible accessibilityLabel={formatarXpTotal(numeros.xp)} style={styles.numero}>
+                        <View style={styles.valor}>
+                            <Ionicons name="flash" size={18} color={theme.primaria} />
+                            <ThemedText style={styles.cifra}>{xpNaCarta(numeros.xp)}</ThemedText>
+                        </View>
+                        <ThemedText type="small" themeColor="textSecondary">
+                            XP
+                        </ThemedText>
+                    </View>
+
+                    {numeros.medalhas && (
+                        <>
+                            <View style={[styles.fio, { backgroundColor: theme.bordaDoCartao }]} />
+                            <Pressable
+                                accessibilityRole="link"
+                                accessibilityLabel={`${contagemDeMedalhas(numeros.medalhas.ganhas, numeros.medalhas.total)} ${TEXTOS_DAS_CONQUISTAS.medalhas}`}
+                                hitSlop={Spacing.two}
+                                onPress={aoAbrirConquistas}
+                                style={styles.numero}>
+                                <View style={styles.valor}>
+                                    <Ionicons name="trophy" size={18} color={theme.sucesso} />
+                                    <ThemedText style={styles.cifra}>
+                                        {`${numeros.medalhas.ganhas}/${numeros.medalhas.total}`}
+                                    </ThemedText>
+                                </View>
+                                <View style={styles.legendaComSeta}>
+                                    <ThemedText type="smallBold" themeColor="primaria">
+                                        {TEXTOS_DAS_CONQUISTAS.medalhas}
+                                    </ThemedText>
+                                    <Ionicons name="chevron-forward" size={12} color={theme.primaria} />
+                                </View>
+                            </Pressable>
+                        </>
+                    )}
+                </View>
             )}
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    carta: { gap: Spacing.two, padding: Spacing.two, borderRadius: Raio.carta, borderWidth: 1.5 },
+    carta: { gap: Spacing.two + 2, padding: Spacing.two + 2, paddingBottom: Spacing.three - 4, borderRadius: Raio.folha, borderWidth: 1.5 },
+    arte: {
+        height: ALTURA_DA_ARTE,
+        borderRadius: Raio.card,
+        borderWidth: 1,
+        overflow: 'hidden',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+    },
+    anel: { position: 'absolute', alignSelf: 'center', borderRadius: 999 },
+    // Os dois anéis têm o centro no meio do lobinho: a distância do chão é a folga, mais metade da altura
+    // dele, menos o raio do anel.
+    anelExterno: {
+        width: Math.round(LARGURA_DO_LOBINHO * 1.4),
+        height: Math.round(LARGURA_DO_LOBINHO * 1.4),
+        bottom: FOLGA_DO_CHAO + ALTURA_DO_LOBINHO / 2 - Math.round(LARGURA_DO_LOBINHO * 1.4) / 2,
+        opacity: 0.55,
+    },
+    anelInterno: {
+        width: LARGURA_DO_LOBINHO,
+        height: LARGURA_DO_LOBINHO,
+        bottom: FOLGA_DO_CHAO + ALTURA_DO_LOBINHO / 2 - LARGURA_DO_LOBINHO / 2,
+        opacity: 0.9,
+    },
+    sombra: {
+        position: 'absolute',
+        bottom: FOLGA_DO_CHAO - 2,
+        width: Math.round(LARGURA_DO_LOBINHO * 0.8),
+        height: 12,
+        borderRadius: 60,
+        opacity: 0.35,
+    },
+    mascote: { width: LARGURA_DO_LOBINHO, height: ALTURA_DO_LOBINHO, marginBottom: FOLGA_DO_CHAO },
     placa: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         gap: Spacing.two,
-        paddingVertical: Spacing.two,
-        paddingHorizontal: 14,
-        borderRadius: Raio.medio,
+        minHeight: 54,
+        paddingHorizontal: Spacing.three,
+        borderRadius: Raio.medio + 2,
     },
-    tipo: { textTransform: 'uppercase', letterSpacing: 0.8 },
-    apelido: { flexShrink: 1, fontSize: 20, lineHeight: 26, fontWeight: 700 },
-    numeros: { flexDirection: 'row', paddingHorizontal: Spacing.one },
-    numero: { flex: 1 },
-    comFio: { borderLeftWidth: 1, paddingLeft: Spacing.three },
+    apelido: { flexShrink: 1, fontSize: 24, lineHeight: 30, fontWeight: 700 },
+    tipo: { marginLeft: 'auto', textTransform: 'uppercase', letterSpacing: 0.8, fontSize: 11 },
+    numeros: { flexDirection: 'row', alignItems: 'center', paddingBottom: Spacing.one },
+    numero: { flex: 1, alignItems: 'center', gap: 2 },
+    valor: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one + 2 },
+    cifra: { fontSize: 26, lineHeight: 32, fontWeight: 700 },
+    fio: { width: 1, height: 40 },
     legendaComSeta: { flexDirection: 'row', alignItems: 'center' },
-    valor: { fontSize: 30, lineHeight: 36, fontWeight: 700 },
-    dica: { paddingHorizontal: Spacing.one, paddingBottom: Spacing.one },
 });

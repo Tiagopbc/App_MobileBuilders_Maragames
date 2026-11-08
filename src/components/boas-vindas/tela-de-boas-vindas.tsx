@@ -1,9 +1,9 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Image } from 'expo-image';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { CartaDeJogador } from '@/components/boas-vindas/carta-de-jogador';
+import { CartaDeJogador, type NumerosDaCarta } from '@/components/boas-vindas/carta-de-jogador';
+import { ConviteDasRegras } from '@/components/boas-vindas/convite-das-regras';
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { LogoBeast } from '@/components/logo-beast';
@@ -13,78 +13,71 @@ import { LarguraDoFormulario, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type TelaDeBoasVindasProps = {
-    // A carta de jogador. Null enquanto as lições não chegaram, ou se não puderam ser lidas: a tela
-    // aparece sem ela, e o Jogar funciona do mesmo jeito.
-    carta: { apelido: string; sequencia: number; xp: number; medalhas: { ganhas: number; total: number } } | null;
+    apelido: string;
+    // Os números da carta. Null enquanto as lições não chegaram, ou se não puderam ser lidas: a carta
+    // aparece só com a arte e a placa, e o Jogar funciona do mesmo jeito.
+    numeros: NumerosDaCarta | null;
+    // Quem ainda não terminou nenhuma lição vê o convite para o Como jogar; depois, o botão ? fixo no
+    // topo. Null enquanto não se sabe (as lições carregando): nenhum dos dois aparece, para a tela não
+    // trocar de cara.
+    primeiraVez: boolean | null;
     aoJogar: () => void;
     aoAbrirRegras: () => void;
     aoAbrirConquistas: () => void;
 };
 
-// A primeira tela de quem já entrou. No alto, a logo e o nome; no meio, o lobinho sobre dois anéis;
-// embaixo, a chamada, a carta de jogador, o Jogar (o único botão) e o link das Regras do jogo. A
-// saudação ("Olá") é da home; a Configuração não existe aqui: o tema é do Perfil.
-export function TelaDeBoasVindas({ carta, aoJogar, aoAbrirRegras, aoAbrirConquistas }: TelaDeBoasVindasProps) {
+// A primeira tela de quem já entrou. No alto, a logo e o nome; embaixo, a chamada, a carta de jogador (o
+// lobinho sobre dois anéis, o apelido e os números), o convite para o Como jogar e o Jogar, o único botão.
+// A saudação ("Olá") é da home; a Configuração não existe aqui: o tema é do Perfil.
+export function TelaDeBoasVindas({
+    apelido,
+    numeros,
+    primeiraVez,
+    aoJogar,
+    aoAbrirRegras,
+    aoAbrirConquistas,
+}: TelaDeBoasVindasProps) {
     const theme = useTheme();
 
     return (
         <FundoDaMarca style={styles.container}>
             <SafeAreaView style={styles.safeArea}>
                 {/* Rola, para o Jogar não ficar fora de alcance num celular baixo; em tela alta o
-                    conteúdo cresce até a altura toda, e o palco do lobinho ocupa a folga. */}
+                    conteúdo cresce até a altura toda, e a assinatura fica no pé. */}
                 <ScrollView testID="rolagem-da-boas-vindas" contentContainerStyle={styles.conteudo}>
                     <View style={styles.topo}>
-                        <LogoBeast tamanho={32} variante="app" />
-                        <ThemedText type="smallBold" style={styles.nome}>
-                            {TEXTOS_DE_BOAS_VINDAS.nome}
-                        </ThemedText>
+                        <View style={styles.marca}>
+                            <LogoBeast tamanho={32} variante="app" />
+                            <ThemedText type="smallBold" themeColor="primaria" numberOfLines={1} style={styles.nome}>
+                                {TEXTOS_DE_BOAS_VINDAS.nome}
+                            </ThemedText>
+                        </View>
+                        {primeiraVez === false && (
+                            <Pressable
+                                accessibilityRole="link"
+                                accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.regras}
+                                hitSlop={Spacing.two}
+                                onPress={aoAbrirRegras}
+                                style={[styles.ajuda, { backgroundColor: theme.cartao, borderColor: theme.bordaDoCartao }]}>
+                                <Ionicons name="help-circle-outline" size={22} color={theme.primaria} />
+                            </Pressable>
+                        )}
                     </View>
 
-                    <View style={styles.palco}>
-                        {/* Os anéis e a sombra no chão: o lobinho não flutua no padrão do fundo. */}
-                        <View testID="anel-externo" style={[styles.anel, styles.anelExterno, { backgroundColor: theme.realce }]} />
-                        <View testID="anel-interno" style={[styles.anel, styles.anelInterno, { backgroundColor: theme.realce }]} />
-                        <View style={[styles.sombra, { backgroundColor: theme.veu }]} />
-                        <Image
-                            accessible
-                            accessibilityRole="image"
-                            accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.mascote}
-                            source={require('@/assets/images/mascote-beast.png')}
-                            contentFit="contain"
-                            style={styles.mascote}
-                        />
-                    </View>
+                    <ThemedText accessibilityRole="header" style={styles.titulo}>
+                        {TEXTOS_DE_BOAS_VINDAS.titulo}
+                    </ThemedText>
 
-                    <View style={styles.texto}>
-                        <ThemedText type="title" accessibilityRole="header">
-                            {TEXTOS_DE_BOAS_VINDAS.titulo}
-                        </ThemedText>
-                        <ThemedText themeColor="textSecondary">{TEXTOS_DE_BOAS_VINDAS.apoio}</ThemedText>
-                    </View>
+                    <CartaDeJogador apelido={apelido} numeros={numeros} aoAbrirConquistas={aoAbrirConquistas} />
 
-                    {carta && (
-                        <CartaDeJogador
-                            apelido={carta.apelido}
-                            sequencia={carta.sequencia}
-                            xp={carta.xp}
-                            medalhas={carta.medalhas}
-                            aoAbrirConquistas={aoAbrirConquistas}
-                        />
+                    {primeiraVez === true && (
+                        <View style={styles.convite}>
+                            <ConviteDasRegras aoAbrir={aoAbrirRegras} />
+                        </View>
                     )}
 
                     <View style={styles.acoes}>
                         <BotaoPrincipal rotulo={TEXTOS_DE_BOAS_VINDAS.jogar} onPress={aoJogar} />
-                        <Pressable
-                            accessibilityRole="link"
-                            accessibilityLabel={TEXTOS_DE_BOAS_VINDAS.regras}
-                            hitSlop={Spacing.two}
-                            onPress={aoAbrirRegras}
-                            style={styles.link}>
-                            <Ionicons name="help-circle-outline" size={20} color={theme.primaria} />
-                            <ThemedText type="smallBold" themeColor="primaria">
-                                {TEXTOS_DE_BOAS_VINDAS.regras}
-                            </ThemedText>
-                        </Pressable>
                     </View>
 
                     <ThemedText type="small" themeColor="textSecondary" style={styles.assinatura}>
@@ -100,16 +93,19 @@ const styles = StyleSheet.create({
     container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
     safeArea: { flex: 1, maxWidth: LarguraDoFormulario },
     conteudo: { flexGrow: 1, paddingHorizontal: Spacing.four, paddingBottom: Spacing.three },
-    topo: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two, paddingTop: Spacing.two },
-    nome: { flex: 1 },
-    palco: { flex: 1, minHeight: 120, alignItems: 'center', justifyContent: 'flex-end', paddingBottom: Spacing.two },
-    anel: { position: 'absolute', alignSelf: 'center', borderRadius: 999 },
-    anelExterno: { width: 190, height: 190, bottom: Spacing.one, opacity: 0.55 },
-    anelInterno: { width: 136, height: 136, bottom: 30, opacity: 0.9 },
-    sombra: { position: 'absolute', bottom: Spacing.one, width: 120, height: 12, borderRadius: 60, opacity: 0.4 },
-    mascote: { width: '80%', maxWidth: 220, aspectRatio: 615 / 815, maxHeight: '100%' },
-    texto: { gap: Spacing.one, marginTop: Spacing.two, marginBottom: Spacing.three },
-    acoes: { gap: Spacing.three, marginTop: Spacing.three },
-    link: { flexDirection: 'row', alignSelf: 'center', alignItems: 'center', gap: Spacing.one, minHeight: 32 },
-    assinatura: { textAlign: 'center', marginTop: Spacing.three },
+    topo: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: Spacing.two,
+        minHeight: 40,
+        paddingTop: Spacing.two,
+    },
+    marca: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two + 2, flexShrink: 1 },
+    nome: { flexShrink: 1 },
+    ajuda: { width: 40, height: 40, borderRadius: 20, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
+    titulo: { fontSize: 22, lineHeight: 28, fontWeight: 700, marginTop: Spacing.three - 4, marginBottom: Spacing.three - 2 },
+    convite: { marginTop: Spacing.three - 2 },
+    acoes: { marginTop: Spacing.three + 2 },
+    assinatura: { textAlign: 'center', marginTop: 'auto', paddingTop: Spacing.three - 2 },
 });

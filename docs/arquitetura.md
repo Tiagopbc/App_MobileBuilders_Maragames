@@ -10,14 +10,14 @@ Por enquanto, só o módulo **Fundamentos de Game Design** tem questões, com 5 
 flowchart LR
     L["Login ou cadastro"] --> P["Completar o perfil"] --> B["Boas-vindas"] --> H["Home"]
     B --> CJ["Conquistas<br/>pela carta de jogador"]
-    B --> RG["Regras do jogo"]
+    B --> RG["Como jogar"]
     H --> LI["Lições"]
     H --> PR["Progresso"]
     H --> PE["Perfil"]
     LI --> T["Termo e autoavaliação<br/>na primeira vez"] --> CI["Ciclo da lição"]
 ```
 
-A boas-vindas é a primeira tela de quem já entrou, em `/`: a logo, o lobinho, a chamada "Solte a fera do game design" e a carta de jogador, com o apelido, os dias seguidos, o XP e as medalhas. O botão Jogar leva à home, que fica em `/home`, e o link das Regras do jogo explica a lição, a certeza, o XP, o resultado e a sequência. A home mostra o cartão "Para hoje", com o próximo passo sugerido, o XP do dia, a sequência de dias e as revisões agendadas. O Perfil reúne os dados do cadastro, as perguntas de "Sobre você", o tema claro ou escuro, o termo aceito e a saída da conta.
+A boas-vindas é a primeira tela de quem já entrou, em `/`: a logo, a chamada "Solte a fera do game design" e a carta de jogador, com o lobinho sobre dois anéis, o apelido, os dias seguidos, o XP e as medalhas. O botão Jogar leva à home, que fica em `/home`. O Como jogar, que explica a lição, a certeza, o XP, o resultado e a sequência, abre por uma faixa de convite até a pessoa terminar a primeira lição (`licaoFeita`, calculada das respostas, sem nada guardado) e, depois, por um botão ? fixo no topo. A home mostra o cartão "Para hoje", com o próximo passo sugerido, o XP do dia, a sequência de dias e as revisões agendadas. O Perfil reúne os dados do cadastro, as perguntas de "Sobre você", o tema claro ou escuro, o termo aceito e a saída da conta.
 
 ## O ciclo de uma lição
 
