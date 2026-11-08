@@ -390,9 +390,9 @@ describe('o pé da carta de conceito', () => {
 });
 
 describe('a assinatura de quem fez o app', () => {
-    it('o autor é uma pessoa só, e a assinatura da boas-vindas diz "by" e o nome', () => {
+    it('o autor é uma pessoa só, e a assinatura da boas-vindas diz "por" e o nome', () => {
         expect(AUTOR).toBe('Tiago Cavalcanti');
-        expect(TEXTOS_DE_BOAS_VINDAS.assinatura).toBe('by Tiago Cavalcanti');
+        expect(TEXTOS_DE_BOAS_VINDAS.assinatura).toBe('por Tiago Cavalcanti');
     });
 
     it('o Perfil mostra o autor e a versão do app', () => {

@@ -708,7 +708,7 @@ export function resumoDoPerfil(apelido: string, resumo: { xp: number | null; fei
 
 export const TEXTOS_DE_BOAS_VINDAS = {
     nome: 'Maragames App',
-    assinatura: `by ${AUTOR}`,
+    assinatura: `por ${AUTOR}`,
     titulo: 'Solte a fera do game design',
     mascote: 'O lobinho da Beast Maragames segurando um controle',
     jogar: 'Jogar',
