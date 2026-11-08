@@ -26,12 +26,11 @@ type CartaDeJogadorProps = {
     aoAbrirConquistas: () => void;
 };
 
-// O lobinho na janela da carta: a mesma proporção do arquivo (615 por 815). O anel de dentro tem a largura
-// dele e o de fora, 1,4 vez isso, como no desenho aprovado.
-const LARGURA_DO_LOBINHO = 176;
+// O lobinho no centro da janela da carta: a mesma proporção do arquivo (615 por 815). O anel de dentro tem a
+// largura dele e o de fora, 1,4 vez isso, como no desenho aprovado.
+const LARGURA_DO_LOBINHO = 224;
 const ALTURA_DO_LOBINHO = Math.round((LARGURA_DO_LOBINHO * 815) / 615);
-const ALTURA_DA_ARTE = 290;
-const FOLGA_DO_CHAO = 6;
+const ALTURA_DA_ARTE = 420;
 
 // A carta de jogador: uma carta de jogo com a arte do lobinho sobre dois anéis, a placa com o apelido e o
 // tipo, e os números da pessoa: dias seguidos, XP e medalhas. Aparece na boas-vindas e vai aparecer em
@@ -149,32 +148,33 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         overflow: 'hidden',
         alignItems: 'center',
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
     },
     anel: { position: 'absolute', alignSelf: 'center', borderRadius: 999 },
-    // Os dois anéis têm o centro no meio do lobinho: a distância do chão é a folga, mais metade da altura
-    // dele, menos o raio do anel.
+    // O lobinho e os dois anéis têm o mesmo centro, o meio da janela: cada anel sobe da base metade do que
+    // sobra da janela depois dele.
     anelExterno: {
         width: Math.round(LARGURA_DO_LOBINHO * 1.4),
         height: Math.round(LARGURA_DO_LOBINHO * 1.4),
-        bottom: FOLGA_DO_CHAO + ALTURA_DO_LOBINHO / 2 - Math.round(LARGURA_DO_LOBINHO * 1.4) / 2,
+        bottom: (ALTURA_DA_ARTE - Math.round(LARGURA_DO_LOBINHO * 1.4)) / 2,
         opacity: 0.55,
     },
     anelInterno: {
         width: LARGURA_DO_LOBINHO,
         height: LARGURA_DO_LOBINHO,
-        bottom: FOLGA_DO_CHAO + ALTURA_DO_LOBINHO / 2 - LARGURA_DO_LOBINHO / 2,
+        bottom: (ALTURA_DA_ARTE - LARGURA_DO_LOBINHO) / 2,
         opacity: 0.9,
     },
+    // A sombra fica sob os pés do lobinho, que agora estão a meio caminho da base.
     sombra: {
         position: 'absolute',
-        bottom: FOLGA_DO_CHAO - 2,
+        bottom: (ALTURA_DA_ARTE - ALTURA_DO_LOBINHO) / 2 - 2,
         width: Math.round(LARGURA_DO_LOBINHO * 0.8),
         height: 12,
         borderRadius: 60,
         opacity: 0.35,
     },
-    mascote: { width: LARGURA_DO_LOBINHO, height: ALTURA_DO_LOBINHO, marginBottom: FOLGA_DO_CHAO },
+    mascote: { width: LARGURA_DO_LOBINHO, height: ALTURA_DO_LOBINHO },
     placa: {
         flexDirection: 'row',
         alignItems: 'center',
