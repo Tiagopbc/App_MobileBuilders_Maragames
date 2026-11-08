@@ -1,6 +1,6 @@
 // Gera o relatório que vai para a Beast Maragames (item 23): uma página só, com os números em
-// conjunto, sem nada de pessoa nenhuma. É o que o grupo publica e envia; os CSVs de
-// `npm run exportar` ficam com o grupo.
+// conjunto, sem nada de pessoa nenhuma. É o que o autor publica e envia; os CSVs de
+// `npm run exportar` ficam com o autor.
 //
 // Só LÊ o Firestore. As contas são as de src/lib/exportacao.ts, as mesmas que o app faz, e a
 // página é montada por src/lib/relatorio.ts.
@@ -9,7 +9,7 @@
 //   npm run relatorio                         todo mundo que aceitou o termo
 //   npm run relatorio -- --desde 2026-10-30   só quem aceitou a partir desse dia (sem as contas de teste)
 //   npm run relatorio -- --saida pasta        escolhe a pasta
-//   npm run relatorio -- --simulado 100       turma de 100 alunos virtuais, sem ler o banco
+//   npm run relatorio -- --simulado 100       turma de 100 participantes virtuais, sem ler o banco
 //
 // Opções da turma simulada (item 36):
 //   --semente N            repete uma turma (sem ela, cada rodada sorteia uma semente nova)
@@ -113,7 +113,7 @@ function simular(alunosTexto: string | undefined) {
         `npm run relatorio -- --simulado ${alunos} --semente ${semente}${cenario ? ` --cenario ${cenario}` : ''}` +
         `${limiteDiario ? ' --limite-diario' : ''}${diasDeEstudo ? ` --dias-de-estudo ${diasDeEstudo}` : ''}${defeitos ? ' --defeitos' : ''}${extra}`;
 
-    console.log(`Turma sintética · ${alunos} alunos virtuais · semente ${semente} · versão do conteúdo ${versao}${opcoesNoTexto ? ` · ${opcoesNoTexto}` : ''}`);
+    console.log(`Turma sintética · ${alunos} participantes virtuais · semente ${semente} · versão do conteúdo ${versao}${opcoesNoTexto ? ` · ${opcoesNoTexto}` : ''}`);
     console.log('O banco não foi lido.');
 
     if (replicas !== undefined) return simularReplicas({ replicas, alunos, semente, cenarios, indicadoresDa, repetir });

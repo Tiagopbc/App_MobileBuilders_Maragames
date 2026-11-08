@@ -1,4 +1,4 @@
-// Base sintética para validar o app (itens 23 e 35): uma turma de alunos virtuais, de perfis
+// Base sintética para validar o app (itens 23 e 35): uma turma de participantes virtuais, de perfis
 // variados, respondendo às lições. Função pura: sem React, sem Firebase, sem estado, e sem
 // Math.random fora de `sementeAleatoria`, para a mesma semente dar sempre a mesma turma.
 //
@@ -336,7 +336,7 @@ const FAIXAS: readonly FaixaEtaria[] = ['18_24', '25_34', '35_44', '45_mais'];
 const UFS_DA_TURMA = ['MA', 'PI', 'PA', 'CE', 'SP'] as const;
 
 /**
- * Uma turma de alunos virtuais e o que cada um responderia. Só faz lição de ciclo completo: sem as
+ * Uma turma de participantes virtuais e o que cada um responderia. Só faz lição de ciclo completo: sem as
  * duas formas não há diagnóstico nem verificação.
  */
 export function simularTurma(conteudo: { topicos: readonly Topico[]; questoes: readonly Question[] }, opcoes: OpcoesDaSimulacao): Turma {

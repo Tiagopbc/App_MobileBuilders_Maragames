@@ -24,7 +24,7 @@ import {
     type Turma,
 } from '../simulacao';
 
-// A turma simulada é a base sintética para validar o app (itens 23 e 35): alunos virtuais de
+// A turma simulada é a base sintética para validar o app (itens 23 e 35): participantes virtuais de
 // perfis variados, sorteados sem proporção fixa, respondendo às lições. Nada disto vem do banco
 // nem vai para ele, e a página diz que os dados são sintéticos.
 
@@ -693,7 +693,7 @@ describe('a página do relatório com dados simulados', () => {
         const topo = simulada.slice(simulada.indexOf('<body>'), simulada.indexOf('<h2'));
 
         expect(topo).toContain('Dados sintéticos para validação do aplicativo');
-        expect(topo).toContain('100 alunos virtuais');
+        expect(topo).toContain('100 participantes virtuais');
         expect(topo).toContain('semente 7');
         expect(topo).toContain('nenhum é evidência sobre a retenção de conteúdo');
     });
@@ -749,7 +749,7 @@ describe('a página do relatório com dados simulados', () => {
     it('em "Como ler", explica o que é a base sintética e o que ela não prova', () => {
         const comoLer = simulada.slice(simulada.indexOf('Como ler estes números'));
 
-        expect(comoLer).toContain('alunos virtuais');
+        expect(comoLer).toContain('participantes virtuais');
         expect(comoLer).toContain('não é resultado de pesquisa');
     });
 

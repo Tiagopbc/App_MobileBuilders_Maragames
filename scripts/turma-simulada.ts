@@ -1,4 +1,4 @@
-// A turma de alunos virtuais que o relatório e a exportação usam (itens 35 e 36): as opções da
+// A turma de participantes virtuais que o relatório e a exportação usam (itens 35 e 36): as opções da
 // linha de comando, o conteúdo de content/ com a versão dele e a turma sorteada. Não lê nem grava
 // o Firestore.
 //
