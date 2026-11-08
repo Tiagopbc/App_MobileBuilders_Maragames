@@ -484,7 +484,7 @@ export interface OpcoesDoRelatorio {
     geradoEm: string; // AAAA-MM-DD, o dia da rodada
     desde?: string; // AAAA-MM-DD, quando a rodada deixou de fora quem aceitou o termo antes
     amostraMinima?: number;
-    // Quando os dados são de alunos virtuais (src/lib/simulacao.ts): a página avisa no topo, e o
+    // Quando os dados são de participantes virtuais (src/lib/simulacao.ts): a página avisa no topo, e o
     // rodapé diz como repetir a turma.
     simulacao?: {
         alunos: number;
@@ -514,16 +514,36 @@ const pontos = (valor: number) => {
  * "IC 95%: 0,21 a 0,38", para ler embaixo de um número. Com poucas pessoas, a reamostragem dá um
  * intervalo estreito demais, e o texto diz que ele é aproximado.
  */
+const avisoDoIntervalo = (pessoas: number) => (pessoas < PESSOAS_PARA_INTERVALO_CONFIAVEL ? ' · intervalo aproximado' : '');
 const textoDoIntervalo = (i: Intervalo, formato: (v: number) => string, pessoas: number) =>
-    `IC 95%: ${formato(i.inferior)} a ${formato(i.superior)}` + (pessoas < PESSOAS_PARA_INTERVALO_CONFIAVEL ? ' · intervalo aproximado' : '');
+    `IC 95%: ${formato(i.inferior)} a ${formato(i.superior)}` + avisoDoIntervalo(pessoas);
 const porcento = (valor: number) => `${Math.round(valor * 100) + 0}%`.replace('-', '−');
+
+const ACIMA_DE_100 = 'mais de 100%';
+const ABAIXO_DE_0 = 'menos de 0%';
+/**
+ * Um limite de intervalo da retenção corrigida. Com poucas respostas ela passa de 100% ou fica abaixo de 0%
+ * (item 37): o cálculo não corta, porque cortar enviesaria a reamostragem, mas a página não escreve um
+ * percentual que não existe. O que arredonda para 100% ou para 0% continua sendo número.
+ */
+const limiteDaRetencao = (valor: number) => {
+    const inteiro = Math.round(valor * 100);
+    return inteiro > 100 ? ACIMA_DE_100 : inteiro < 0 ? ABAIXO_DE_0 : porcento(valor);
+};
+/** "IC 95%: 78% a mais de 100%"; com os dois limites fora da faixa do mesmo lado, diz uma vez só. */
+const textoDoIntervaloDaRetencao = (i: Intervalo, pessoas: number) => {
+    const de = limiteDaRetencao(i.inferior);
+    const ate = limiteDaRetencao(i.superior);
+    const foraDaFaixa = de === ate && (de === ACIMA_DE_100 || de === ABAIXO_DE_0);
+    return `IC 95%: ${foraDaFaixa ? de : `${de} a ${ate}`}` + avisoDoIntervalo(pessoas);
+};
 const valorP = (p: number) => (p < 0.001 ? 'p < 0,001' : `p = ${decimal(p, p < 0.01 ? 3 : 2)}`);
 const plural = (n: number, um: string, varios: string) => `${n} ${n === 1 ? um : varios}`;
 const fracao = (taxa: Taxa) => `${taxa.acertos} de ${taxa.total}`;
 const largura = (parte: number, todo: number) => (todo <= 0 ? 0 : Math.round((Math.min(parte, todo) / todo) * 100));
 
 const ORDEM_DOS_QUADRANTES: readonly Quadrante[] = ['firme', 'fragil', 'lacuna', 'ponto_cego'];
-// Na terceira pessoa: no app o aluno lê "você"; aqui quem lê é a Beast Maragames.
+// Na terceira pessoa: no app a pessoa lê "você"; aqui quem lê é a Beast Maragames.
 const O_QUE_E_O_QUADRANTE: Record<Quadrante, string> = {
     firme: 'acertou com certeza',
     fragil: 'acertou sem certeza',
@@ -648,18 +668,18 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
     const { simulacao } = opcoes;
     // O aviso vem antes de qualquer número: ninguém pode ler esta página como resultado de pesquisa.
     const aviso = simulacao
-        ? `<div class="aviso"><p><strong>Dados sintéticos para validação do aplicativo · ${plural(simulacao.alunos, 'aluno virtual', 'alunos virtuais')} · semente ${simulacao.semente}` +
+        ? `<div class="aviso"><p><strong>Dados sintéticos para validação do aplicativo · ${plural(simulacao.alunos, 'participante virtual', 'participantes virtuais')} · semente ${simulacao.semente}` +
           (simulacao.cenario ? ` · cenário ${esc(simulacao.cenario.rotulo)}` : '') +
           `.</strong></p>` +
           (simulacao.cenario && simulacao.cenario.rotulo !== 'Base' ? `<p>Neste cenário, ${esc(simulacao.cenario.descricao)}.</p>` : '') +
           `<p>Os perfis foram sorteados por um gerador aleatório, para testar o que a ferramenta consegue medir a partir das respostas. ` +
-          `Nenhum número desta página veio de alunos de verdade, e nenhum é evidência sobre a retenção de conteúdo.</p></div>`
+          `Nenhum número desta página veio de pessoas de verdade, e nenhum é evidência sobre a retenção de conteúdo.</p></div>`
         : '';
 
     const cabecalho =
         `<header><p class="marca">Beast Maragames</p><h1>Relatório de aprendizagem</h1>` +
         (simulacao
-            ? `<p class="meta">Simulação de ${dia(opcoes.geradoEm)} · ${plural(simulacao.alunos, 'aluno virtual', 'alunos virtuais')}</p></header>${aviso}`
+            ? `<p class="meta">Simulação de ${dia(opcoes.geradoEm)} · ${plural(simulacao.alunos, 'participante virtual', 'participantes virtuais')}</p></header>${aviso}`
             : `<p class="meta">Dados de ${dia(opcoes.geradoEm)} · ${plural(n, 'participante', 'participantes')}${filtro}</p></header>`);
 
     const pagina = (corpo: string) =>
@@ -698,7 +718,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
         'Em resumo',
         '',
         `<div class="cartoes">` +
-            cartao('Participantes', String(n), simulacao ? 'alunos virtuais' : 'aceitaram o termo') +
+            cartao('Participantes', String(n), simulacao ? 'participantes virtuais' : 'aceitaram o termo') +
             cartao('Lições verificadas', String(ind.verificadas), 'com o antes e o depois medidos') +
             (ind.ganhoDaTurma !== null && ganhoPequeno
                 ? cartao('Ganho da turma', 'poucos dados', `amostra pequena · ${plural(ind.pre.total, 'resposta', 'respostas')} no diagnóstico`)
@@ -738,7 +758,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
     ] as const;
     const aprendizagem = bloco(
         'Aprendizagem',
-        'Os alunos acertam mais depois de estudar a lição?',
+        'As pessoas acertam mais depois de estudar a lição?',
         legenda(series) +
             barra('Diagnóstico', ind.pre, 'antes') +
             barra('Verificação', ind.pos, 'depois') +
@@ -813,7 +833,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
                           const rotulo = nivel === 'alta' ? 'Do que se sabia, com certeza' : 'Do que se sabia, sem certeza';
                           if (intervalo === null) return '';
                           if (poucas(corrigida.respostas[nivel])) return cartao(rotulo, 'poucos dados', 'amostra pequena · continuou sabido na revisão');
-                          return cartao(rotulo, porcento(intervalo.estimativa), `continuou sabido na revisão · ${ic(intervalo, porcento, pessoas.revisao)}`);
+                          return cartao(rotulo, porcento(intervalo.estimativa), `continuou sabido na revisão · ${textoDoIntervaloDaRetencao(intervalo, pessoas.revisao)}`);
                       })
                       .join('') +
                   (poucas(corrigida.respostas.alta) || poucas(corrigida.respostas.baixa)
@@ -825,7 +845,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
                                 (incluiZero(corrigida.diferenca) ? ' · sem evidência de diferença' : '')
                         )) +
                   `</div>` +
-                  `<p class="nota">As barras acima contam os acertos no chute, que não têm o que reter e só se repetem por acaso; como há mais chute entre os Frágeis, elas fazem a certeza parecer proteger mesmo quando não protege. Os cartões descontam o chute: do acerto em cada nível sai a parte que a pessoa sabia, e o número é quanto dessa parte ela ainda sabia na revisão. Com poucas respostas, ele pode passar de 100% ou ficar abaixo de 0%. Os intervalos reamostram pessoas, e não respostas.</p>`)
+                  `<p class="nota">As barras acima contam os acertos no chute, que não têm o que reter e só se repetem por acaso; como há mais chute entre os Frágeis, elas fazem a certeza parecer proteger mesmo quando não protege. Os cartões descontam o chute: do acerto em cada nível sai a parte que a pessoa sabia, e o número é quanto dessa parte ela ainda sabia na revisão. Com poucas respostas, ele pode passar de 100% ou ficar abaixo de 0%, e nos intervalos a página escreve mais de 100% ou menos de 0%. Os intervalos reamostram pessoas, e não respostas.</p>`)
     );
 
     // Perfis de resposta
@@ -973,7 +993,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
             ? ''
             : bloco(
                   'Conferência do classificador',
-                  'O perfil de resposta lido das respostas bate com o tipo que o gerador sorteou para cada aluno virtual?',
+                  'O perfil de resposta lido das respostas bate com o tipo que o gerador sorteou para cada participante virtual?',
                   `<div class="tabela"><table><thead><tr><th>Tipo sorteado</th>${simulacao.matriz.perfis.map((p) => `<th>${esc(p)}</th>`).join('')}</tr></thead><tbody>` +
                       simulacao.matriz.tipos
                           .map((t) => `<tr><td>${esc(t.rotulo)}</td>${t.contagens.map((c) => `<td class="num">${c === 0 ? '·' : c}</td>`).join('')}</tr>`)
@@ -1027,7 +1047,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
         '',
         `<ul class="ler">` +
             (simulacao
-                ? `<li>Esta página foi gerada com alunos virtuais de perfis sorteados: quem domina, quem tem dificuldade, quem chuta, quem se acha mais sabido do que é, quem duvida do que sabe e quem desiste. As proporções também são sorteadas. Serve para testar a ferramenta: não é resultado de pesquisa.</li>` +
+                ? `<li>Esta página foi gerada com participantes virtuais de perfis sorteados: quem domina, quem tem dificuldade, quem chuta, quem se acha mais sabido do que é, quem duvida do que sabe e quem desiste. As proporções também são sorteadas. Serve para testar a ferramenta: não é resultado de pesquisa.</li>` +
                   `<li>No gerador, nada do cadastro (sexo, faixa etária, experiência, estudo, aluno do site) influencia o desempenho: qualquer diferença entre esses grupos é acaso da amostra.</li>`
                 : `<li>Com ${plural(n, 'participante', 'participantes')} e sem grupo de controle, estes números descrevem e não provam causa.</li>`) +
             `<li>Cada lição mede três vezes: 3 questões antes de estudar (diagnóstico), 3 questões equivalentes depois (verificação) e as mesmas da verificação 7 dias depois (revisão).</li>` +

@@ -884,6 +884,56 @@ describe('relatorioHtml', () => {
             expect(retencao).toContain('intervalo aproximado');
         });
 
+        // Com poucas respostas, a retenção corrigida passa de 100% ou fica abaixo de 0%. O cálculo não corta
+        // (cortar enviesaria a reamostragem), mas a página não escreve um percentual que não existe.
+        describe('o intervalo da retenção corrigida nunca passa de 100% nem fica abaixo de 0%', () => {
+            const bloco = (alta: { estimativa: number; inferior: number; superior: number }) => {
+                const ind = indicadores();
+                const html = pagina({ ...ind, incerteza: { ...ind.incerteza, retencaoCorrigida: { ...ind.incerteza.retencaoCorrigida, alta } } }, 1);
+                return html.slice(html.indexOf('<h2>Retenção</h2>'), html.indexOf('<h2>Perfis de resposta</h2>'));
+            };
+            // Só o cartão "com certeza", que é o que cada exemplo muda: o "sem certeza" do exemplo também sai do intervalo.
+            const cartaoDaCerteza = (alta: { estimativa: number; inferior: number; superior: number }) => {
+                const retencao = bloco(alta);
+                const comeco = retencao.indexOf('Do que se sabia, com certeza');
+                return retencao.slice(comeco, retencao.indexOf('</div></div>', comeco));
+            };
+
+            it('o limite de cima acima de 100% vira "mais de 100%"', () => {
+                const cartao = cartaoDaCerteza({ estimativa: 0.93, inferior: 0.78, superior: 1.12 });
+
+                expect(cartao).toContain('IC 95%: 78% a mais de 100%');
+                expect(cartao).not.toContain('112%');
+            });
+
+            it('o limite de baixo abaixo de 0% vira "menos de 0%"', () => {
+                const cartao = cartaoDaCerteza({ estimativa: 0.1, inferior: -0.08, superior: 0.4 });
+
+                expect(cartao).toContain('IC 95%: menos de 0% a 40%');
+                expect(cartao).not.toContain('−8%');
+            });
+
+            it('com os dois limites do mesmo lado, diz uma vez só', () => {
+                const acima = cartaoDaCerteza({ estimativa: 1.1, inferior: 1.05, superior: 1.2 });
+                const abaixo = cartaoDaCerteza({ estimativa: -0.3, inferior: -0.5, superior: -0.1 });
+
+                expect(acima).toContain('IC 95%: mais de 100%');
+                expect(acima).not.toContain('mais de 100% a');
+                expect(abaixo).toContain('IC 95%: menos de 0%');
+                expect(abaixo).not.toContain('menos de 0% a');
+            });
+
+            it('o que arredonda para 100% ou para 0% continua sendo número', () => {
+                const cartao = cartaoDaCerteza({ estimativa: 0.99, inferior: -0.001, superior: 1.0000000001 });
+
+                expect(cartao).toContain('IC 95%: 0% a 100%');
+            });
+
+            it('a nota diz que a página escreve "mais de 100%" e "menos de 0%" nesses casos', () => {
+                expect(bloco({ estimativa: 0.5, inferior: 0.4, superior: 0.6 })).toContain('a página escreve mais de 100% ou menos de 0%');
+            });
+        });
+
         it('os cartões ficam em três colunas no computador e em duas no celular: seis cartões, duas linhas', () => {
             const html = pagina();
 
@@ -905,6 +955,40 @@ describe('relatorioHtml', () => {
             expect(resumo(pagina(indicadores(), 10))).toContain('amostra pequena');
             expect(resumo(pagina(indicadores(), 10))).not.toContain('<div class="valor">0,67</div>');
             expect(resumo(pagina(indicadores(), 1))).toContain('<div class="valor">0,67</div>');
+        });
+    });
+
+    // A turma simulada é de participantes virtuais, como o resto da página fala de participantes. "Aluno
+    // do site" fica: é o rótulo da pergunta do cadastro, que quer dizer quem já estuda na Beast Maragames.
+    describe('a página da turma simulada', () => {
+        const simulada = (alunos: number) =>
+            relatorioHtml(indicadores(), {
+                geradoEm: '2026-11-10',
+                amostraMinima: 1,
+                simulacao: {
+                    alunos,
+                    semente: 7,
+                    matriz: { tipos: [{ rotulo: 'Domina', contagens: [1] }], perfis: ['Domina'] },
+                },
+            });
+
+        it('fala de participantes virtuais, no plural e no singular', () => {
+            expect(simulada(100)).toContain('100 participantes virtuais');
+            expect(simulada(1)).toContain('1 participante virtual');
+            expect(simulada(100)).toContain('<div class="sub">participantes virtuais</div>');
+        });
+
+        it('não chama ninguém de aluno virtual nem pergunta se "os alunos" acertam mais', () => {
+            const html = simulada(100);
+
+            expect(html).not.toMatch(/alunos? virtua/i);
+            expect(html).not.toContain('Os alunos');
+            expect(html).toContain('As pessoas acertam mais depois de estudar a lição?');
+        });
+
+        it('o "Aluno do site" do cadastro continua com esse nome', () => {
+            expect(simulada(100)).toContain('Aluno do site');
+            expect(pagina()).toContain('Aluno do site');
         });
     });
 

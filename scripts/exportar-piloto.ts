@@ -1,5 +1,5 @@
-// Exporta os dados para a análise do grupo: o artigo, a apresentação e a conferência dos números
-// do app (M7, item 23). Os arquivos ficam com o grupo; o que vai para a Beast Maragames é o
+// Exporta os dados para a análise do autor: o artigo, a apresentação e a conferência dos números
+// do app (M7, item 23). Os arquivos ficam com o autor; o que vai para a Beast Maragames é o
 // relatório, de `npm run relatorio`.
 //
 // Só LÊ o Firestore, com a chave de serviço (serviceAccountKey.json, fora do git). As contas
@@ -10,7 +10,7 @@
 //   npm run exportar -- --desde 2026-10-30   só quem aceitou a partir desse dia (sem as contas de teste)
 //   npm run exportar -- --saida pasta        escolhe a pasta
 //   npm run exportar -- --simulado 100 --semente 1250808581
-//                                            o banco fictício: a turma de alunos virtuais, sem ler o banco
+//                                            o banco fictício: a turma de participantes virtuais, sem ler o banco
 //
 // Com --simulado, o Firestore não é lido nem tocado: a turma é a mesma que `npm run relatorio`
 // sorteia com a mesma semente (e as mesmas --cenario, --limite-diario, --dias-de-estudo e
@@ -22,7 +22,7 @@
 // quando há filtro. Se ninguém entra no filtro, avisa e não grava nada.
 //
 // Gera eventos.csv, participantes.csv, licoes.csv, questoes.csv, autoavaliacao.csv e resumo.md,
-// com um código no lugar do nome, e chave.csv, que liga cada código ao nome e NÃO sai do grupo.
+// com um código no lugar do nome, e chave.csv, que liga cada código ao nome e NÃO sai do autor.
 
 import { mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
@@ -32,7 +32,7 @@ import { bancoFicticio, nomeDaTurma } from '../src/lib/simulacao';
 import { RAIZ, argumento, filtroDesde, hoje, lerDadosDoBanco } from './dados-do-banco';
 import { conteudoComVersao, opcoesDaLinhaDeComando, turmaSimulada } from './turma-simulada';
 
-/** O banco fictício: a turma virtual em arquivos, para o grupo trabalhar em cima. */
+/** O banco fictício: a turma virtual em arquivos, para o autor trabalhar em cima. */
 function exportarSimulado(alunosTexto: string) {
     const { alunos, semente, cenarioPedido, diasDeEstudo, limiteDiario, defeitos } = opcoesDaLinhaDeComando(alunosTexto, 100);
     const cenario = cenarioPedido ?? 'base';
@@ -54,7 +54,7 @@ function exportarSimulado(alunosTexto: string) {
 
     console.log(`Banco fictício gravado em ${pasta}`);
     console.log(
-        `  ${alunos} alunos virtuais · semente ${semente} · cenário ${cenario}` +
+        `  ${alunos} participantes virtuais · semente ${semente} · cenário ${cenario}` +
             `${limiteDiario ? ' · limite diário' : ''}${diasDeEstudo ? ` · ${diasDeEstudo} dias de estudo` : ''}${defeitos ? ' · defeitos plantados' : ''}` +
             ` · versão do conteúdo ${versao}. O Firestore não foi lido.`
     );
@@ -89,7 +89,7 @@ async function main() {
     console.log(`  eventos:       ${exportado.eventos.length}`);
     console.log(`  lições:        ${exportado.licoes.length} (uma linha por pessoa e por lição começada)`);
     console.log(`  questões:      ${exportado.questoes.length}`);
-    console.log('  chave.csv liga os códigos aos nomes: fica só com o grupo, não envie.');
+    console.log('  chave.csv liga os códigos aos nomes: fica só com o autor, não envie.');
 }
 
 main().then(
