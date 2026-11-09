@@ -346,8 +346,10 @@ describe('a revisão', () => {
         expect(screen.getByLabelText('Na verificação: 1 de 1')).toBeOnTheScreen();
         expect(screen.getByLabelText('Hoje: 1 de 1')).toBeOnTheScreen();
         expect(screen.getByText('Você lembrou 1 de 1. A revisão mostra o que ficou.')).toBeOnTheScreen();
-        // Os +2 de antes, mais o acerto com dúvida da revisão (+2).
-        expect(screen.getByText('XP da lição: +4 XP')).toBeOnTheScreen();
+        // Só o acerto com dúvida da revisão (+2): os +2 de antes ficam de fora, para o número bater com o
+        // que a pessoa acabou de fazer.
+        expect(screen.getByText('XP da revisão: +2 XP')).toBeOnTheScreen();
+        expect(screen.queryByText(/XP da lição/)).toBeNull();
         // A revisão feita no dia em que abre e o ciclo completo são medalhas novas; a Primeira lição, de 7 dias antes, não.
         expect(screen.getByRole('link', { name: 'Medalha nova: Revisão em dia' })).toBeOnTheScreen();
         expect(screen.getByRole('link', { name: 'Medalha nova: Ciclo completo' })).toBeOnTheScreen();

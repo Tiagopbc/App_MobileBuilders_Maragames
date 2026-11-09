@@ -176,8 +176,11 @@ export function FimDaLicao({
                         )}
                         <VariacaoDoFim resultado={resultado} />
                         <ThemedText type="small" themeColor="textSecondary">
-                            {/* O saldo aparece como é, inclusive negativo (item 14). */}
-                            {`${TEXTOS.xpDaLicao}: ${formatarXp(resultado.xp)}`}
+                            {/* O saldo aparece como é, inclusive negativo (item 14). Na revisão feita, o número é só
+                                o da revisão: o da lição inteira parecia o custo de uma revisão curta. */}
+                            {resultado.xpDaRevisao === null
+                                ? `${TEXTOS.xpDaLicao}: ${formatarXp(resultado.xp)}`
+                                : `${TEXTOS.xpDaRevisao}: ${formatarXp(resultado.xpDaRevisao)}`}
                         </ThemedText>
                     </Superficie>
                 )}

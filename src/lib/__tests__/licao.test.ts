@@ -552,6 +552,8 @@ describe('resultadoDaLicao', () => {
             revisao: null,
             // Diagnóstico −5, prática +5, verificação +7.
             xp: 7,
+            // Sem revisão feita, não há XP de revisão.
+            xpDaRevisao: null,
             quadrantes: { firme: 2, fragil: 1, lacuna: 0, ponto_cego: 0 },
         });
     });
@@ -571,6 +573,8 @@ describe('resultadoDaLicao', () => {
             revisao: { acertos: 2, total: 3 },
             // Os 7 de antes, mais +3 −4 +3 da revisão.
             xp: 9,
+            // O XP só da revisão: o que a tela "Revisão feita" mostra, sem as etapas de antes.
+            xpDaRevisao: 2,
             quadrantes: { firme: 2, ponto_cego: 1 },
         });
     });

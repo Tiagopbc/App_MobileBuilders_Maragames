@@ -145,6 +145,7 @@ export const TEXTOS = {
     licaoConcluida: 'Lição concluída',
     revisaoFeita: 'Revisão feita',
     xpDaLicao: 'XP da lição',
+    xpDaRevisao: 'XP da revisão',
     antesDiagnostico: 'Antes · diagnóstico',
     depoisVerificacao: 'Depois · verificação',
     naVerificacao: 'Na verificação',
