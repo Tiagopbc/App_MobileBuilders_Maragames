@@ -142,7 +142,8 @@ export const TEXTOS = {
     irParaOCartao: 'Ir para o cartão',
     fazerVerificacao: 'Fazer a verificação',
     voltarParaALicao: 'Voltar para a lição',
-    licaoConcluida: 'Lição concluída',
+    licaoConcluida: 'Lição concluída', // só a lição curta, que não tem revisão
+    verificacaoFeita: 'Verificação feita',
     revisaoFeita: 'Revisão feita',
     xpDaLicao: 'XP da lição',
     xpDaRevisao: 'XP da revisão',
