@@ -146,7 +146,13 @@ export function FimDaLicao({
                         <Mascote altura={140} />
                     </View>
                     <ThemedText type="title" accessibilityRole="header" style={styles.textoCentral}>
-                        {resultado.ciclo === 'completo' && resultado.revisao ? TEXTOS.revisaoFeita : TEXTOS.licaoConcluida}
+                        {/* "Concluída" é a lição com a revisão feita (como na lista de Lições): no fim da
+                            verificação ainda falta a revisão, 7 dias depois. A lição curta não tem revisão. */}
+                        {resultado.ciclo === 'curto'
+                            ? TEXTOS.licaoConcluida
+                            : resultado.revisao
+                              ? TEXTOS.revisaoFeita
+                              : TEXTOS.verificacaoFeita}
                     </ThemedText>
                     <ThemedText themeColor="textSecondary" style={styles.textoCentral}>
                         {titulo}

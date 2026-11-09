@@ -245,8 +245,10 @@ describe('uma lição de ciclo completo, do começo à espera da revisão', () =
         expect(rotas.caminho()).toBe('/licoes/mda/verificacao');
         await responderNaTela(user, /Certa/, 'Tenho certeza');
 
-        // Fim da lição: o antes só aparece agora, ao lado do depois.
-        expect(await screen.findByText('Lição concluída')).toBeOnTheScreen();
+        // Fim da verificação: o antes só aparece agora, ao lado do depois. A lição ainda não acabou (falta a
+        // revisão, 7 dias depois), então o título não diz "concluída": "Concluída" é o da lição com a revisão feita.
+        expect(await screen.findByText('Verificação feita')).toBeOnTheScreen();
+        expect(screen.queryByText('Lição concluída')).toBeNull();
         expect(screen.getByText('Framework MDA')).toBeOnTheScreen();
         expect(screen.getByLabelText('Antes · diagnóstico: 0 de 1')).toBeOnTheScreen();
         expect(screen.getByLabelText('Depois · verificação: 1 de 1')).toBeOnTheScreen();
