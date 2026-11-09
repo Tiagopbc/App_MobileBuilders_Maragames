@@ -72,7 +72,7 @@ const BIA: PerfilDoExport = {
     consentiuEm: em('2026-10-30 19:05'),
 };
 
-// Conta de teste do grupo, de antes do piloto, e alguém que criou conta e não aceitou o termo.
+// Conta de teste do autor, de antes do piloto, e alguém que criou conta e não aceitou o termo.
 const TESTE: PerfilDoExport = { ...ANA, uid: 'uid-de-teste', nome: 'Conta de Teste', consentiuEm: em('2026-10-06 10:00') };
 const SEM_TERMO: PerfilDoExport = { ...BIA, uid: 'uid-sem-termo', nome: 'Carla Sem Termo', formaPre: null, consentiuEm: null };
 
@@ -187,7 +187,7 @@ describe('nada que identifique alguém sai nos arquivos que são enviados', () =
         }
     });
 
-    it('a chave, que fica só com o grupo, é o único lugar com o nome', () => {
+    it('a chave, que fica só com o autor, é o único lugar com o nome', () => {
         expect(exportado().chave[0]).toEqual({
             codigo: 'P01',
             uid: ANA.uid,

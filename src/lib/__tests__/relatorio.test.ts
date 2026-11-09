@@ -992,6 +992,13 @@ describe('relatorioHtml', () => {
         });
     });
 
+    it('a página de dados de verdade diz que é um retrato do dia e que o autor a gera de novo', () => {
+        const html = pagina();
+
+        expect(html).toContain('A página é um retrato do dia 10/11/2026. Para atualizar, o autor gera de novo.');
+        expect(html).not.toContain('o grupo gera');
+    });
+
     it('sem autoavaliação, o bloco diz que ninguém deu as notas ainda', () => {
         const html = pagina(indicadores({ ...DADOS, autoavaliacoes: [] }));
 
