@@ -329,6 +329,7 @@ export type ResultadoDaLicao =
           depois: Taxa; // verificação
           revisao: Taxa | null; // null enquanto a revisão não foi concluída
           xp: number; // saldo dos blocos que já podem aparecer; pode ser negativo (item 14)
+          xpDaRevisao: number | null; // só o da revisão, para a tela "Revisão feita"; null até ela ser concluída
           quadrantes: Record<Quadrante, number>; // do bloco sem feedback mais recente
       };
 
@@ -376,6 +377,7 @@ export function resultadoDaLicao(entrada: EntradaDoResultadoDaLicao): ResultadoD
         depois: taxa(pos),
         revisao: reteste ? taxa(reteste) : null,
         xp: pre.xp + pratica.xp + pos.xp + (reteste?.xp ?? 0),
+        xpDaRevisao: reteste ? reteste.xp : null,
         quadrantes: (reteste ?? pos).quadrantes,
     };
 }
