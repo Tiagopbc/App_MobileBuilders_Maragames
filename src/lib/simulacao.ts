@@ -628,7 +628,7 @@ export function matrizDeConfusao(turma: Turma): Record<TipoDeAluno, Record<Perfi
 
 /**
  * O banco fictício: a turma nas quatro coleções que o app grava no Firestore, no formato delas,
- * para o grupo trabalhar em cima (item 36). Os horários ficam em milissegundos, como no app depois
+ * para o autor trabalhar em cima (item 36). Os horários ficam em milissegundos, como no app depois
  * de ler o banco. Nada disto vai para o Firestore.
  */
 export interface BancoFicticio {

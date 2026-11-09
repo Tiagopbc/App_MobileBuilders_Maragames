@@ -107,7 +107,7 @@ export function topicosDasLicoes(
     );
 }
 
-// A ordem do piloto é a de apresentação (`ordem`), decidida pelo grupo e gravada pelo seed
+// A ordem do piloto é a de apresentação (`ordem`), decidida pelo autor e gravada pelo seed
 // (item 23); `order` é só o número da lição no curso. Lição sem `ordem`, sobra de um seed
 // antigo, vai para o fim, pelo número da lição, para não furar a fila de quem tem.
 export function ordenarLicoes<T extends Pick<Lesson, 'order' | 'ordem'>>(licoes: readonly T[]): T[] {

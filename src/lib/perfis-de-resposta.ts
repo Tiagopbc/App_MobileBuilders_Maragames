@@ -2,7 +2,7 @@
 // responde, sem perguntar nada. Função pura: sem React, sem Firebase, sem estado.
 //
 // As regras são de leitura direta, na ordem abaixo, e a primeira que vale decide. Os limites são
-// escolhas do grupo, a revisar com dados de verdade: estão aqui para o relatório dizer, de cada
+// escolhas do autor, a revisar com dados de verdade: estão aqui para o relatório dizer, de cada
 // perfil, como ele foi reconhecido.
 
 import type { Confianca } from '../types/domain';

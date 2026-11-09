@@ -1,5 +1,5 @@
 // Exportação dos dados (M7, itens 23 e 30): transforma o que está no banco nas tabelas que o
-// grupo envia à Mara Games e usa na análise. Função pura: sem React, sem Firebase, sem estado.
+// autor envia à Beast Maragames e usa na análise. Função pura: sem React, sem Firebase, sem estado.
 // Quem lê o Firestore e escreve os arquivos é o script em scripts/exportar-piloto.ts.
 //
 // As contas são as mesmas que o aluno vê no app: o estado e o ciclo de cada lição, o quadrante,
@@ -15,7 +15,7 @@ import { resultadoDoBloco, type Taxa } from './resultado';
 import { retencao } from './retencao';
 import { xpDaResposta } from './xp';
 
-// O que a exportação lê de `users/{uid}`. Nome, contato e cidade só vão para a chave do grupo.
+// O que a exportação lê de `users/{uid}`. Nome, contato e cidade só vão para a chave do autor.
 // Os campos de 12/10/2026 em diante (item 34) faltam nas contas mais antigas.
 export interface PerfilDoExport extends ExtrasDoPerfil {
     uid: string;
@@ -65,7 +65,7 @@ export interface Exportacao {
     autoavaliacoes: Linha[]; // uma linha por pessoa e por módulo: a nota que ela se deu antes de estudar
     resumo: string; // os números agregados, em texto
     agregados: Agregados; // os mesmos números do resumo, para o relatório (src/lib/relatorio.ts)
-    chave: Linha[]; // código ↔ nome: fica só com o grupo, nunca é enviada
+    chave: Linha[]; // código ↔ nome: fica só com o autor, nunca é enviada
 }
 
 // Os números em conjunto, sem nada de pessoa nenhuma. O resumo em texto e o relatório da Beast
@@ -590,7 +590,7 @@ export function arquivosDaExportacao(exportado: Exportacao): ArquivoDaExportacao
             ? [{ nome: 'autoavaliacao.csv', conteudo: paraCsv(exportado.autoavaliacoes) }]
             : []),
         { nome: 'resumo.md', conteudo: exportado.resumo },
-        // Liga cada código ao nome: fica só com o grupo, nunca é enviada.
+        // Liga cada código ao nome: fica só com o autor, nunca é enviada.
         { nome: 'chave.csv', conteudo: paraCsv(exportado.chave) },
     ];
 }

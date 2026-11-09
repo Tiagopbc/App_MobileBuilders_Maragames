@@ -3,7 +3,7 @@
 // lê o Firestore e grava o arquivo é o script em scripts/gerar-relatorio.ts.
 //
 // A página não leva nada de pessoa nenhuma: nem nome, nem contato, nem o código que a exportação
-// dá a cada participante. O detalhe por pessoa fica nos arquivos do grupo (`npm run exportar`).
+// dá a cada participante. O detalhe por pessoa fica nos arquivos do autor (`npm run exportar`).
 
 import { CoresDoRelatorio } from '../constants/cores-do-relatorio';
 import {
@@ -1054,7 +1054,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
             `<li>O ganho é o de Hake: do que faltava acertar no diagnóstico, a parte que passou a ser acertada na verificação, calculado sobre o acerto de todo o grupo. Vai até um e fica negativo se a verificação foi pior. A média do ganho de cada pessoa aparece ao lado, no resumo: com poucas questões por pessoa ela oscila mais.</li>` +
             `<li>Onde há menos de ${minima} respostas, a página mostra só a contagem, e a barra aparece apagada e riscada: um percentual sobre tão pouco enganaria.</li>` +
             `<li>Nenhum dado de pessoa aparece aqui: nem nome, nem contato, nem resposta individual.</li>` +
-            (simulacao ? '' : `<li>A página é um retrato do dia ${dia(opcoes.geradoEm)}. Para atualizar, o grupo gera de novo.</li>`) +
+            (simulacao ? '' : `<li>A página é um retrato do dia ${dia(opcoes.geradoEm)}. Para atualizar, o autor gera de novo.</li>`) +
             `</ul>`
     );
 
