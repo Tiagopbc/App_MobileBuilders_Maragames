@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Spacing, type ThemeColor } from '@/constants/theme';
+import { Borda, Spacing, type ThemeColor } from '@/constants/theme';
 import { ROTULO_QUADRANTE } from '@/constants/textos';
 import { useTheme } from '@/hooks/use-theme';
 import type { Quadrante } from '@/lib/quadrante';
@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
         paddingVertical: Spacing.one,
         paddingHorizontal: Spacing.two,
         borderRadius: 999,
-        borderWidth: 1.5,
+        borderWidth: Borda,
     },
 });

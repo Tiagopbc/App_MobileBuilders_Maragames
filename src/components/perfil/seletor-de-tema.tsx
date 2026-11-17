@@ -2,7 +2,7 @@ import { useSyncExternalStore } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Borda, Spacing } from '@/constants/theme';
 import { ROTULO_DO_TEMA } from '@/constants/textos';
 import { useTheme } from '@/hooks/use-theme';
 import { PREFERENCIAS_DE_TEMA, assinarPreferenciaDeTema, escolherTema, preferenciaDeTema } from '@/lib/tema';
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         flex: 1,
         minHeight: 44,
         borderRadius: 12,
-        borderWidth: 1.5,
+        borderWidth: Borda,
         paddingVertical: Spacing.two,
         paddingHorizontal: Spacing.one,
         alignItems: 'center',

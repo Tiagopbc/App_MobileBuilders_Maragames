@@ -1,13 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { Mascote } from '@/components/mascote';
 import { ThemedText } from '@/components/themed-text';
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { MolduraDaTela } from '@/components/moldura-da-tela';
+import { Spacing } from '@/constants/theme';
 import { TERMO, TEXTOS_DO_TERMO } from '@/constants/termo';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -47,72 +46,68 @@ export function TelaDeConsentimento(props: TelaDeConsentimentoProps) {
     }
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <ScrollView contentContainerStyle={styles.conteudo}>
-                    <Mascote />
-                    <ThemedText type="subtitle">{TEXTOS_DO_TERMO.titulo}</ThemedText>
-                    <ThemedText type="small" themeColor="textSecondary">
-                        {TEXTOS_DO_TERMO.versao}
-                    </ThemedText>
+        <MolduraDaTela largura="conteudo">
+            <ScrollView contentContainerStyle={styles.conteudo}>
+                <Mascote />
+                <ThemedText type="subtitle">{TEXTOS_DO_TERMO.titulo}</ThemedText>
+                <ThemedText type="small" themeColor="textSecondary">
+                    {TEXTOS_DO_TERMO.versao}
+                </ThemedText>
 
-                    {TERMO.map((secao) => (
-                        <View key={secao.titulo} style={styles.secao}>
-                            <ThemedText type="smallBold">{secao.titulo}</ThemedText>
-                            <ThemedText themeColor="textSecondary">{secao.texto}</ThemedText>
-                        </View>
-                    ))}
-                </ScrollView>
-
-                {props.somenteLeitura ? (
-                    <View style={styles.rodape}>
-                        <BotaoPrincipal rotulo={TEXTOS_DO_TERMO.fechar} onPress={aoSair} />
+                {TERMO.map((secao) => (
+                    <View key={secao.titulo} style={styles.secao}>
+                        <ThemedText type="smallBold">{secao.titulo}</ThemedText>
+                        <ThemedText themeColor="textSecondary">{secao.texto}</ThemedText>
                     </View>
-                ) : (
-                    <View style={styles.rodape}>
-                        <Pressable
-                            accessibilityRole="checkbox"
-                            accessibilityLabel={TEXTOS_DO_TERMO.concordo}
-                            aria-checked={concordo}
-                            disabled={enviando}
-                            onPress={() => setConcordo((marcado) => !marcado)}
-                            style={styles.caixa}>
-                            <Ionicons
-                                name={concordo ? 'checkbox' : 'square-outline'}
-                                size={24}
-                                color={concordo ? theme.primaria : theme.textSecondary}
-                            />
-                            <ThemedText type="smallBold" style={styles.textoDaCaixa}>
-                                {TEXTOS_DO_TERMO.concordo}
-                            </ThemedText>
-                        </Pressable>
+                ))}
+            </ScrollView>
 
-                        {erro && (
-                            <ThemedText type="small" themeColor="erro" aria-live="polite">
-                                {TEXTOS_DO_TERMO.erroAoAceitar}
-                            </ThemedText>
-                        )}
-
-                        <BotaoPrincipal
-                            rotulo={TEXTOS_DO_TERMO.aceitar}
-                            desabilitado={!concordo}
-                            carregando={enviando}
-                            onPress={aceitar}
+            {props.somenteLeitura ? (
+                <View style={styles.rodape}>
+                    <BotaoPrincipal rotulo={TEXTOS_DO_TERMO.fechar} onPress={aoSair} />
+                </View>
+            ) : (
+                <View style={styles.rodape}>
+                    <Pressable
+                        accessibilityRole="checkbox"
+                        accessibilityLabel={TEXTOS_DO_TERMO.concordo}
+                        aria-checked={concordo}
+                        disabled={enviando}
+                        onPress={() => setConcordo((marcado) => !marcado)}
+                        style={styles.caixa}>
+                        <Ionicons
+                            name={concordo ? 'checkbox' : 'square-outline'}
+                            size={24}
+                            color={concordo ? theme.primaria : theme.textSecondary}
                         />
+                        <ThemedText type="smallBold" style={styles.textoDaCaixa}>
+                            {TEXTOS_DO_TERMO.concordo}
+                        </ThemedText>
+                    </Pressable>
 
-                        <Pressable accessibilityRole="button" disabled={enviando} onPress={aoSair} style={styles.agoraNao}>
-                            <ThemedText type="linkPrimary">{TEXTOS_DO_TERMO.agoraNao}</ThemedText>
-                        </Pressable>
-                    </View>
-                )}
-            </SafeAreaView>
-        </FundoDaMarca>
+                    {erro && (
+                        <ThemedText type="small" themeColor="erro" aria-live="polite">
+                            {TEXTOS_DO_TERMO.erroAoAceitar}
+                        </ThemedText>
+                    )}
+
+                    <BotaoPrincipal
+                        rotulo={TEXTOS_DO_TERMO.aceitar}
+                        desabilitado={!concordo}
+                        carregando={enviando}
+                        onPress={aceitar}
+                    />
+
+                    <Pressable accessibilityRole="button" disabled={enviando} onPress={aoSair} style={styles.agoraNao}>
+                        <ThemedText type="linkPrimary">{TEXTOS_DO_TERMO.agoraNao}</ThemedText>
+                    </Pressable>
+                </View>
+            )}
+        </MolduraDaTela>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: MaxContentWidth },
     conteudo: { gap: Spacing.four, padding: Spacing.four },
     secao: { gap: Spacing.one },
     rodape: { gap: Spacing.two, paddingHorizontal: Spacing.four, paddingVertical: Spacing.three },

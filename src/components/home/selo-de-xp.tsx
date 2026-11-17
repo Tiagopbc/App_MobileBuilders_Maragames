@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { rotuloDoSeloDeXp, xpDeHojeNoSelo } from '@/constants/textos';
-import { Raio, Spacing } from '@/constants/theme';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type SeloDeXpProps = {
@@ -37,7 +37,7 @@ export function SeloDeXp({ xp, deHoje }: SeloDeXpProps) {
 }
 
 const styles = StyleSheet.create({
-    selo: { alignItems: 'flex-end', paddingVertical: 6, paddingHorizontal: Spacing.three - 4, borderRadius: Raio.medio, borderWidth: 1.5 },
+    selo: { alignItems: 'flex-end', paddingVertical: 6, paddingHorizontal: Spacing.three - 4, borderRadius: Raio.medio, borderWidth: Borda },
     linha: { flexDirection: 'row', alignItems: 'baseline', gap: Spacing.one },
     numero: { fontSize: 18, lineHeight: 22, fontWeight: 700 },
     doDia: { fontSize: 12, lineHeight: 14, fontWeight: 600 },

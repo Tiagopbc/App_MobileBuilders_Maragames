@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Borda, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { alternarOpcao } from '@/lib/perfil';
 import type { Erro } from '@/lib/validacao';
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
         flexGrow: 1,
         minHeight: 44,
         borderRadius: 12,
-        borderWidth: 1.5,
+        borderWidth: Borda,
         paddingVertical: Spacing.two,
         paddingHorizontal: Spacing.three,
         alignItems: 'center',

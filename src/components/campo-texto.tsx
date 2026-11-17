@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { StyleSheet, TextInput, View, type TextInputProps } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Borda, Fonts, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { Erro } from '@/lib/validacao';
 
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     rotulo: { fontSize: 13, letterSpacing: 0.7, textTransform: 'uppercase' },
     input: {
         borderWidth: 0,
-        borderBottomWidth: 1.5,
+        borderBottomWidth: Borda,
         borderRadius: 0,
         paddingHorizontal: 0,
         paddingVertical: 12,

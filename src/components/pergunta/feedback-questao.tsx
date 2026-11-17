@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { APARENCIA_DO_QUADRANTE } from '@/components/selo-quadrante';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
-import { Raio, Spacing, Tipo } from '@/constants/theme';
+import { Borda, Raio, Spacing, Tipo } from '@/constants/theme';
 import { DESCRICAO_QUADRANTE, ROTULO_QUADRANTE, TEXTOS, formatarXp } from '@/constants/textos';
 import { useRelevo, useTheme } from '@/hooks/use-theme';
 import type { Feedback } from '@/lib/pergunta';
@@ -28,7 +28,7 @@ export function FeedbackQuestao({ feedback }: { feedback: Feedback }) {
                     backgroundColor: theme[fundo],
                     borderColor: theme[cor],
                     borderBottomColor: theme[cor],
-                    borderBottomWidth: 1.5 + relevo.espessura,
+                    borderBottomWidth: Borda + relevo.espessura,
                 },
             ]}>
             <View style={styles.linha}>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
         gap: Spacing.two,
         padding: Spacing.three,
         borderRadius: Raio.card,
-        borderWidth: 1.5,
+        borderWidth: Borda,
     },
     linha: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
     manchete: { flex: 1, fontSize: Tipo.destaque.tamanho, lineHeight: Tipo.destaque.linha, fontWeight: 700 },

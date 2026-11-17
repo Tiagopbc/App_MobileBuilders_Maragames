@@ -1,6 +1,6 @@
 import { Pressable, View, type PressableProps, type StyleProp, type ViewProps, type ViewStyle } from 'react-native';
 
-import { Raio } from '@/constants/theme';
+import { Borda, Raio } from '@/constants/theme';
 import { useRelevo, useTheme } from '@/hooks/use-theme';
 
 // O card das telas é um só, o mesmo da prática: o fundo e o contorno do cartão e a borda de baixo
@@ -19,9 +19,9 @@ function useEstiloDaSuperficie(tamanho: Tamanho): ViewStyle {
     return {
         backgroundColor: theme.cartao,
         borderColor: theme.bordaDoCartao,
-        borderWidth: 1.5,
+        borderWidth: Borda,
         borderBottomColor: theme.relevoDoCartao,
-        borderBottomWidth: 1.5 + relevo.espessura,
+        borderBottomWidth: Borda + relevo.espessura,
         borderRadius: RAIO[tamanho],
     };
 }
@@ -49,7 +49,7 @@ export function SuperficieQueLevaToque({ tamanho = 'padrao', style, ...rest }: S
                 base,
                 { opacity: 1 },
                 pressed
-                    ? { borderBottomWidth: 1.5, marginTop: relevo.afunda, marginBottom: relevo.espessura - relevo.afunda }
+                    ? { borderBottomWidth: Borda, marginTop: relevo.afunda, marginBottom: relevo.espessura - relevo.afunda }
                     : { marginTop: 0, marginBottom: 0 },
                 typeof style === 'function' ? style({ pressed }) : style,
             ]}

@@ -1,13 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { EsqueletoDasLicoes } from '@/components/esqueleto/esqueleto-das-licoes';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
-import { MaxContentWidth, Spacing, type ThemeColor } from '@/constants/theme';
+import { CabecalhoComFechar, MolduraDaTela } from '@/components/moldura-da-tela';
+import { Spacing, type ThemeColor } from '@/constants/theme';
 import type { ModuloEmBreve } from '@/constants/em-breve';
 import { TEXTOS, dominioEmContagem, licaoEmBreve, moduloEmBreve, situacaoDaLicao } from '@/constants/textos';
 import type { EstadoDasLicoes, LicaoDoAluno } from '@/hooks/use-licoes';
@@ -53,107 +52,89 @@ export function TelaDasLicoes({ estado, emBreve, aoAbrir, aoTentarDeNovo, aoSair
     const mostraEsqueleto = useAposAtraso(estado.tipo === 'carregando');
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <View style={styles.cabecalho}>
-                    <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={TEXTOS.voltarAoInicio}
-                        hitSlop={Spacing.three}
-                        onPress={aoSair}>
-                        <Ionicons name="close" size={28} color={theme.text} />
-                    </Pressable>
-                    <ThemedText type="subtitle" style={styles.titulo}>
-                        {TEXTOS.licoes}
-                    </ThemedText>
+        <MolduraDaTela largura="conteudo">
+            <CabecalhoComFechar rotulo={TEXTOS.voltarAoInicio} aoFechar={aoSair}>
+                <ThemedText type="subtitle" style={styles.titulo}>
+                    {TEXTOS.licoes}
+                </ThemedText>
+            </CabecalhoComFechar>
+
+            {/* Só depois de uma pequena espera: com rede rápida, o conteúdo chega antes e nada pisca. */}
+            {mostraEsqueleto && <EsqueletoDasLicoes />}
+
+            {estado.tipo === 'erro' && (
+                <View style={styles.centro}>
+                    <ThemedText style={styles.textoCentral}>{TEXTOS.erroAoCarregarLicoes}</ThemedText>
+                    <BotaoPrincipal rotulo={TEXTOS.tentarDeNovo} onPress={aoTentarDeNovo} />
                 </View>
+            )}
 
-                {/* Só depois de uma pequena espera: com rede rápida, o conteúdo chega antes e nada pisca. */}
-                {mostraEsqueleto && <EsqueletoDasLicoes />}
-
-                {estado.tipo === 'erro' && (
-                    <View style={styles.centro}>
-                        <ThemedText style={styles.textoCentral}>{TEXTOS.erroAoCarregarLicoes}</ThemedText>
-                        <BotaoPrincipal rotulo={TEXTOS.tentarDeNovo} onPress={aoTentarDeNovo} />
-                    </View>
-                )}
-
-                {estado.tipo === 'pronto' && (
-                    <ScrollView contentContainerStyle={styles.conteudo}>
-                        {porModulo(estado.licoes).map((grupo) => (
-                            <View key={grupo.modulo} style={styles.grupo}>
-                                <ThemedText type="smallBold" themeColor="textSecondary">
-                                    {grupo.modulo}
-                                </ThemedText>
-                                {grupo.licoes.map((licao) => {
-                                    const situacao = situacaoDaLicao(licao.estado);
-                                    const dominio = licao.dominio ? dominioEmContagem(licao.dominio) : null;
-                                    const icone = ICONE_DO_ESTADO[licao.estado.tipo];
-                                    return (
-                                        <SuperficieQueLevaToque
-                                            key={licao.topicId}
-                                            accessibilityRole="button"
-                                            accessibilityLabel={[licao.titulo, situacao, dominio].filter(Boolean).join(', ')}
-                                            onPress={() => aoAbrir(licao.topicId)}
-                                            style={styles.licao}>
-                                            <Ionicons name={icone.nome} size={24} color={theme[icone.cor]} />
-                                            <View style={styles.textos}>
-                                                <ThemedText style={styles.nome}>{licao.titulo}</ThemedText>
-                                                <ThemedText type="small" themeColor="textSecondary">
-                                                    {[situacao, dominio].filter(Boolean).join(' · ')}
-                                                </ThemedText>
-                                            </View>
-                                            <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
-                                        </SuperficieQueLevaToque>
-                                    );
-                                })}
-                            </View>
-                        ))}
-                        {emBreve.map((grupo) => (
-                            <View key={grupo.modulo} style={styles.grupo}>
-                                <ThemedText type="smallBold" themeColor="textSecondary">
-                                    {moduloEmBreve(grupo.modulo)}
-                                </ThemedText>
-                                {grupo.licoes.map((titulo) => (
-                                    <View
-                                        key={titulo}
-                                        accessible
-                                        accessibilityLabel={licaoEmBreve(titulo)}
-                                        style={[
-                                            styles.licao,
-                                            styles.trancada,
-                                            { backgroundColor: theme.fundoApagado, borderColor: theme.bordaDoCartao },
-                                        ]}>
-                                        <Ionicons name="lock-closed-outline" size={24} color={theme.textSecondary} />
+            {estado.tipo === 'pronto' && (
+                <ScrollView contentContainerStyle={styles.conteudo}>
+                    {porModulo(estado.licoes).map((grupo) => (
+                        <View key={grupo.modulo} style={styles.grupo}>
+                            <ThemedText type="smallBold" themeColor="textSecondary">
+                                {grupo.modulo}
+                            </ThemedText>
+                            {grupo.licoes.map((licao) => {
+                                const situacao = situacaoDaLicao(licao.estado);
+                                const dominio = licao.dominio ? dominioEmContagem(licao.dominio) : null;
+                                const icone = ICONE_DO_ESTADO[licao.estado.tipo];
+                                return (
+                                    <SuperficieQueLevaToque
+                                        key={licao.topicId}
+                                        accessibilityRole="button"
+                                        accessibilityLabel={[licao.titulo, situacao, dominio].filter(Boolean).join(', ')}
+                                        onPress={() => aoAbrir(licao.topicId)}
+                                        style={styles.licao}>
+                                        <Ionicons name={icone.nome} size={24} color={theme[icone.cor]} />
                                         <View style={styles.textos}>
-                                            <ThemedText style={styles.nome} themeColor="textSecondary">
-                                                {titulo}
-                                            </ThemedText>
+                                            <ThemedText style={styles.nome}>{licao.titulo}</ThemedText>
                                             <ThemedText type="small" themeColor="textSecondary">
-                                                {TEXTOS.emBreve}
+                                                {[situacao, dominio].filter(Boolean).join(' · ')}
                                             </ThemedText>
                                         </View>
+                                        <Ionicons name="chevron-forward" size={20} color={theme.textSecondary} />
+                                    </SuperficieQueLevaToque>
+                                );
+                            })}
+                        </View>
+                    ))}
+                    {emBreve.map((grupo) => (
+                        <View key={grupo.modulo} style={styles.grupo}>
+                            <ThemedText type="smallBold" themeColor="textSecondary">
+                                {moduloEmBreve(grupo.modulo)}
+                            </ThemedText>
+                            {grupo.licoes.map((titulo) => (
+                                <View
+                                    key={titulo}
+                                    accessible
+                                    accessibilityLabel={licaoEmBreve(titulo)}
+                                    style={[
+                                        styles.licao,
+                                        styles.trancada,
+                                        { backgroundColor: theme.fundoApagado, borderColor: theme.bordaDoCartao },
+                                    ]}>
+                                    <Ionicons name="lock-closed-outline" size={24} color={theme.textSecondary} />
+                                    <View style={styles.textos}>
+                                        <ThemedText style={styles.nome} themeColor="textSecondary">
+                                            {titulo}
+                                        </ThemedText>
+                                        <ThemedText type="small" themeColor="textSecondary">
+                                            {TEXTOS.emBreve}
+                                        </ThemedText>
                                     </View>
-                                ))}
-                            </View>
-                        ))}
-                    </ScrollView>
-                )}
-            </SafeAreaView>
-        </FundoDaMarca>
+                                </View>
+                            ))}
+                        </View>
+                    ))}
+                </ScrollView>
+            )}
+        </MolduraDaTela>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: MaxContentWidth },
-    cabecalho: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: Spacing.three,
-        paddingHorizontal: Spacing.four,
-        paddingVertical: Spacing.three,
-    },
     titulo: { flex: 1 },
     centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.three, padding: Spacing.four },
     textoCentral: { textAlign: 'center' },

@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
-import { Spacing, type ThemeColor } from '@/constants/theme';
+import { Borda, Spacing, type ThemeColor } from '@/constants/theme';
 import { useRelevo, useTheme } from '@/hooks/use-theme';
 
 // Antes de confirmar só existem 'normal' e 'selecionada'. 'certa', 'errada' e 'apagada'
@@ -59,11 +59,11 @@ export function AlternativaItem({ letra, texto, estado, marcada, desabilitada, o
                 // descer, e o texto passa para o de apoio, em vez de desbotar com opacidade. O
                 // relevo embaixo tem cor própria; certa e errada mantêm a cor do próprio estado.
                 selecionada
-                    ? { borderBottomWidth: 1.5, marginTop: relevo.afunda, marginBottom: relevo.espessura - relevo.afunda }
+                    ? { borderBottomWidth: Borda, marginTop: relevo.afunda, marginBottom: relevo.espessura - relevo.afunda }
                     : apagada
-                      ? { borderBottomWidth: 1.5, marginTop: 0, marginBottom: relevo.espessura }
+                      ? { borderBottomWidth: Borda, marginTop: 0, marginBottom: relevo.espessura }
                       : {
-                            borderBottomWidth: 1.5 + relevo.espessura,
+                            borderBottomWidth: Borda + relevo.espessura,
                             borderBottomColor: cor ? theme[cor] : theme.relevoDoCartao,
                             marginTop: 0,
                             marginBottom: 0,
@@ -74,7 +74,7 @@ export function AlternativaItem({ letra, texto, estado, marcada, desabilitada, o
                     styles.letra,
                     // Selecionada: o roxo do botão. Certa e errada: a cor do próprio estado.
                     { backgroundColor: selecionada ? theme.botao : cor ? theme[cor] : theme.fundoDaLetra },
-                    !cor && { borderWidth: 1.5, borderColor: theme.bordaDoCartao },
+                    !cor && { borderWidth: Borda, borderColor: theme.bordaDoCartao },
                 ]}>
                 <ThemedText
                     type="smallBold"
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 14,
         borderRadius: 14,
-        borderWidth: 1.5,
+        borderWidth: Borda,
     },
     letra: {
         width: 28,

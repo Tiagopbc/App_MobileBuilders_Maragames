@@ -3,7 +3,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { TEXTOS_DE_BOAS_VINDAS } from '@/constants/textos';
-import { Raio, Spacing } from '@/constants/theme';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 // A faixa de convite da boas-vindas: para quem ainda não terminou nenhuma lição, a porta mais à vista
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 14,
         borderRadius: Raio.card,
-        borderWidth: 1.5,
+        borderWidth: Borda,
     },
     icone: { width: 38, height: 38, borderRadius: 19, alignItems: 'center', justifyContent: 'center' },
     textos: { flex: 1 },

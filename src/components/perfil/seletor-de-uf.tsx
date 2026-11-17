@@ -4,7 +4,7 @@ import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 
 import { Opcoes } from '@/components/opcoes';
 import { ThemedText } from '@/components/themed-text';
-import { Fonts, Spacing } from '@/constants/theme';
+import { Borda, Fonts, Spacing } from '@/constants/theme';
 import { TEXTOS_DO_PERFIL } from '@/constants/textos';
 import { useTheme } from '@/hooks/use-theme';
 import { UFS } from '@/lib/perfil';
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderWidth: 1.5,
+        borderWidth: Borda,
         borderRadius: 14,
         paddingHorizontal: Spacing.three,
         paddingVertical: 12,

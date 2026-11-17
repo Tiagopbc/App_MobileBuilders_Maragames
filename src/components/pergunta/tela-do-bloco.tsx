@@ -1,14 +1,14 @@
 import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View, type ScrollViewInstance } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, View, type ScrollViewInstance } from 'react-native';
 
 import { BarraDeProgresso } from '@/components/barra-de-progresso';
 import { BotaoPrincipal } from '@/components/botao-principal';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
-import { MaxContentWidth, Raio, Spacing } from '@/constants/theme';
+import { CabecalhoComFechar, MolduraDaTela } from '@/components/moldura-da-tela';
+import { Carregando } from '@/components/estado-da-carga';
+import { Raio, Spacing } from '@/constants/theme';
 import { TEXTOS, TEXTO_DA_FALTA } from '@/constants/textos';
 import { useBloco, type EntradaDoBloco, type EstadoDoBloco, type Relatorio } from '@/hooks/use-bloco';
 import { useTheme } from '@/hooks/use-theme';
@@ -39,7 +39,6 @@ type TelaDoBlocoProps = EntradaDoBloco & {
 // A tela inteira de um bloco: cabeçalho, a pergunta da vez e o fim. Não sabe de onde os dados
 // vêm (isso é do hook) nem para onde a navegação vai (isso é da rota).
 export function TelaDoBloco({ aoSair, aoAbrirRegras, fim, ...entrada }: TelaDoBlocoProps) {
-    const theme = useTheme();
     const { estado, titulo, confirmar, avancar, tentarDeNovo } = useBloco(entrada);
     const naQuestao = estado.tipo === 'pergunta' || estado.tipo === 'feedback';
     // Sem feedback por questão, a tela avisa onde o resultado aparece. No diagnóstico de uma
@@ -47,72 +46,59 @@ export function TelaDoBloco({ aoSair, aoAbrirRegras, fim, ...entrada }: TelaDoBl
     const aviso = faseTemFeedback(entrada.fase) ? null : entrada.fase === 'pre' ? TEXTOS.semFeedbackNaLicao : TEXTOS.semFeedback;
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <View style={styles.cabecalho}>
-                    <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={TEXTOS.sairDoBloco}
-                        hitSlop={Spacing.three}
-                        onPress={aoSair}>
-                        <Ionicons name="close" size={28} color={theme.text} />
-                    </Pressable>
-                    <ThemedText type="smallBold" style={styles.titulo} numberOfLines={1}>
-                        {titulo}
+        <MolduraDaTela largura="conteudo">
+            <CabecalhoComFechar rotulo={TEXTOS.sairDoBloco} aoFechar={aoSair}>
+                <ThemedText type="smallBold" style={styles.titulo} numberOfLines={1}>
+                    {titulo}
+                </ThemedText>
+                {naQuestao && (
+                    <ThemedText type="smallBold" themeColor="textSecondary">
+                        {estado.pergunta.posicao}/{estado.pergunta.total}
                     </ThemedText>
-                    {naQuestao && (
-                        <ThemedText type="smallBold" themeColor="textSecondary">
-                            {estado.pergunta.posicao}/{estado.pergunta.total}
-                        </ThemedText>
-                    )}
-                </View>
-
-                {naQuestao && (
-                    <View style={styles.progresso}>
-                        {/* Conta as respondidas: no feedback da prática, a questão da vez já entra. */}
-                        <BarraDeProgresso
-                            rotulo={TEXTOS.progressoDoBloco}
-                            feitas={estado.pergunta.posicao - (estado.tipo === 'feedback' ? 0 : 1)}
-                            total={estado.pergunta.total}
-                        />
-                    </View>
                 )}
+            </CabecalhoComFechar>
 
-                <FaixaSemConexao />
-
-                {estado.tipo === 'carregando' && (
-                    <View style={styles.centro}>
-                        <ActivityIndicator />
-                    </View>
-                )}
-
-                {estado.tipo === 'erro' && (
-                    <View style={styles.centro}>
-                        <ThemedText style={styles.textoCentral}>{estado.mensagem}</ThemedText>
-                        {estado.podeTentarDeNovo && (
-                            <BotaoPrincipal rotulo={TEXTOS.tentarDeNovo} onPress={tentarDeNovo} />
-                        )}
-                        <Pressable accessibilityRole="button" onPress={aoSair}>
-                            <ThemedText type="linkPrimary">{TEXTOS.voltarAoInicio}</ThemedText>
-                        </Pressable>
-                    </View>
-                )}
-
-                {estado.tipo === 'concluido' && fim(estado.relatorio)}
-
-                {naQuestao && (
-                    // A `key` troca o componente a cada questão, e com ele as seleções: nada fica marcado.
-                    <Pergunta
-                        key={estado.pergunta.questao.id}
-                        estado={estado}
-                        aviso={aviso}
-                        aoConfirmar={confirmar}
-                        aoAvancar={avancar}
-                        aoAbrirRegras={aoAbrirRegras}
+            {naQuestao && (
+                <View style={styles.progresso}>
+                    {/* Conta as respondidas: no feedback da prática, a questão da vez já entra. */}
+                    <BarraDeProgresso
+                        rotulo={TEXTOS.progressoDoBloco}
+                        feitas={estado.pergunta.posicao - (estado.tipo === 'feedback' ? 0 : 1)}
+                        total={estado.pergunta.total}
                     />
-                )}
-            </SafeAreaView>
-        </FundoDaMarca>
+                </View>
+            )}
+
+            <FaixaSemConexao />
+
+            {estado.tipo === 'carregando' && <Carregando />}
+
+            {estado.tipo === 'erro' && (
+                <View style={styles.centro}>
+                    <ThemedText style={styles.textoCentral}>{estado.mensagem}</ThemedText>
+                    {estado.podeTentarDeNovo && (
+                        <BotaoPrincipal rotulo={TEXTOS.tentarDeNovo} onPress={tentarDeNovo} />
+                    )}
+                    <Pressable accessibilityRole="button" onPress={aoSair}>
+                        <ThemedText type="linkPrimary">{TEXTOS.voltarAoInicio}</ThemedText>
+                    </Pressable>
+                </View>
+            )}
+
+            {estado.tipo === 'concluido' && fim(estado.relatorio)}
+
+            {naQuestao && (
+                // A `key` troca o componente a cada questão, e com ele as seleções: nada fica marcado.
+                <Pergunta
+                    key={estado.pergunta.questao.id}
+                    estado={estado}
+                    aviso={aviso}
+                    aoConfirmar={confirmar}
+                    aoAvancar={avancar}
+                    aoAbrirRegras={aoAbrirRegras}
+                />
+            )}
+        </MolduraDaTela>
     );
 }
 
@@ -232,15 +218,6 @@ const styles = StyleSheet.create({
     erroAoGravar: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.two, padding: 10, borderRadius: Raio.medio },
     iconeDoErro: { marginTop: 1 },
     textoDoErro: { flex: 1 },
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: MaxContentWidth },
-    cabecalho: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: Spacing.three,
-        paddingHorizontal: Spacing.four,
-        paddingVertical: Spacing.three,
-    },
     titulo: { flex: 1 },
     progresso: { paddingHorizontal: Spacing.four, paddingBottom: Spacing.three },
     centro: {

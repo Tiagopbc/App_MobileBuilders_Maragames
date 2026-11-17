@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { SITUACAO_DA_ETAPA, rotuloDaEtapaDoParaHoje } from '@/constants/textos';
-import { Spacing } from '@/constants/theme';
+import { Borda, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { SegmentoDoParaHoje } from '@/lib/licao';
 
@@ -38,7 +38,7 @@ export function EtapasDoParaHoje({ segmentos }: { segmentos: readonly SegmentoDo
                                 situacao === 'feito' && { backgroundColor: theme.sucesso },
                                 situacao === 'agora' && { backgroundColor: theme.borda },
                                 situacao === 'depois' && { backgroundColor: theme.borda },
-                                situacao === 'selada' && { borderWidth: 1.5, borderColor: theme.relevoDoCartao, borderStyle: 'dashed' },
+                                situacao === 'selada' && { borderWidth: Borda, borderColor: theme.relevoDoCartao, borderStyle: 'dashed' },
                             ]}>
                             {situacao === 'agora' && (
                                 <View

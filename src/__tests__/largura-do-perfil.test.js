@@ -22,7 +22,9 @@ it.each([
 ])('%s usa a coluna do formulário', (caminho) => {
     const texto = ler(caminho);
 
-    expect(texto).toContain('maxWidth: LarguraDoFormulario');
+    // Direto no estilo, ou pela moldura comum das telas (src/components/moldura-da-tela.tsx).
+    expect(texto).toMatch(/maxWidth: LarguraDoFormulario|<MolduraDaTela largura="formulario">/);
     expect(texto).not.toContain('MaxContentWidth');
+    expect(texto).not.toContain('largura="conteudo"');
     expect(texto).not.toMatch(/maxWidth: \d/);
 });
