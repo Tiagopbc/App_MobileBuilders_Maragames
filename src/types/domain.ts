@@ -12,7 +12,7 @@ export interface Attempt {
     id: string;
     uid: string;
     fase: Fase; // não muda depois de criada
-    lessonId: string | null; // null nos blocos pré, pós e reteste, que atravessam os quatro tópicos
+    lessonId: string | null; // a lição do tópico do bloco; null só em tentativas de antes do ciclo por lição (item 30)
     respostas: string[]; // ids das questões já respondidas nesta tentativa
     concluida: boolean;
     createdAt: number;
@@ -79,7 +79,7 @@ export interface Lesson {
     title: string;
     order: number;
     topicId?: string;
-    ordem?: number; // ordem de apresentação no piloto (1 a 4 no dia 1, 5 em diante na trilha diária)
+    ordem?: number; // ordem de apresentação, decidida pelo autor e gravada pelo seed
     trilha?: 'medido' | 'diaria';
     modulo?: string | null;
     cartao?: SlideConceito[]; // cartão de conceito mostrado antes da prática

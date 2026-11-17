@@ -66,10 +66,6 @@ export class RepositorioFalso implements ProgressRepository {
         return ordenarQuestoes(this.questoes);
     }
 
-    async getQuestoesDoTopico(topicId: string): Promise<Question[]> {
-        return (await this.getQuestoes()).filter((q) => q.topicId === topicId);
-    }
-
     async getRespostas(uid: string): Promise<Answer[]> {
         if (this.falhaAoCarregar) throw new Error('sem rede');
         return ordenarRespostas(this.respostas.filter((r) => r.uid === uid));

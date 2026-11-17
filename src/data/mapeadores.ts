@@ -120,7 +120,7 @@ export function ordenarLicoes<T extends Pick<Lesson, 'order' | 'ordem'>>(licoes:
 }
 
 // `order` é a posição da questão dentro do tópico, então a lista sai agrupada por tópico.
-// A ordem entre tópicos aqui é só alfabética; a do roteiro é parâmetro de `etapaDoRoteiro`.
+// A ordem entre tópicos aqui é só alfabética; a sugerida é a de `topicosDasLicoes`.
 export function ordenarQuestoes<T extends Pick<Question, 'topicId' | 'order'>>(questoes: readonly T[]): T[] {
     return [...questoes].sort((a, b) => {
         if (a.topicId !== b.topicId) return a.topicId < b.topicId ? -1 : 1;

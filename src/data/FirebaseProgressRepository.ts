@@ -68,11 +68,6 @@ export class FirebaseProgressRepository implements ProgressRepository {
         return ordenarQuestoes(snap.docs.map((d) => paraQuestion(d.id, d.data())));
     }
 
-    async getQuestoesDoTopico(topicId: string): Promise<Question[]> {
-        const snap = await getDocs(query(collection(this.db, 'questions'), where('topicId', '==', topicId)));
-        return ordenarQuestoes(snap.docs.map((d) => paraQuestion(d.id, d.data())));
-    }
-
     async getRespostas(uid: string): Promise<Answer[]> {
         // O filtro por uid é exigido pela regra de `answers`: sem ele a consulta inteira é recusada.
         const snap = await getDocs(query(collection(this.db, 'answers'), where('uid', '==', uid)));

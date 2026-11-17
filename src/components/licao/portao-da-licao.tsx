@@ -19,7 +19,7 @@ type PortaoDaLicaoProps = {
 };
 
 // A trava da lição (item 30): antes de desenhar um cartão ou um bloco, confere se o estado da
-// lição deixa abri-lo. A regra é `podeAbrirNaLicao`; é o mesmo desenho do portão do roteiro (item 23).
+// lição deixa abri-lo. A regra é `podeAbrirNaLicao`.
 export function PortaoDaLicao({ uid, topicId, formaPre, passo, barrado, relogio, children }: PortaoDaLicaoProps) {
     const { estado, recarregar } = useLicao({ uid, topicId, formaPre, relogio });
     // A decisão é tomada uma vez, ao abrir, e não muda mais. Terminar o passo muda o estado da

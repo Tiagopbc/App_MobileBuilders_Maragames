@@ -22,7 +22,7 @@ import {
     formatarXp,
     formatarXpTotal,
     resumirQuadrantes,
-    resumoDoProgresso,
+    partesDoResumo,
     xpNaCarta,
     respostasDeMinimas,
     botaoDaSugestao,
@@ -189,19 +189,25 @@ describe('resumirQuadrantes', () => {
     });
 });
 
-describe('resumoDoProgresso', () => {
+describe('partesDoResumo', () => {
+    // A frase inteira, como a tela a mostra: as partes, uma depois da outra.
+    const frase = (total: number, firmes: number, pontosCegos: number) =>
+        partesDoResumo(total, firmes, pontosCegos)
+            .map((parte) => parte.texto)
+            .join('');
+
     it('diz quantas respostas, quantas estão firmes e em quantas a pessoa achou que sabia', () => {
-        expect(resumoDoProgresso(15, 9, 2)).toBe('De 15 respostas, 9 estão firmes. Em 2, você achou que sabia.');
-        expect(resumoDoProgresso(4, 2, 1)).toBe('De 4 respostas, 2 estão firmes. Em 1, você achou que sabia.');
+        expect(frase(15, 9, 2)).toBe('De 15 respostas, 9 estão firmes. Em 2, você achou que sabia.');
+        expect(frase(4, 2, 1)).toBe('De 4 respostas, 2 estão firmes. Em 1, você achou que sabia.');
     });
 
     it('sem ponto cego, a segunda frase some', () => {
-        expect(resumoDoProgresso(8, 8, 0)).toBe('De 8 respostas, 8 estão firmes.');
+        expect(frase(8, 8, 0)).toBe('De 8 respostas, 8 estão firmes.');
     });
 
     it('concorda com o singular e com o zero', () => {
-        expect(resumoDoProgresso(1, 1, 0)).toBe('De 1 resposta, 1 está firme.');
-        expect(resumoDoProgresso(4, 0, 1)).toBe('De 4 respostas, nenhuma está firme. Em 1, você achou que sabia.');
+        expect(frase(1, 1, 0)).toBe('De 1 resposta, 1 está firme.');
+        expect(frase(4, 0, 1)).toBe('De 4 respostas, nenhuma está firme. Em 1, você achou que sabia.');
     });
 });
 

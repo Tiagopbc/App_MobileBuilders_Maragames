@@ -225,10 +225,6 @@ export function partesDoResumo(total: number, firmes: number, pontosCegos: numbe
     return partes;
 }
 
-export function resumoDoProgresso(total: number, firmes: number, pontosCegos: number): string {
-    return partesDoResumo(total, firmes, pontosCegos).map((p) => p.texto).join('');
-}
-
 /** O que o leitor de tela diz de uma lição de módulo em breve. */
 export function licaoEmBreve(titulo: string): string {
     return `${titulo}, em breve`;
