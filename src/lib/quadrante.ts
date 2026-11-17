@@ -14,3 +14,8 @@ export function quadranteDe(correta: boolean, confianca: Confianca): Quadrante {
     if (correta) return alta ? 'firme' : 'fragil';
     return alta ? 'ponto_cego' : 'lacuna';
 }
+
+/** Uma contagem nova, com os quatro quadrantes em zero. */
+export function semQuadrantes(): Record<Quadrante, number> {
+    return { firme: 0, fragil: 0, lacuna: 0, ponto_cego: 0 };
+}

@@ -17,18 +17,25 @@ type RespostaDoDominio = Pick<Answer, 'topicId' | 'questionId' | 'correta' | 're
  * Tópico sem resposta não aparece no resultado.
  */
 export function dominioPorTopico(respostas: readonly RespostaDoDominio[]): Record<string, Dominio> {
-    const ultimaPorQuestao = new Map<string, RespostaDoDominio>();
-    for (const r of respostas) {
-        const atual = ultimaPorQuestao.get(r.questionId);
-        if (!atual || r.respondidaEm >= atual.respondidaEm) ultimaPorQuestao.set(r.questionId, r);
-    }
-
     const dominio: Record<string, Dominio> = {};
-    for (const r of ultimaPorQuestao.values()) {
+    for (const r of maisRecentePor(respostas, (x) => x.questionId)) {
         const d = (dominio[r.topicId] ??= { acertos: 0, total: 0, taxa: 0 });
         d.total += 1;
         if (r.correta) d.acertos += 1;
         d.taxa = d.acertos / d.total;
     }
     return dominio;
+}
+
+/**
+ * A resposta mais recente de cada chave, pelo horário; no empate, vale a que vem depois na lista.
+ * A chave diz o que conta como a mesma resposta: a questão, ou a questão dentro de uma fase.
+ */
+export function maisRecentePor<R extends Pick<Answer, 'respondidaEm'>>(respostas: readonly R[], chave: (r: R) => string): R[] {
+    const ultimas = new Map<string, R>();
+    for (const r of respostas) {
+        const atual = ultimas.get(chave(r));
+        if (!atual || r.respondidaEm >= atual.respondidaEm) ultimas.set(chave(r), r);
+    }
+    return [...ultimas.values()];
 }

@@ -3,6 +3,7 @@ import {
     SEXOS,
     TOTAL_DE_EXTRAS,
     alternarOpcao,
+    comTodasAsChaves,
     UFS,
     extrasRespondidos,
     idDoModulo,
@@ -168,5 +169,36 @@ describe('alternarOpcao', () => {
 
     it('numa lista sem "nenhuma", todas combinam', () => {
         expect(alternarOpcao(['arte', 'audio', 'programacao'], ['arte'], 'programacao')).toEqual(['arte', 'programacao']);
+    });
+});
+
+describe('comTodasAsChaves', () => {
+    it('entrega as nove perguntas opcionais, com as respondidas e as vazias', () => {
+        const extras = comTodasAsChaves({ ocupacao: 'estudo', engines: ['godot'] });
+
+        expect(Object.keys(extras).sort()).toEqual(
+            [
+                'alunoDoSite',
+                'comoConheceu',
+                'engines',
+                'estudoDeGameDesign',
+                'interesses',
+                'linguagens',
+                'objetivo',
+                'ocupacao',
+                'tempoPorSemana',
+            ].sort()
+        );
+        expect(extras.ocupacao).toBe('estudo');
+        expect(extras.engines).toEqual(['godot']);
+        // A chave sem valor é o que manda a sessão apagar a resposta no banco.
+        expect('objetivo' in extras).toBe(true);
+        expect(extras.objetivo).toBeUndefined();
+    });
+
+    it('não leva nada além das perguntas opcionais', () => {
+        const extras = comTodasAsChaves({ ocupacao: 'estudo', nome: 'Fulano' } as never);
+
+        expect('nome' in extras).toBe(false);
     });
 });

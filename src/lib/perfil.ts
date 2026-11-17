@@ -77,7 +77,8 @@ export function perfilCompleto(p: Partial<Perfil> | null): boolean {
     );
 }
 
-const CAMPOS_EXTRAS: readonly (keyof ExtrasDoPerfil)[] = [
+/** As perguntas opcionais do perfil (item 34): a lista única, que a sessão e o banco também usam. */
+export const CAMPOS_EXTRAS = [
     'ocupacao',
     'engines',
     'linguagens',
@@ -87,7 +88,7 @@ const CAMPOS_EXTRAS: readonly (keyof ExtrasDoPerfil)[] = [
     'tempoPorSemana',
     'comoConheceu',
     'alunoDoSite',
-];
+] as const satisfies readonly (keyof ExtrasDoPerfil)[];
 
 export const TOTAL_DE_EXTRAS = CAMPOS_EXTRAS.length;
 
@@ -104,6 +105,11 @@ export function extrasDe(p: ExtrasDoPerfil): ExtrasDoPerfil {
     const extras: Record<string, unknown> = {};
     for (const campo of CAMPOS_EXTRAS) if (p[campo] !== undefined) extras[campo] = p[campo];
     return extras as ExtrasDoPerfil;
+}
+
+/** As perguntas opcionais com todas as chaves, inclusive as sem resposta: é a chave sem valor que manda apagar. */
+export function comTodasAsChaves(p: ExtrasDoPerfil): ExtrasDoPerfil {
+    return Object.fromEntries(CAMPOS_EXTRAS.map((campo) => [campo, p[campo]])) as ExtrasDoPerfil;
 }
 
 export interface Modulo {

@@ -200,10 +200,12 @@ export const FASE_DO_PASSO: Record<PassoComQuestoes, Fase> = {
     revisao: 'reteste',
 };
 
+// Os estados de depois da verificação: a lição já foi feita, falte ou não a revisão.
+const DEPOIS_DA_VERIFICACAO: readonly EstadoDaLicao['tipo'][] = ['aguardando_revisao', 'revisao', 'concluida'];
+
 /** Feita é a lição que já passou da verificação (ou, no ciclo curto, da prática). */
 export function licaoFeita(licao: Pick<Licao, 'estado'>): boolean {
-    const { tipo } = licao.estado;
-    return tipo === 'aguardando_revisao' || tipo === 'revisao' || tipo === 'concluida';
+    return DEPOIS_DA_VERIFICACAO.includes(licao.estado.tipo);
 }
 
 export type DestinoDaLicao = { tipo: 'termo' } | { tipo: 'passo'; passo: PassoDaLicao };
@@ -361,7 +363,7 @@ export function resultadoDaLicao(entrada: EntradaDoResultadoDaLicao): ResultadoD
         return { ciclo: 'curto', pratica: taxa(pratica), xp: pratica.xp, quadrantes: pratica.quadrantes };
     }
 
-    if (formaPre === null || (estado !== 'aguardando_revisao' && estado !== 'revisao' && estado !== 'concluida')) {
+    if (formaPre === null || !licaoFeita(licao)) {
         return null;
     }
 
@@ -385,8 +387,8 @@ export function resultadoDaLicao(entrada: EntradaDoResultadoDaLicao): ResultadoD
 // Em que estados da lição cada bloco sem feedback do tópico já pode aparecer. O diagnóstico só
 // aparece junto com a verificação: o resultado dele fica para o fim da lição, ao lado do depois.
 const A_VISTA_NA_LICAO: Record<Exclude<Fase, 'pratica'>, readonly EstadoDaLicao['tipo'][]> = {
-    pre: ['aguardando_revisao', 'revisao', 'concluida'],
-    pos: ['aguardando_revisao', 'revisao', 'concluida'],
+    pre: DEPOIS_DA_VERIFICACAO,
+    pos: DEPOIS_DA_VERIFICACAO,
     reteste: ['concluida'],
 };
 

@@ -1,4 +1,4 @@
-import { quadranteDe } from '../quadrante';
+import { quadranteDe, semQuadrantes } from '../quadrante';
 
 describe('quadranteDe', () => {
     it('acerto com certeza é firme', () => {
@@ -23,5 +23,18 @@ describe('quadranteDe', () => {
 
     it('erro com certeza é ponto cego', () => {
         expect(quadranteDe(false, 3)).toBe('ponto_cego');
+    });
+});
+
+describe('semQuadrantes', () => {
+    it('começa com os quatro quadrantes em zero', () => {
+        expect(semQuadrantes()).toEqual({ firme: 0, fragil: 0, lacuna: 0, ponto_cego: 0 });
+    });
+
+    it('cada chamada devolve uma contagem nova: somar numa não muda a outra', () => {
+        const uma = semQuadrantes();
+        uma.firme += 1;
+
+        expect(semQuadrantes().firme).toBe(0);
     });
 });

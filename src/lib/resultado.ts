@@ -3,7 +3,7 @@
 // recalcula tudo a partir de `answers`.
 
 import type { Answer, Confianca, Question } from '../types/domain';
-import { quadranteDe, type Quadrante } from './quadrante';
+import { quadranteDe, semQuadrantes, type Quadrante } from './quadrante';
 import { xpDaResposta } from './xp';
 
 export type RespostaDoResultado = Pick<Answer, 'questionId' | 'topicId' | 'correta' | 'confianca'>;
@@ -40,7 +40,10 @@ export interface ResultadoDoBloco extends Taxa {
 // acerto que pode ter sido sorte.
 export const ORDEM_DE_REVISAO: readonly QuadranteARevisar[] = ['ponto_cego', 'lacuna', 'fragil'];
 
-const semQuadrantes = (): Record<Quadrante, number> => ({ firme: 0, fragil: 0, lacuna: 0, ponto_cego: 0 });
+/** Uma contagem nova do acerto em cada nível de confiança, os três sem resposta. */
+export function semAcertoPorConfianca(): Record<Confianca, Taxa> {
+    return { 1: { acertos: 0, total: 0 }, 2: { acertos: 0, total: 0 }, 3: { acertos: 0, total: 0 } };
+}
 
 /**
  * Resume as respostas dadas às questões do bloco. `questoes` é o bloco inteiro, na ordem de
@@ -60,7 +63,7 @@ export function resultadoDoBloco(
         xp: 0,
         quadrantes: semQuadrantes(),
         porTopico: [],
-        porConfianca: { 1: { acertos: 0, total: 0 }, 2: { acertos: 0, total: 0 }, 3: { acertos: 0, total: 0 } },
+        porConfianca: semAcertoPorConfianca(),
         questoesARevisar: [],
     };
     const topicos = new Map<string, ResultadoDoTopico>();

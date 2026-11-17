@@ -19,7 +19,7 @@ import { deleteField, doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db } from './firebase';
 import { paraPerfil } from '../data/mapeadores';
 import { repositorio } from '../data/repositorio';
-import { perfilCompleto } from './perfil';
+import { CAMPOS_EXTRAS, perfilCompleto } from './perfil';
 import type { DadosPerfil, ExtrasParaSalvar, Perfil } from '../types/domain';
 
 type SessionValue = {
@@ -51,18 +51,7 @@ export function useSession() {
 }
 
 // O que `salvarExtras` aceita gravar: as perguntas opcionais e o aceite de contato.
-const CAMPOS_EXTRAS: readonly (keyof ExtrasParaSalvar)[] = [
-    'ocupacao',
-    'engines',
-    'linguagens',
-    'estudoDeGameDesign',
-    'interesses',
-    'objetivo',
-    'tempoPorSemana',
-    'comoConheceu',
-    'alunoDoSite',
-    'aceitaContato',
-];
+const CAMPOS_PARA_SALVAR: readonly (keyof ExtrasParaSalvar)[] = [...CAMPOS_EXTRAS, 'aceitaContato'];
 
 // Sem resposta: campo sem valor ou lista vazia. No banco isso é campo ausente, e não vazio.
 const semResposta = (valor: unknown) => valor === undefined || (Array.isArray(valor) && valor.length === 0);
@@ -71,7 +60,7 @@ const semResposta = (valor: unknown) => valor === undefined || (Array.isArray(va
 // Só as chaves que vieram: o que a tela não mandou fica como está no banco.
 function paraOBanco(extras: ExtrasParaSalvar): Record<string, unknown> {
     const escrita: Record<string, unknown> = {};
-    for (const campo of CAMPOS_EXTRAS) {
+    for (const campo of CAMPOS_PARA_SALVAR) {
         if (!(campo in extras)) continue;
         escrita[campo] = semResposta(extras[campo]) ? deleteField() : extras[campo];
     }
@@ -81,7 +70,7 @@ function paraOBanco(extras: ExtrasParaSalvar): Record<string, unknown> {
 // O mesmo, no perfil em memória: a resposta desfeita some do objeto.
 function comExtras(perfil: Perfil, extras: ExtrasParaSalvar): Perfil {
     const novo: Record<string, unknown> = { ...perfil };
-    for (const campo of CAMPOS_EXTRAS) {
+    for (const campo of CAMPOS_PARA_SALVAR) {
         if (!(campo in extras)) continue;
         if (semResposta(extras[campo])) delete novo[campo];
         else novo[campo] = extras[campo];
