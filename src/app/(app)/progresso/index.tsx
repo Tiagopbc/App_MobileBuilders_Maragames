@@ -1,33 +1,24 @@
-import { Redirect, useFocusEffect, useRouter } from 'expo-router';
-import { useCallback } from 'react';
+import { Redirect, useRouter } from 'expo-router';
 
 import { TelaDoProgresso } from '@/components/progresso/tela-do-progresso';
 import { useLicoes } from '@/hooks/use-licoes';
-import { participanteDoRoteiro } from '@/lib/participante';
+import { useRecarregarAoFocar } from '@/hooks/use-recarregar-ao-focar';
+import { useVoltarOu } from '@/hooks/use-voltar-ou';
 import { useSession } from '@/lib/session';
 
 // O Progresso (Fase 5 do plano): /progresso. O "Meu domínio" do aluno.
 export default function ProgressoScreen() {
     const { user, perfil } = useSession();
     const router = useRouter();
+    const sair = useVoltarOu('/home');
 
-    const { formaPre } = participanteDoRoteiro(perfil);
+    const formaPre = perfil?.formaPre ?? null;
     const { estado, recarregar } = useLicoes({ uid: user?.uid ?? '', formaPre });
 
     // Roda quando a tela ganha foco, inclusive na volta do detalhe de um tópico.
-    useFocusEffect(
-        useCallback(() => {
-            recarregar();
-        }, [recarregar])
-    );
+    useRecarregarAoFocar(recarregar);
 
     if (!user) return <Redirect href="/home" />;
-
-    function sair() {
-        // Na web, quem abre a URL direto não tem para onde voltar.
-        if (router.canGoBack()) router.back();
-        else router.replace('/home');
-    }
 
     return (
         <TelaDoProgresso

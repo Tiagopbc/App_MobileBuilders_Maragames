@@ -1,8 +1,8 @@
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { EsqueletoDaSequencia, EsqueletoDoParaHoje } from '@/components/esqueleto/esqueleto-da-home';
@@ -27,8 +27,8 @@ import { useAoVoltarAoApp } from '@/hooks/use-ao-voltar-ao-app';
 import { useAposAtraso } from '@/hooks/use-apos-atraso';
 import { useLicoes, type LicaoDoAluno } from '@/hooks/use-licoes';
 import { useTheme } from '@/hooks/use-theme';
+import { useRecarregarAoFocar } from '@/hooks/use-recarregar-ao-focar';
 import { destinoDaLicao, licaoFeita, segmentosDoParaHoje } from '@/lib/licao';
-import { participanteDoRoteiro } from '@/lib/participante';
 import { semanaDaSequencia } from '@/lib/sequencia';
 import { useSession } from '@/lib/session';
 import { xpDeHoje } from '@/lib/xp';
@@ -54,16 +54,12 @@ export default function HomeScreen() {
   const theme = useTheme();
   const router = useRouter();
 
-  const { formaPre } = participanteDoRoteiro(perfil);
+  const formaPre = perfil?.formaPre ?? null;
   // Nada é guardado: as lições saem das respostas, a cada vez que a home aparece.
   const { estado, recarregar } = useLicoes({ uid: user?.uid ?? '', formaPre });
 
   // Roda quando a home ganha foco, inclusive na volta de uma lição, e não só na primeira vez.
-  useFocusEffect(
-    useCallback(() => {
-      recarregar();
-    }, [recarregar])
-  );
+  useRecarregarAoFocar(recarregar);
   // E quando o app volta do segundo plano: a revisão abre pela virada do dia, e quem deixou o
   // app aberto e volta no dia dela não troca de tela.
   useAoVoltarAoApp(recarregar);

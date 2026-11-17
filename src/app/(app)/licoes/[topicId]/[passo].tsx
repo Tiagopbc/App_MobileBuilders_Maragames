@@ -5,8 +5,8 @@ import { PortaoDaLicao } from '@/components/licao/portao-da-licao';
 import { TelaDoBloco } from '@/components/pergunta/tela-do-bloco';
 import { TEXTOS } from '@/constants/textos';
 import type { Relatorio } from '@/hooks/use-bloco';
+import { useVoltarOu } from '@/hooks/use-voltar-ou';
 import { FASE_DO_PASSO, type Licao, type PassoComQuestoes } from '@/lib/licao';
-import { participanteDoRoteiro } from '@/lib/participante';
 import { useSession } from '@/lib/session';
 
 // O parâmetro da rota é texto livre (na web, qualquer coisa digitada na URL).
@@ -22,19 +22,14 @@ export default function PassoDaLicaoScreen() {
     const router = useRouter();
 
     const paraALicao = { pathname: '/licoes/[topicId]', params: { topicId } } as const;
+    const sair = useVoltarOu(paraALicao);
     if (!user) return <Redirect href="/home" />;
     if (!ehPasso(passo)) return <Redirect href={paraALicao} />;
 
-    const { formaPre } = participanteDoRoteiro(perfil);
+    const formaPre = perfil?.formaPre ?? null;
     const uid = user.uid;
     // Fixado aqui, depois da checagem: dentro de `fim` (uma declaração içada), `passo` voltaria a ser texto.
     const passoDaLicao: PassoComQuestoes = passo;
-
-    function sair() {
-        // Na web, quem abre a URL direto não tem para onde voltar.
-        if (router.canGoBack()) router.back();
-        else router.replace(paraALicao);
-    }
 
     // Como o passo termina. `licao` é a lição como estava quando ele abriu.
     function fim(relatorio: Relatorio, licao: Licao) {

@@ -1,20 +1,15 @@
-import { Redirect, useRouter } from 'expo-router';
+import { Redirect } from 'expo-router';
 
 import { TelaSobreVoce } from '@/components/perfil/tela-sobre-voce';
+import { useVoltarOu } from '@/hooks/use-voltar-ou';
 import { useSession } from '@/lib/session';
 
 // As perguntas opcionais do perfil (item 34): /sobre-voce, aberta pelo cartão do Perfil.
 export default function SobreVoceScreen() {
     const { perfil, salvarExtras } = useSession();
-    const router = useRouter();
+    const fechar = useVoltarOu('/perfil');
 
     if (!perfil) return <Redirect href="/home" />;
-
-    function fechar() {
-        // Na web, quem abre a URL direto não tem para onde voltar.
-        if (router.canGoBack()) router.back();
-        else router.replace('/perfil');
-    }
 
     return <TelaSobreVoce inicial={perfil} aoSalvar={salvarExtras} aoSair={fechar} />;
 }
