@@ -16,9 +16,10 @@ import {
 } from '../constants/textos';
 import type { Question, Topico } from '../types/domain';
 import { ganhoNormalizado, type Agregados, type Exportacao, type Linha } from './exportacao';
+import { decimal, fracao, plural } from './formato';
 import { PERFIS_DE_RESPOSTA, perfilDeResposta, type PerfilDeResposta } from './perfis-de-resposta';
 import { AMOSTRA_MINIMA } from './progresso';
-import type { Quadrante } from './quadrante';
+import { QUADRANTES, type Quadrante } from './quadrante';
 import type { Taxa } from './resultado';
 import {
     intervaloPorReamostragem,
@@ -179,10 +180,25 @@ function contar(participantes: readonly Linha[], campo: string, rotulos: Rotulos
     return agrupar(participantes, campo, rotulos, semResposta).map((g) => ({ rotulo: g.rotulo, pessoas: g.pessoas.length }));
 }
 
+/** O acerto de um grupo de pessoas no diagnóstico e na verificação, das lições com os dois. */
+function preEPosDe(pessoas: readonly Linha[]): { pre: Taxa; pos: Taxa } {
+    return {
+        pre: { acertos: soma(pessoas, 'pre_acertos'), total: soma(pessoas, 'pre_total') },
+        pos: { acertos: soma(pessoas, 'pos_acertos'), total: soma(pessoas, 'pos_total') },
+    };
+}
+
+/** Dos acertos da verificação de um grupo, os que continuaram certos na revisão. */
+function retencaoDoGrupo(pessoas: readonly Linha[]): Taxa {
+    return {
+        acertos: soma(pessoas, 'firmes_mantidos') + soma(pessoas, 'frageis_mantidos'),
+        total: soma(pessoas, 'firmes_no_pos') + soma(pessoas, 'frageis_no_pos'),
+    };
+}
+
 /** Os números principais de um grupo de pessoas, das colunas que a exportação dá a cada uma. */
 function numerosDoGrupo(rotulo: string, pessoas: readonly Linha[]): GrupoDoRelatorio {
-    const pre = { acertos: soma(pessoas, 'pre_acertos'), total: soma(pessoas, 'pre_total') };
-    const pos = { acertos: soma(pessoas, 'pos_acertos'), total: soma(pessoas, 'pos_total') };
+    const { pre, pos } = preEPosDe(pessoas);
     return {
         rotulo,
         pessoas: pessoas.length,
@@ -190,10 +206,7 @@ function numerosDoGrupo(rotulo: string, pessoas: readonly Linha[]): GrupoDoRelat
         pre,
         pos,
         ganho: ganhoNormalizado(pre, pos),
-        retencao: {
-            acertos: soma(pessoas, 'firmes_mantidos') + soma(pessoas, 'frageis_mantidos'),
-            total: soma(pessoas, 'firmes_no_pos') + soma(pessoas, 'frageis_no_pos'),
-        },
+        retencao: retencaoDoGrupo(pessoas),
         pontoCego: { acertos: soma(pessoas, 'pontos_cegos_no_pos'), total: soma(pessoas, 'pos_total') },
     };
 }
@@ -235,6 +248,11 @@ export function indicadoresDoRelatorio(
     const { agregados, participantes, licoes, eventos, questoes, autoavaliacoes } = exportado;
     const tituloDoTopico = new Map(conteudo.topicos.map((t) => [t.id, t.titulo]));
     const enunciadoDaQuestao = new Map(conteudo.questoes.map((q) => [q.id, q.enunciado]));
+    // O enunciado e o tópico de uma linha da tabela de questões, pelo conteúdo.
+    const nomesDaQuestao = (q: Linha) => ({
+        enunciado: enunciadoDaQuestao.get(String(q.questao)) ?? String(q.questao),
+        topico: tituloDoTopico.get(String(q.topico)) ?? String(q.topico),
+    });
 
     // De onde as respostas vieram, da plataforma mais usada para a menos.
     const porPlataforma = new Map<string, number>();
@@ -305,8 +323,7 @@ export function indicadoresDoRelatorio(
         .sort((a, b) => taxaNaVerificacao(a) - taxaNaVerificacao(b) || cegosNaVerificacao(b) - cegosNaVerificacao(a))
         .slice(0, MAXIMO_DE_QUESTOES_A_REVER)
         .map((q) => ({
-            enunciado: enunciadoDaQuestao.get(String(q.questao)) ?? String(q.questao),
-            topico: tituloDoTopico.get(String(q.topico)) ?? String(q.topico),
+            ...nomesDaQuestao(q),
             acerto: { acertos: numero(q, 'verificacao_acertos'), total: numero(q, 'verificacao_respostas') },
             pontosCegos: numero(q, 'verificacao_pontos_cegos'),
             distrator: texto(q, 'verificacao_distrator_mais_escolhido'),
@@ -323,8 +340,7 @@ export function indicadoresDoRelatorio(
         .sort((a, b) => concentracaoDe(b) - concentracaoDe(a) || errosDe(b) - errosDe(a))
         .slice(0, MAXIMO_DE_ERROS_CONCENTRADOS)
         .map((q) => ({
-            enunciado: enunciadoDaQuestao.get(String(q.questao)) ?? String(q.questao),
-            topico: tituloDoTopico.get(String(q.topico)) ?? String(q.topico),
+            ...nomesDaQuestao(q),
             distrator: texto(q, 'distrator_mais_escolhido') ?? '',
             vezes: numero(q, 'vezes_no_distrator'),
             erros: errosDe(q),
@@ -349,24 +365,21 @@ export function indicadoresDoRelatorio(
 
     // Os intervalos, reamostrando pessoas. Cada conta usa as colunas que a exportação dá a cada uma.
     const taxaDe = (acertos: number, total: number) => (total === 0 ? null : acertos / total);
-    const somaDe = (amostra: readonly Linha[], campo: string) => soma(amostra, campo);
-    const ganhoDe = (amostra: readonly Linha[]) =>
-        ganhoNormalizado(
-            { acertos: somaDe(amostra, 'pre_acertos'), total: somaDe(amostra, 'pre_total') },
-            { acertos: somaDe(amostra, 'pos_acertos'), total: somaDe(amostra, 'pos_total') }
-        );
-    const retencaoDe = (amostra: readonly Linha[]) =>
-        taxaDe(
-            somaDe(amostra, 'firmes_mantidos') + somaDe(amostra, 'frageis_mantidos'),
-            somaDe(amostra, 'firmes_no_pos') + somaDe(amostra, 'frageis_no_pos')
-        );
+    const ganhoDe = (amostra: readonly Linha[]) => {
+        const { pre, pos } = preEPosDe(amostra);
+        return ganhoNormalizado(pre, pos);
+    };
+    const retencaoDe = (amostra: readonly Linha[]) => {
+        const { acertos, total } = retencaoDoGrupo(amostra);
+        return taxaDe(acertos, total);
+    };
     // A retenção corrigida de um nível de confiança, somando as pessoas da amostra.
     const corrigidaDe = (amostra: readonly Linha[], nivel: 'alta' | 'baixa') => {
         const [noPos, mantidos] = nivel === 'alta' ? ['firmes_no_pos', 'firmes_mantidos'] : ['frageis_no_pos', 'frageis_mantidos'];
         return retencaoCorrigida({
-            respostas: somaDe(amostra, `confianca_${nivel}_no_pos`),
-            acertos: somaDe(amostra, noPos),
-            mantidos: somaDe(amostra, mantidos),
+            respostas: soma(amostra, `confianca_${nivel}_no_pos`),
+            acertos: soma(amostra, noPos),
+            mantidos: soma(amostra, mantidos),
         });
     };
     const diferencaCorrigidaDe = (amostra: readonly Linha[]) => {
@@ -505,7 +518,6 @@ function esc(valor: string): string {
 }
 
 const dia = (data: string) => data.split('-').reverse().join('/');
-const decimal = (valor: number, casas = 1) => valor.toFixed(casas).replace('.', ',');
 const pontos = (valor: number) => {
     const arredondado = Math.round(valor * 100);
     return `${arredondado > 0 ? '+' : arredondado < 0 ? '−' : ''}${Math.abs(arredondado)} pontos`;
@@ -538,11 +550,8 @@ const textoDoIntervaloDaRetencao = (i: Intervalo, pessoas: number) => {
     return `IC 95%: ${foraDaFaixa ? de : `${de} a ${ate}`}` + avisoDoIntervalo(pessoas);
 };
 const valorP = (p: number) => (p < 0.001 ? 'p < 0,001' : `p = ${decimal(p, p < 0.01 ? 3 : 2)}`);
-const plural = (n: number, um: string, varios: string) => `${n} ${n === 1 ? um : varios}`;
-const fracao = (taxa: Taxa) => `${taxa.acertos} de ${taxa.total}`;
 const largura = (parte: number, todo: number) => (todo <= 0 ? 0 : Math.round((Math.min(parte, todo) / todo) * 100));
 
-const ORDEM_DOS_QUADRANTES: readonly Quadrante[] = ['firme', 'fragil', 'lacuna', 'ponto_cego'];
 // Na terceira pessoa: no app a pessoa lê "você"; aqui quem lê é a Beast Maragames.
 const O_QUE_E_O_QUADRANTE: Record<Quadrante, string> = {
     firme: 'acertou com certeza',
@@ -655,13 +664,36 @@ const cartao = (rotulo: string, valor: string, sub: string) =>
 const legenda = (itens: readonly (readonly [cor: string, rotulo: string])[]) =>
     `<ul class="legenda">${itens.map(([cor, rotulo]) => `<li><i class="c-${cor}"></i>${esc(rotulo)}</li>`).join('')}</ul>`;
 
+/** Uma tabela: os cabeçalhos, já em texto de página, e as linhas prontas. */
+const tabela = (cabecalhos: readonly string[], linhas: string) =>
+    `<div class="tabela"><table><thead><tr>${cabecalhos.map((c) => `<th>${c}</th>`).join('')}</tr></thead><tbody>${linhas}</tbody></table></div>`;
+
+/** Um texto com uma nota menor embaixo, como o enunciado e o tópico dele. */
+const comNota = (texto: string, nota: string) => `${esc(texto)}<br><span class="n">${esc(nota)}</span>`;
+
+/** Um grupo de barras com título e quantas pessoas ele tem. */
+const grupo = (titulo: string, pessoas: number, corpo: string) =>
+    `<div class="grupo"><p class="titulo">${esc(titulo)} <span class="n">· ${plural(pessoas, 'pessoa', 'pessoas')}</span></p>${corpo}</div>`;
+
 const bloco = (titulo: string, pergunta: string, corpo: string) =>
     `<section><h2>${titulo}</h2>${pergunta ? `<p class="pergunta">${pergunta}</p>` : ''}${corpo}</section>`;
 
 /** A página do relatório, pronta para gravar: um arquivo só, que não busca nada fora dele. */
+/** O que todos os blocos da página usam: os números, as opções da rodada e os trechos prontos. */
+interface Contexto extends ReturnType<typeof pecas> {
+    ind: Indicadores;
+    opcoes: OpcoesDoRelatorio;
+    simulacao: OpcoesDoRelatorio['simulacao'];
+    n: number; // participantes
+    minima: number; // a amostra mínima da rodada
+    poucas: (respostas: number) => boolean;
+}
+
+// A diferença em pontos: o número vai grande, e a palavra, no texto de baixo, para não quebrar.
+const emPontos = (valor: number) => pontos(valor).replace(' pontos', '');
+
 export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): string {
     const minima = opcoes.amostraMinima ?? AMOSTRA_MINIMA;
-    const { leitura, destaque, barra, pequena } = pecas(minima);
     const n = ind.participantes;
     const filtro = opcoes.desde ? ` · só quem aceitou o termo a partir de ${dia(opcoes.desde)}` : '';
 
@@ -702,19 +734,39 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
         );
     }
 
+    const c: Contexto = { ind, opcoes, simulacao, n, minima, poucas: (respostas) => respostas < minima, ...pecas(minima) };
+    return pagina(
+        [
+            blocoDoResumo(c),
+            blocoDaAprendizagem(c),
+            blocoDaConsciencia(c),
+            blocoDaRetencao(c),
+            blocoDosPerfisDeResposta(c),
+            blocoDaAutoavaliacao(c),
+            blocoPorPerfil(c),
+            blocoDoEngajamento(c),
+            blocoDoConteudo(c),
+            blocoDeQuemRespondeu(c),
+            blocoDaConferencia(c),
+            blocoDaConferenciaDosDefeitos(c),
+            blocoDeComoLer(c),
+        ]
+            .filter((b) => b !== '')
+            .join('\n')
+    );
+}
+
+function blocoDoResumo(c: Contexto): string {
+    const { ind, simulacao, n, poucas, destaque, pequena } = c;
     // 1. Em resumo
     const retencao = destaque(ind.retencao);
     const pontosCegos = destaque(ind.pontosCegos);
     const { pessoas } = ind.incerteza;
-    const ic = (i: Intervalo, formato: (v: number) => string, contribuiram: number) => textoDoIntervalo(i, formato, contribuiram);
-    // A diferença em pontos: o número vai grande, e a palavra, no texto de baixo, para não quebrar.
-    const emPontos = (valor: number) => pontos(valor).replace(' pontos', '');
     // O ganho segue o corte de amostra, como os outros cartões: sobre poucas respostas, não é número.
     const ganhoPequeno = pequena(ind.pre) || pequena(ind.pos);
-    const { testePareado, calibracao, retencaoCorrigida: corrigida } = ind.incerteza;
-    const poucas = (respostas: number) => respostas < minima;
+    const { testePareado, calibracao } = ind.incerteza;
     const calibracaoPequena = poucas(ind.porConfianca[3].total) || poucas(ind.porConfianca[1].total + ind.porConfianca[2].total);
-    const resumo = bloco(
+    return bloco(
         'Em resumo',
         '',
         `<div class="cartoes">` +
@@ -727,7 +779,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
                       ind.ganhoDaTurma === null ? 'sem dados' : decimal(ind.ganhoDaTurma, 2),
                       'do que faltava acertar, a parte que passou a ser acertada' +
                           (ind.incerteza.ganhoDaTurma
-                              ? ` · ${ic(ind.incerteza.ganhoDaTurma, (v) => decimal(v, 2), pessoas.verificacao)}` +
+                              ? ` · ${textoDoIntervalo(ind.incerteza.ganhoDaTurma, (v) => decimal(v, 2), pessoas.verificacao)}` +
                                 (incluiZero(ind.incerteza.ganhoDaTurma) ? ' · sem evidência de ganho' : '')
                               : '') +
                           (testePareado === null
@@ -742,21 +794,24 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
                   : cartao(
                       'Calibração',
                       emPontos(calibracao.estimativa),
-                      `pontos · acerto com certeza menos acerto sem certeza, na verificação · ${ic(calibracao, pontos, pessoas.verificacao)}` +
+                      `pontos · acerto com certeza menos acerto sem certeza, na verificação · ${textoDoIntervalo(calibracao, pontos, pessoas.verificacao)}` +
                           (incluiZero(calibracao) ? ' · sem evidência de que a certeza diga algo' : '')
                   )) +
             cartao('Retenção', retencao.valor, `${retencao.contagem}acertos que continuaram certos 7 dias depois`) +
             cartao('Ponto cego', pontosCegos.valor, `${pontosCegos.contagem}respostas erradas com certeza`) +
             `</div>`
     );
+}
 
+function blocoDaAprendizagem(c: Contexto): string {
+    const { ind, barra } = c;
     // 2. Aprendizagem
     const series = [
         ['antes', 'Diagnóstico (antes)'],
         ['depois', 'Verificação (depois)'],
         ['revisao', 'Revisão (7 dias depois)'],
     ] as const;
-    const aprendizagem = bloco(
+    return bloco(
         'Aprendizagem',
         'As pessoas acertam mais depois de estudar a lição?',
         legenda(series) +
@@ -767,32 +822,35 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
             `<h3>Por tópico</h3>` +
             (ind.cobertura.length === 0
                 ? ''
-                : `<div class="tabela"><table><thead><tr><th>Tópico</th><th>Começaram</th><th>Forma A</th><th>Forma B</th><th>Verificaram</th></tr></thead><tbody>` +
+                : tabela(['Tópico', 'Começaram', 'Forma A', 'Forma B', 'Verificaram'],
                   ind.cobertura
                       .map(
                           (c) =>
                               `<tr><td>${esc(c.titulo)}</td><td class="num">${c.pessoas}</td><td class="num">${c.formaA}</td><td class="num">${c.formaB}</td><td class="num">${c.verificadas}</td></tr>`
                       )
-                      .join('') +
-                  `</tbody></table></div>` +
+                      .join('')
+                  ) +
                   `<p class="nota">Cada pessoa escolhe que lições faz, então cada tópico tem a sua gente: o número de um tópico mistura o efeito da lição com quem escolheu fazê-la, e um tópico não se compara com outro como se fossem a mesma turma. A comparação justa é o ganho de cada pessoa, que compara a pessoa com ela mesma. A forma A e a B se alternam entre as pessoas; num tópico com poucas, uma forma pode pesar mais.</p>`) +
             (ind.porTopico.length === 0
                 ? `<p>Nenhuma lição com a verificação feita.</p>`
                 : ind.porTopico
                       .map(
                           (t) =>
-                              `<div class="grupo"><p class="titulo">${esc(t.titulo)} <span class="n">· ${plural(t.pessoas, 'pessoa', 'pessoas')}</span></p>` +
-                              barra('Diagnóstico', t.pre, 'antes') +
-                              barra('Verificação', t.pos, 'depois') +
-                              (t.reteste.total > 0 ? barra('Revisão', t.reteste, 'revisao') : '') +
-                              `</div>`
+                              grupo(t.titulo, t.pessoas,
+                                  barra('Diagnóstico', t.pre, 'antes') +
+                                  barra('Verificação', t.pos, 'depois') +
+                                  (t.reteste.total > 0 ? barra('Revisão', t.reteste, 'revisao') : '')
+                              )
                       )
                       .join(''))
     );
+}
 
+function blocoDaConsciencia(c: Contexto): string {
+    const { ind, barra } = c;
     // 3. Consciência do próprio saber
-    const respostasNoPos = ORDEM_DOS_QUADRANTES.reduce((total, q) => total + ind.quadrantesNoPos[q], 0);
-    const consciencia = bloco(
+    const respostasNoPos = QUADRANTES.reduce((total, q) => total + ind.quadrantesNoPos[q], 0);
+    return bloco(
         'Consciência do próprio saber',
         'Quem diz que sabe, sabe? Em cada questão a pessoa declara o quanto confia na resposta.',
         `<h3>Acerto por nível de confiança, na verificação</h3>` +
@@ -802,20 +860,24 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
             (respostasNoPos === 0
                 ? `<p>sem dados</p>`
                 : `<div class="pilha">` +
-                  ORDEM_DOS_QUADRANTES.filter((q) => ind.quadrantesNoPos[q] > 0)
+                  QUADRANTES.filter((q) => ind.quadrantesNoPos[q] > 0)
                       .map(
                           (q) =>
                               `<div class="c-${q}" style="flex:${ind.quadrantesNoPos[q]} 1 0" title="${ROTULO_QUADRANTE[q]}: ${ind.quadrantesNoPos[q]} de ${respostasNoPos}"></div>`
                       )
                       .join('') +
                   `</div>`) +
-            `<ul class="legenda">${ORDEM_DOS_QUADRANTES.map(
+            `<ul class="legenda">${QUADRANTES.map(
                 (q) => `<li><i class="c-${q}"></i><strong>${ROTULO_QUADRANTE[q]}</strong>: ${ind.quadrantesNoPos[q]} <span class="n">(${O_QUE_E_O_QUADRANTE[q]})</span></li>`
             ).join('')}</ul>`
     );
+}
 
+function blocoDaRetencao(c: Contexto): string {
+    const { ind, poucas, barra } = c;
+    const { pessoas, retencaoCorrigida: corrigida } = ind.incerteza;
     // 4. Retenção
-    const retencaoBloco = bloco(
+    return bloco(
         'Retenção',
         'A confiança declarada indica o que vai ser esquecido? A revisão repete, 7 dias depois, as questões da verificação: aqui só entram as que a pessoa tinha acertado.',
         barra('Firmes que continuaram certos', ind.firmes, 'firme') +
@@ -841,23 +903,29 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
                       : cartao(
                             'Diferença',
                             emPontos(corrigida.diferenca.estimativa),
-                            `pontos · com certeza menos sem certeza · ${ic(corrigida.diferenca, pontos, pessoas.revisao)}` +
+                            `pontos · com certeza menos sem certeza · ${textoDoIntervalo(corrigida.diferenca, pontos, pessoas.revisao)}` +
                                 (incluiZero(corrigida.diferenca) ? ' · sem evidência de diferença' : '')
                         )) +
                   `</div>` +
                   `<p class="nota">As barras acima contam os acertos no chute, que não têm o que reter e só se repetem por acaso; como há mais chute entre os Frágeis, elas fazem a certeza parecer proteger mesmo quando não protege. Os cartões descontam o chute: do acerto em cada nível sai a parte que a pessoa sabia, e o número é quanto dessa parte ela ainda sabia na revisão. Com poucas respostas, ele pode passar de 100% ou ficar abaixo de 0%, e nos intervalos a página escreve mais de 100% ou menos de 0%. Os intervalos reamostram pessoas, e não respostas.</p>`)
     );
+}
 
+function blocoDosPerfisDeResposta(c: Contexto): string {
+    const { ind } = c;
     // Perfis de resposta
     const maisDeUmPerfil = Math.max(1, ...ind.perfisDeResposta.map((p) => p.pessoas));
-    const perfisDeResposta = bloco(
+    return bloco(
         'Perfis de resposta',
         'Que tipo de respondente cada pessoa é? O perfil sai só das respostas dela: quanto acerta, com que certeza, quanto erra achando que sabe e em quanto tempo responde.',
         ind.perfisDeResposta.map((p) => contagem(p.rotulo, p.pessoas, maisDeUmPerfil, plural(p.pessoas, 'pessoa', 'pessoas'))).join('') +
             `<ul class="ler nota">${ind.perfisDeResposta.map((p) => `<li><strong>${esc(p.rotulo)}:</strong> ${esc(p.criterio)}.</li>`).join('')}</ul>` +
             `<p class="nota">A revisão não entra nesta conta, porque repete as questões da verificação. Os limites de cada perfil são escolhas do autor, a revisar com dados de verdade.</p>`
     );
+}
 
+function blocoDaAutoavaliacao(c: Contexto): string {
+    const { ind, leitura, barra, pequena } = c;
     // 5. Autoavaliação
     // O acerto no diagnóstico numa régua que começa no acaso: chutando, acerta-se uma de quatro.
     const acimaDoAcaso = (taxa: Taxa) => {
@@ -870,7 +938,7 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
             `<div class="val">${leitura(taxa)}</div></div>`
         );
     };
-    const autoavaliacao = bloco(
+    return bloco(
         'Autoavaliação',
         'Em que área as pessoas acham que sabem mais do que sabem? Antes da primeira lição, cada uma se dá uma nota de 1 a 5 por área.',
         ind.autoavaliacao.length === 0
@@ -882,40 +950,44 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
               ind.autoavaliacao
                   .map(
                       (a) =>
-                          `<div class="grupo"><p class="titulo">${esc(a.modulo)} <span class="n">· ${plural(a.pessoas, 'pessoa', 'pessoas')}</span></p>` +
-                          `<div class="linha"><div class="rot">Nota média</div>` +
-                          `<div class="trilho" title="Nota média: ${decimal(a.notaMedia)} de 5"><div class="fill c-antes" style="width:${largura(a.notaMedia - 1, 4)}%"></div></div>` +
-                          `<div class="val">${decimal(a.notaMedia)} de 5</div></div>` +
-                          acimaDoAcaso(a.diagnostico) +
-                          `</div>`
+                          grupo(a.modulo, a.pessoas,
+                              `<div class="linha"><div class="rot">Nota média</div>` +
+                              `<div class="trilho" title="Nota média: ${decimal(a.notaMedia)} de 5"><div class="fill c-antes" style="width:${largura(a.notaMedia - 1, 4)}%"></div></div>` +
+                              `<div class="val">${decimal(a.notaMedia)} de 5</div></div>` +
+                              acimaDoAcaso(a.diagnostico)
+                          )
                   )
                   .join('') +
               `<p class="nota">As duas barras estão na mesma régua: a nota 1 é a barra vazia e a nota 5, a barra cheia. Na barra do diagnóstico, a vazia é o acaso (25%, chutando uma de quatro) e a cheia, 100%. Entram só as pessoas que deram a nota antes do primeiro diagnóstico e fizeram o diagnóstico de alguma lição da área. Nota alta com acerto baixo é área em que as pessoas se superestimam.</p>`
     );
+}
 
+function blocoPorPerfil(c: Contexto): string {
+    const { ind, simulacao, leitura, pequena } = c;
     // Por perfil
     // O ganho sai do diagnóstico e da verificação: com amostra pequena em um deles, ele também não aparece.
     const ganho = (g: Extract<GrupoDoRelatorio, { oculto: false }>) =>
         g.ganho === null ? 'sem dados' : pequena(g.pre) || pequena(g.pos) ? '<span class="n">amostra pequena</span>' : decimal(g.ganho, 2);
     const minimoDePessoas = ind.porGrupo.flatMap((v) => v.grupos).some((g) => g.oculto) ? MINIMO_DE_PESSOAS_POR_GRUPO : null;
-    const porGrupo = bloco(
+    return bloco(
         'Por perfil',
         'Os resultados mudam com o perfil de quem responde? Cada tabela separa as mesmas pessoas por uma variável do cadastro.',
         ind.porGrupo
             .map(
                 (v) =>
-                    `<h3>${esc(v.titulo)}</h3><div class="tabela"><table><thead><tr><th>Grupo</th><th>Pessoas</th><th>Diagnóstico</th><th>Verificação</th><th>Ganho</th><th>Retenção</th><th>Ponto cego</th></tr></thead><tbody>` +
-                    v.grupos
-                        .map(
-                            (g) =>
-                                `<tr><td>${esc(g.rotulo)}</td><td class="num">${g.pessoas}</td>` +
-                                (g.oculto
-                                    ? `<td colspan="5"><span class="n">números ocultos</span></td></tr>`
-                                    : `<td>${leitura(g.pre)}</td><td>${leitura(g.pos)}</td>` +
-                                      `<td class="num">${ganho(g)}</td><td>${leitura(g.retencao)}</td><td>${leitura(g.pontoCego)}</td></tr>`)
-                        )
-                        .join('') +
-                    `</tbody></table></div>`
+                    `<h3>${esc(v.titulo)}</h3>` +
+                    tabela(['Grupo', 'Pessoas', 'Diagnóstico', 'Verificação', 'Ganho', 'Retenção', 'Ponto cego'],
+                        v.grupos
+                            .map(
+                                (g) =>
+                                    `<tr><td>${esc(g.rotulo)}</td><td class="num">${g.pessoas}</td>` +
+                                    (g.oculto
+                                        ? `<td colspan="5"><span class="n">números ocultos</span></td></tr>`
+                                        : `<td>${leitura(g.pre)}</td><td>${leitura(g.pos)}</td>` +
+                                          `<td class="num">${ganho(g)}</td><td>${leitura(g.retencao)}</td><td>${leitura(g.pontoCego)}</td></tr>`)
+                            )
+                            .join('')
+                    )
             )
             .join('') +
             `<p class="nota">Grupo pequeno engana: uma diferença entre poucas pessoas pode ser só acaso. Olhe a contagem antes de comparar.` +
@@ -925,11 +997,14 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
             (simulacao ? ' Na base sintética, nada do cadastro (sexo, faixa etária, experiência, estudo, aluno do site) influencia o desempenho, por construção.' : '') +
             `</p>`
     );
+}
 
+function blocoDoEngajamento(c: Contexto): string {
+    const { ind } = c;
     // 6. Engajamento
     const { licoes, voltaramOutroDia, diasAtivosEmMedia, maiorSequencia, plataformas } = ind.engajamento;
     const maisRespostas = Math.max(0, ...plataformas.map((p) => p.respostas));
-    const engajamento = bloco(
+    return bloco(
         'Engajamento',
         'As pessoas terminam o que começam, e voltam?',
         `<div class="cartoes">` +
@@ -951,10 +1026,13 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
                       ? `<p class="nota">O app passou a registrar de onde cada resposta vem em 12/10/2026; as anteriores ficam sem essa informação.</p>`
                       : ''))
     );
+}
 
+function blocoDoConteudo(c: Contexto): string {
+    const { ind } = c;
     // 7. Conteúdo
     const { conteudo } = ind;
-    const conteudoBloco = bloco(
+    return bloco(
         'Conteúdo',
         'Que questões pedem revisão? Acerto baixo pode ser conteúdo mal explicado ou questão mal escrita.',
         conteudo.avaliadas === 0
@@ -962,69 +1040,76 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
             : `<p class="nota">${conteudo.avaliadas} de ${conteudo.total} questões de diagnóstico e verificação já foram respondidas na verificação. A questão é julgada só na verificação, depois da lição; o acerto no diagnóstico, antes de estudar, vem à parte e mede só o quanto ela é difícil. Com poucas respostas por questão, esta lista serve para casos gritantes (ninguém acerta na verificação, ou quase todos caem na mesma alternativa errada): não é ranking.</p>` +
               (conteudo.aRever.length === 0
                   ? `<p>Todas as questões foram acertadas por todo mundo na verificação.</p>`
-                  : `<div class="tabela"><table><thead><tr><th>Questão</th><th>Verificação</th><th>Pontos cegos</th><th>Alternativa errada mais escolhida</th><th>Diagnóstico</th></tr></thead><tbody>` +
-                    conteudo.aRever
-                        .map(
-                            (q) =>
-                                `<tr><td>${esc(q.enunciado)}<br><span class="n">${esc(q.topico)}</span></td>` +
-                                `<td class="num">${fracao(q.acerto)}</td><td class="num">${q.pontosCegos}</td>` +
-                                `<td>${q.distrator === null ? '—' : esc(q.distrator)}</td><td class="num">${q.diagnostico.total === 0 ? '—' : fracao(q.diagnostico)}</td></tr>`
-                        )
-                        .join('') +
-                    `</tbody></table></div>`) +
+                  : tabela(['Questão', 'Verificação', 'Pontos cegos', 'Alternativa errada mais escolhida', 'Diagnóstico'],
+                        conteudo.aRever
+                            .map(
+                                (q) =>
+                                    `<tr><td>${comNota(q.enunciado, q.topico)}</td>` +
+                                    `<td class="num">${fracao(q.acerto)}</td><td class="num">${q.pontosCegos}</td>` +
+                                    `<td>${q.distrator === null ? '—' : esc(q.distrator)}</td><td class="num">${q.diagnostico.total === 0 ? '—' : fracao(q.diagnostico)}</td></tr>`
+                            )
+                            .join('')
+                    )) +
               (conteudo.concentrados.length === 0
                   ? ''
                   : `<h3>Erros concentrados numa alternativa</h3>` +
-                    `<div class="tabela"><table><thead><tr><th>Questão</th><th>Alternativa errada</th><th>Erros nela</th></tr></thead><tbody>` +
-                    conteudo.concentrados
-                        .map(
-                            (q) =>
-                                `<tr><td>${esc(q.enunciado)}<br><span class="n">${esc(q.topico)}</span></td>` +
-                                `<td>${esc(q.distrator)}</td><td class="num">${q.vezes} de ${q.erros}</td></tr>`
-                        )
-                        .join('') +
-                    `</tbody></table></div>` +
+                    tabela(['Questão', 'Alternativa errada', 'Erros nela'],
+                        conteudo.concentrados
+                            .map(
+                                (q) =>
+                                    `<tr><td>${comNota(q.enunciado, q.topico)}</td>` +
+                                    `<td>${esc(q.distrator)}</td><td class="num">${q.vezes} de ${q.erros}</td></tr>`
+                            )
+                            .join('')
+                    ) +
                     `<p class="nota">Questões em que uma alternativa errada levou ${Math.round(CONCENTRACAO_DOS_ERROS * 100)}% ou mais dos erros do diagnóstico e da verificação, com pelo menos ${MINIMO_DE_ERROS_CONCENTRADOS} erros. Com três alternativas erradas, o acaso daria um terço a cada uma. Pode ser um erro comum de quem ainda não estudou, que vale tratar no cartão, uma alternativa que parece certa ou o gabarito trocado.</p>`)
     );
+}
 
+function blocoDaConferencia(c: Contexto): string {
+    const { simulacao } = c;
     // Conferência do classificador: só na página simulada, quando o script passa a matriz.
-    const conferencia =
-        simulacao?.matriz === undefined
+    return simulacao?.matriz === undefined
             ? ''
             : bloco(
                   'Conferência do classificador',
                   'O perfil de resposta lido das respostas bate com o tipo que o gerador sorteou para cada participante virtual?',
-                  `<div class="tabela"><table><thead><tr><th>Tipo sorteado</th>${simulacao.matriz.perfis.map((p) => `<th>${esc(p)}</th>`).join('')}</tr></thead><tbody>` +
+                  tabela(['Tipo sorteado', ...simulacao.matriz.perfis.map((p) => esc(p))],
                       simulacao.matriz.tipos
                           .map((t) => `<tr><td>${esc(t.rotulo)}</td>${t.contagens.map((c) => `<td class="num">${c === 0 ? '·' : c}</td>`).join('')}</tr>`)
-                          .join('') +
-                      `</tbody></table></div>` +
+                          .join('')
+                      ) +
                       `<p class="nota">Os tipos do gerador foram desenhados junto com os perfis, então acertar a diagonal não prova que o classificador funciona com gente de verdade. O que esta tabela mostra são as confusões: que tipo é lido como qual perfil.</p>`
               );
+}
 
+function blocoDaConferenciaDosDefeitos(c: Contexto): string {
+    const { simulacao } = c;
     // Conferência dos defeitos: só na página simulada com --defeitos.
-    const conferenciaDosDefeitos =
-        simulacao?.defeitos === undefined
+    return simulacao?.defeitos === undefined
             ? ''
             : bloco(
                   'Conferência dos defeitos plantados',
                   'O gerador estragou três questões de propósito. O bloco de conteúdo acima as encontrou?',
-                  `<div class="tabela"><table><thead><tr><th>Defeito</th><th>Questão</th><th>Entre as questões a rever</th><th>Erros concentrados</th></tr></thead><tbody>` +
+                  tabela(['Defeito', 'Questão', 'Entre as questões a rever', 'Erros concentrados'],
                       simulacao.defeitos
                           .map(
                               (d) =>
-                                  `<tr><td>${esc(d.rotulo)}<br><span class="n">${esc(d.descricao)}</span></td>` +
-                                  `<td>${esc(d.enunciado)}<br><span class="n">${esc(d.topico)}</span></td>` +
+                                  `<tr><td>${comNota(d.rotulo, d.descricao)}</td>` +
+                                  `<td>${comNota(d.enunciado, d.topico)}</td>` +
                                   `<td class="num">${d.posicao === null ? 'fora da lista' : `${d.posicao}ª`}</td>` +
                                   `<td class="num">${d.concentrado ? 'sim' : 'não'}</td></tr>`
                           )
-                          .join('') +
-                      `</tbody></table></div>` +
+                          .join('')
+                      ) +
                       `<p class="nota">As questões a rever vêm pelo acerto na verificação. Um defeito que pesa em quem não sabe, como o distrator irresistível, mexe pouco nesse acerto, porque depois da lição quase todos sabem: ele aparece nos erros concentrados numa alternativa.</p>`
               );
+}
 
+function blocoDeQuemRespondeu(c: Contexto): string {
+    const { ind, simulacao, n } = c;
     // 8. Quem respondeu
-    const perfil = bloco(
+    return bloco(
         'Quem respondeu',
         simulacao ? 'O perfil sorteado para a turma virtual, em contagem de pessoas.' : 'O perfil de quem aceitou o termo, em contagem de pessoas.',
         `<div class="colunas">` +
@@ -1040,9 +1125,12 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
                 .join('') +
             `</div>`
     );
+}
 
+function blocoDeComoLer(c: Contexto): string {
+    const { opcoes, simulacao, n, minima } = c;
     // 9. Como ler
-    const comoLer = bloco(
+    return bloco(
         'Como ler estes números',
         '',
         `<ul class="ler">` +
@@ -1056,25 +1144,5 @@ export function relatorioHtml(ind: Indicadores, opcoes: OpcoesDoRelatorio): stri
             `<li>Nenhum dado de pessoa aparece aqui: nem nome, nem contato, nem resposta individual.</li>` +
             (simulacao ? '' : `<li>A página é um retrato do dia ${dia(opcoes.geradoEm)}. Para atualizar, o autor gera de novo.</li>`) +
             `</ul>`
-    );
-
-    return pagina(
-        [
-            resumo,
-            aprendizagem,
-            consciencia,
-            retencaoBloco,
-            perfisDeResposta,
-            autoavaliacao,
-            porGrupo,
-            engajamento,
-            conteudoBloco,
-            perfil,
-            conferencia,
-            conferenciaDosDefeitos,
-            comoLer,
-        ]
-            .filter((b) => b !== '')
-            .join('\n')
     );
 }

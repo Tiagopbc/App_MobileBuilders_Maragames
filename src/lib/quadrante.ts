@@ -6,6 +6,9 @@ import type { Confianca } from '../types/domain';
 // Valor usado no código. Os rótulos ("Firme", "Frágil", "Lacuna", "Ponto cego") ficam só na tela.
 export type Quadrante = 'firme' | 'fragil' | 'lacuna' | 'ponto_cego';
 
+// Os quatro, na ordem de leitura: do acerto com certeza ao erro com certeza.
+export const QUADRANTES: readonly Quadrante[] = ['firme', 'fragil', 'lacuna', 'ponto_cego'];
+
 // Só "Tenho certeza" é confiança alta; "Palpite" e "Tenho dúvida" contam como baixa.
 export const CONFIANCA_ALTA: Confianca = 3;
 

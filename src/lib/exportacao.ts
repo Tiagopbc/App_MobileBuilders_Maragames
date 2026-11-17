@@ -9,9 +9,10 @@ import type { Answer, Autoavaliacao, Confianca, ExtrasDoPerfil, FormaPre, Questi
 import { questoesDaPratica, questoesDoBlocoMedido } from './bloco';
 import { FUSO_MS, diaDeCalendario } from './calendario';
 import { DIAS_ATE_A_REVISAO, licoesDoAluno } from './licao';
+import { decimal, fracao, plural } from './formato';
 import { idDoModulo } from './perfil';
-import { quadranteDe, semQuadrantes, type Quadrante } from './quadrante';
-import { resultadoDoBloco, type Taxa } from './resultado';
+import { QUADRANTES, quadranteDe, semQuadrantes, type Quadrante } from './quadrante';
+import { resultadoDoBloco, semAcertoPorConfianca, type Taxa } from './resultado';
 import { retencao } from './retencao';
 import { xpDaResposta } from './xp';
 
@@ -128,9 +129,7 @@ function maiorSequencia(dias: readonly number[]): number {
 }
 
 const porcento = (taxa: Taxa) => (taxa.total === 0 ? 'sem respostas' : `${Math.round((taxa.acertos / taxa.total) * 100)}%`);
-const fracao = (taxa: Taxa) => `${taxa.acertos} de ${taxa.total}`;
 const zero = (): Taxa => ({ acertos: 0, total: 0 });
-const QUADRANTES: readonly Quadrante[] = ['firme', 'fragil', 'lacuna', 'ponto_cego'];
 const somar = (em: Taxa, taxa: Taxa) => {
     em.acertos += taxa.acertos;
     em.total += taxa.total;
@@ -172,9 +171,8 @@ export function exportarDados(dados: DadosDaExportacao, opcoes: OpcoesDaExportac
         reteste: zero(),
         firmes: zero(),
         frageis: zero(),
-        porConfianca: { 1: zero(), 2: zero(), 3: zero() },
+        porConfianca: semAcertoPorConfianca(),
         quadrantesNoPos: semQuadrantes(),
-        pontosCegosNoPos: 0,
         verificadas: 0,
         revisadas: 0,
         antesDaHora: 0,
@@ -398,7 +396,6 @@ export function exportarDados(dados: DadosDaExportacao, opcoes: OpcoesDaExportac
         somar(total.reteste, daPessoa.reteste);
         somar(total.firmes, daPessoa.firmes);
         somar(total.frageis, daPessoa.frageis);
-        total.pontosCegosNoPos += daPessoa.pontosCegosNoPos;
         total.verificadas += daPessoa.verificadas;
         total.revisadas += daPessoa.revisadas;
         if (ganho !== null) total.ganhos.push(ganho);
@@ -408,7 +405,55 @@ export function exportarDados(dados: DadosDaExportacao, opcoes: OpcoesDaExportac
     // daria peso dobrado a quem voltou.
     const uids = new Set(participantes.map((p) => p.perfil.uid));
     const validas = dados.respostas.filter((r) => uids.has(r.uid) && r.fase !== 'reteste');
-    const linhasDeQuestao: Linha[] = ids.flatMap((topicId) =>
+    const linhasDeQuestao = qualidadeDasQuestoes(ids, questoes, validas);
+
+    const n = participantes.length;
+    const media = (valores: number[]) => (valores.length === 0 ? null : valores.reduce((a, b) => a + b, 0) / valores.length);
+    const ganhoMedio = media(total.ganhos);
+    const ganhoDaTurma = ganhoNormalizado(total.pre, total.pos);
+
+    const agregados: Agregados = {
+        participantes: n,
+        verificadas: total.verificadas,
+        revisadas: total.revisadas,
+        antesDaHora: total.antesDaHora,
+        pre: total.pre,
+        pos: total.pos,
+        reteste: total.reteste,
+        ganhoDaTurma,
+        ganhoMedio,
+        porTopico: topicos.filter((t) => porTopico.has(t.id)).map((t) => ({ topicId: t.id, titulo: t.titulo, ...porTopico.get(t.id)! })),
+        porConfianca: total.porConfianca,
+        quadrantesNoPos: total.quadrantesNoPos,
+        firmes: total.firmes,
+        frageis: total.frageis,
+    };
+
+    return {
+        eventos,
+        participantes: linhasDeParticipante,
+        licoes: linhasDeLicao,
+        questoes: linhasDeQuestao,
+        autoavaliacoes: linhasDeAutoavaliacao,
+        resumo: resumoEmTexto(agregados),
+        agregados,
+        chave: participantes.map(({ perfil, codigo }) => ({
+            codigo,
+            uid: perfil.uid,
+            nome: perfil.nome ?? null,
+            apelido: perfil.apelido ?? null,
+            email: perfil.email ?? null,
+            cidade: perfil.cidade ?? null,
+        })),
+    };
+}
+
+/**
+ * Uma linha por questão, das respostas válidas (sem a revisão): o acerto, os pontos cegos e o
+ * distrator mais escolhido, no total e por fase.
+ */
+function qualidadeDasQuestoes(ids: readonly string[], questoes: readonly Question[], validas: readonly Answer[]): Linha[] {
+    return ids.flatMap((topicId) =>
         questoes
             .filter((q) => q.topicId === topicId)
             .map((q) => {
@@ -451,88 +496,52 @@ export function exportarDados(dados: DadosDaExportacao, opcoes: OpcoesDaExportac
                 };
             })
     );
+}
 
-    const n = participantes.length;
-    const media = (valores: number[]) => (valores.length === 0 ? null : valores.reduce((a, b) => a + b, 0) / valores.length);
-    const ganhoMedio = media(total.ganhos);
-    const ganhoDaTurma = ganhoNormalizado(total.pre, total.pos);
-    const resumo = [
+/** O resumo em texto, dos mesmos números do relatório: um não diz uma coisa e o outro, outra. */
+function resumoEmTexto(a: Agregados): string {
+    return [
         '# Beast Maragames: resumo dos dados',
         '',
-        `Participantes: ${n}`,
-        `Lições com a verificação feita: ${total.verificadas}`,
-        `Lições com a revisão feita: ${total.revisadas} de ${total.verificadas}`,
-        `Revisões feitas antes dos ${DIAS_ATE_A_REVISAO} dias: ${total.antesDaHora}`,
+        `Participantes: ${a.participantes}`,
+        `Lições com a verificação feita: ${a.verificadas}`,
+        `Lições com a revisão feita: ${a.revisadas} de ${a.verificadas}`,
+        `Revisões feitas antes dos ${DIAS_ATE_A_REVISAO} dias: ${a.antesDaHora}`,
         '',
         '## Aprendizagem',
         '',
         'Só entram as lições com o diagnóstico e a verificação completos.',
         '',
-        `Acerto no diagnóstico: ${porcento(total.pre)} (${fracao(total.pre)})`,
-        `Acerto na verificação: ${porcento(total.pos)} (${fracao(total.pos)})`,
-        `Acerto na revisão: ${porcento(total.reteste)} (${fracao(total.reteste)})`,
-        `Ganho normalizado da turma: ${ganhoDaTurma === null ? 'sem dados' : ganhoDaTurma.toFixed(2).replace('.', ',')}`,
-        `Ganho normalizado médio, por pessoa: ${ganhoMedio === null ? 'sem dados' : ganhoMedio.toFixed(2).replace('.', ',')}`,
+        `Acerto no diagnóstico: ${porcento(a.pre)} (${fracao(a.pre)})`,
+        `Acerto na verificação: ${porcento(a.pos)} (${fracao(a.pos)})`,
+        `Acerto na revisão: ${porcento(a.reteste)} (${fracao(a.reteste)})`,
+        `Ganho normalizado da turma: ${a.ganhoDaTurma === null ? 'sem dados' : decimal(a.ganhoDaTurma, 2)}`,
+        `Ganho normalizado médio, por pessoa: ${a.ganhoMedio === null ? 'sem dados' : decimal(a.ganhoMedio, 2)}`,
         '',
         '## Por tópico',
         '',
-        ...(porTopico.size === 0
+        ...(a.porTopico.length === 0
             ? ['Nenhuma lição com a verificação feita.']
-            : topicos
-                  .filter((t) => porTopico.has(t.id))
-                  .map((t) => {
-                      const { pre, pos, pessoas } = porTopico.get(t.id)!;
-                      return `${t.titulo}: antes ${porcento(pre)} (${fracao(pre)}), depois ${porcento(pos)} (${fracao(pos)}), ${pessoas} pessoa${pessoas === 1 ? '' : 's'}`;
-                  })),
+            : a.porTopico.map(
+                  ({ titulo, pre, pos, pessoas }) =>
+                      `${titulo}: antes ${porcento(pre)} (${fracao(pre)}), depois ${porcento(pos)} (${fracao(pos)}), ${plural(pessoas, 'pessoa', 'pessoas')}`
+              )),
         '',
         '## Consciência do próprio saber (verificação)',
         '',
-        `Quando marcou Palpite, acertou: ${porcento(total.porConfianca[1])} (${fracao(total.porConfianca[1])})`,
-        `Quando marcou Tenho dúvida, acertou: ${porcento(total.porConfianca[2])} (${fracao(total.porConfianca[2])})`,
-        `Quando marcou Tenho certeza, acertou: ${porcento(total.porConfianca[3])} (${fracao(total.porConfianca[3])})`,
-        `Pontos cegos (erro com certeza): ${total.pontosCegosNoPos} de ${total.pos.total} respostas`,
+        `Quando marcou Palpite, acertou: ${porcento(a.porConfianca[1])} (${fracao(a.porConfianca[1])})`,
+        `Quando marcou Tenho dúvida, acertou: ${porcento(a.porConfianca[2])} (${fracao(a.porConfianca[2])})`,
+        `Quando marcou Tenho certeza, acertou: ${porcento(a.porConfianca[3])} (${fracao(a.porConfianca[3])})`,
+        `Pontos cegos (erro com certeza): ${a.quadrantesNoPos.ponto_cego} de ${a.pos.total} respostas`,
         '',
         '## Retenção: a confiança prevê o esquecimento?',
         '',
-        `Acertos Firmes no pós que continuaram certos no reteste: ${fracao(total.firmes)}`,
-        `Acertos Frágeis no pós que continuaram certos no reteste: ${fracao(total.frageis)}`,
+        `Acertos Firmes no pós que continuaram certos no reteste: ${fracao(a.firmes)}`,
+        `Acertos Frágeis no pós que continuaram certos no reteste: ${fracao(a.frageis)}`,
         '',
-        `Com ${n} participante${n === 1 ? '' : 's'} e sem grupo de controle, estes números descrevem e não provam causa.`,
+        `Com ${plural(a.participantes, 'participante', 'participantes')} e sem grupo de controle, estes números descrevem e não provam causa.`,
         '',
     ].join('\n');
-
-    return {
-        eventos,
-        participantes: linhasDeParticipante,
-        licoes: linhasDeLicao,
-        questoes: linhasDeQuestao,
-        autoavaliacoes: linhasDeAutoavaliacao,
-        resumo,
-        agregados: {
-            participantes: n,
-            verificadas: total.verificadas,
-            revisadas: total.revisadas,
-            antesDaHora: total.antesDaHora,
-            pre: total.pre,
-            pos: total.pos,
-            reteste: total.reteste,
-            ganhoDaTurma,
-            ganhoMedio,
-            porTopico: topicos.filter((t) => porTopico.has(t.id)).map((t) => ({ topicId: t.id, titulo: t.titulo, ...porTopico.get(t.id)! })),
-            porConfianca: total.porConfianca,
-            quadrantesNoPos: total.quadrantesNoPos,
-            firmes: total.firmes,
-            frageis: total.frageis,
-        },
-        chave: participantes.map(({ perfil, codigo }) => ({
-            codigo,
-            uid: perfil.uid,
-            nome: perfil.nome ?? null,
-            apelido: perfil.apelido ?? null,
-            email: perfil.email ?? null,
-            cidade: perfil.cidade ?? null,
-        })),
-    };
 }
 
 /** Uma lista de escolhas numa célula só: `godot|unity`. Sem resposta, vazio. */

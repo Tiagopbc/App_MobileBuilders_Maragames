@@ -1,9 +1,5 @@
 import { dataEmSaoLuis, meiaNoiteDe } from '../calendario';
-
-/** Horário de São Luís (UTC−3) em milissegundos. Ex.: em('2026-10-30 20:00'). */
-function em(dataHora: string): number {
-    return Date.parse(`${dataHora.replace(' ', 'T')}:00-03:00`);
-}
+import { em } from '../../test/fabrica';
 
 describe('dataEmSaoLuis', () => {
     it('dá o dia da semana, o dia, o mês e o ano no fuso de São Luís', () => {

@@ -1,9 +1,6 @@
 import type { Fase } from '../../types/domain';
 import { semanaDaSequencia, sequenciaDeDias } from '../sequencia';
-
-function em(dataHora: string): number {
-    return Date.parse(`${dataHora.replace(' ', 'T')}:00-03:00`);
-}
+import { em } from '../../test/fabrica';
 
 // O pós-teste terminou na sexta, 30/10, à noite: é o dia 1.
 
