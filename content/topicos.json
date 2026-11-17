@@ -9,19 +9,19 @@
     "cartao": [
       {
         "titulo": "Decidir o que o jogo deve ser",
-        "texto": "Para Jesse Schell, game design é o ato de decidir o que um jogo deve ser: quais são as regras, os objetivos, os desafios e o que o jogador pode fazer. Programar, desenhar e compor são outras áreas; o designer trabalha com todas elas, mas a decisão sobre como o jogo funciona é dele."
+        "texto": "Game design é o ato de decidir o que um jogo deve ser: quais são as regras, os objetivos, os desafios e o que o jogador pode fazer. Programar, desenhar e compor são outras áreas; o designer trabalha com todas elas, mas a decisão sobre como o jogo funciona é dele."
       },
       {
         "titulo": "O que é um jogo",
-        "texto": "Salen e Zimmerman definem jogo como um sistema em que jogadores entram num conflito artificial, definido por regras, que termina num resultado quantificável. Artificial quer dizer separado da vida comum: o conflito existe dentro do jogo. Quantificável quer dizer que, no fim, dá para dizer quem ganhou, quem perdeu ou quantos pontos cada um fez."
+        "texto": "Um jogo é um sistema em que jogadores entram num conflito artificial, definido por regras, que termina num resultado quantificável. Artificial quer dizer separado da vida comum: o conflito existe dentro do jogo. Quantificável quer dizer que, no fim, dá para dizer quem ganhou, quem perdeu ou quantos pontos cada um fez."
       },
       {
         "titulo": "Os elementos formais",
-        "texto": "Tracy Fullerton lista os elementos que dão forma a qualquer jogo: jogadores, objetivos, procedimentos (as ações e a ordem em que acontecem), regras, recursos, conflito, limites e resultado. Tirar um deles costuma desmontar o jogo. Eles são o vocabulário do designer para descrever e comparar jogos."
+        "texto": "Todo jogo é formado pelos mesmos elementos formais: jogadores, objetivos, procedimentos (as ações e a ordem em que acontecem), regras, recursos, conflito, limites e resultado. Tirar um deles costuma desmontar o jogo. Eles são o vocabulário do designer para descrever e comparar jogos."
       },
       {
         "titulo": "Obstáculos desnecessários",
-        "texto": "Bernard Suits resume: jogar é a tentativa voluntária de superar obstáculos desnecessários. No golfe, o objetivo é pôr a bola no buraco, e o jeito mais fácil seria levá-la com a mão. A regra proíbe esse caminho e obriga a usar o taco. Aceitar essa ineficiência de propósito é o que faz o jogo existir."
+        "texto": "Jogar é a tentativa voluntária de superar obstáculos desnecessários. No golfe, o objetivo é pôr a bola no buraco, e o jeito mais fácil seria levá-la com a mão. A regra proíbe esse caminho e obriga a usar o taco. Aceitar essa ineficiência de propósito é o que faz o jogo existir."
       },
       {
         "titulo": "O jogo não é a experiência",
@@ -39,7 +39,7 @@
     "cartao": [
       {
         "titulo": "Três camadas de um jogo",
-        "texto": "O MDA (Hunicke, LeBlanc e Zubek, 2004) divide um jogo em três camadas: Mecânica, Dinâmica e Estética. Ele serve para pensar como uma regra escrita pelo designer vira, no fim, algo que o jogador sente."
+        "texto": "O MDA é um modelo que divide um jogo em três camadas: Mecânica, Dinâmica e Estética. Ele serve para pensar como uma regra escrita pelo designer vira, no fim, algo que o jogador sente."
       },
       {
         "titulo": "Mecânica",
@@ -51,7 +51,7 @@
       },
       {
         "titulo": "Estética",
-        "texto": "É a resposta emocional do jogador. O artigo lista oito tipos: Sensação (prazer de ver e ouvir), Fantasia (faz de conta), Narrativa (drama), Desafio (superar obstáculos), Companheirismo (estar com outros), Descoberta (explorar o desconhecido), Expressão (criar, personalizar, se expressar) e Submissão (jogo como passatempo relaxado)."
+        "texto": "É a resposta emocional do jogador. São oito tipos: Sensação (prazer de ver e ouvir), Fantasia (faz de conta), Narrativa (drama), Desafio (superar obstáculos), Companheirismo (estar com outros), Descoberta (explorar o desconhecido), Expressão (criar, personalizar, se expressar) e Submissão (jogo como passatempo relaxado)."
       },
       {
         "titulo": "Duas direções",
@@ -73,7 +73,7 @@
     "cartao": [
       {
         "titulo": "A mecânica central",
-        "texto": "Salen e Zimmerman chamam de mecânica central a atividade que o jogador repete várias vezes ao longo do jogo. Em Super Mario é pular; em Tetris, girar e encaixar peças. Se a mecânica central não for boa de repetir, nada em volta dela salva o jogo."
+        "texto": "A mecânica central é a atividade que o jogador repete várias vezes ao longo do jogo. Em Super Mario é pular; em Tetris, girar e encaixar peças. Se a mecânica central não for boa de repetir, nada em volta dela salva o jogo."
       },
       {
         "titulo": "O core loop",
@@ -85,15 +85,15 @@
       },
       {
         "titulo": "Diversão é aprender",
-        "texto": "Para Raph Koster, a diversão vem de aprender: o cérebro gosta de reconhecer e dominar padrões. Quando o jogador já domina tudo, o jogo fica chato; quando não consegue aprender nada, fica frustrante. O designer mantém padrões novos chegando."
+        "texto": "A diversão vem de aprender: o cérebro gosta de reconhecer e dominar padrões. Quando o jogador já domina tudo, o jogo fica chato; quando não consegue aprender nada, fica frustrante. O designer mantém padrões novos chegando."
       },
       {
         "titulo": "O canal do fluxo",
-        "texto": "Csikszentmihalyi chama de fluxo o estado de concentração total em que o desafio está à altura da habilidade. Desafio demais para a habilidade gera ansiedade; de menos, tédio. Bons jogos sobem o desafio junto com a habilidade de quem joga."
+        "texto": "Fluxo é o estado de concentração total em que o desafio está à altura da habilidade. Desafio demais para a habilidade gera ansiedade; de menos, tédio. Bons jogos sobem o desafio junto com a habilidade de quem joga."
       },
       {
         "titulo": "Quatro tipos de diversão",
-        "texto": "Nicole Lazzaro observou jogadores e separou quatro chaves: diversão difícil (superar desafios), diversão fácil (explorar por curiosidade), estado alterado (jogar para mudar como se sente) e diversão com pessoas (competir, cooperar, conviver). Jogos diferentes apostam em chaves diferentes."
+        "texto": "A diversão tem quatro chaves: diversão difícil (superar desafios), diversão fácil (explorar por curiosidade), estado alterado (jogar para mudar como se sente) e diversão com pessoas (competir, cooperar, conviver). Jogos diferentes apostam em chaves diferentes."
       }
     ]
   },
@@ -115,7 +115,7 @@
       },
       {
         "titulo": "Estratégia dominante",
-        "texto": "Uma estratégia dominante é uma opção melhor que as outras em qualquer situação. Quando ela existe, a escolha morre: todo mundo faz a mesma coisa. Schell recomenda caçar e eliminar estratégias dominantes, porque o que mantém o jogo vivo são escolhas com prós e contras."
+        "texto": "Uma estratégia dominante é uma opção melhor que as outras em qualquer situação. Quando ela existe, a escolha morre: todo mundo faz a mesma coisa. Por isso o designer caça e elimina estratégias dominantes: o que mantém o jogo vivo são escolhas com prós e contras."
       },
       {
         "titulo": "Pedra, papel e tesoura",
@@ -123,7 +123,7 @@
       },
       {
         "titulo": "Realimentação positiva e negativa",
-        "texto": "Na realimentação positiva, a vantagem gera mais vantagem e a partida se decide cedo. Na negativa, o jogo ajuda quem está atrás ou freia quem lidera, e a disputa fica apertada. Adams e Dormans mostram que a maioria dos jogos combina as duas: a positiva para a partida terminar, a negativa para ela não acabar cedo demais."
+        "texto": "Na realimentação positiva, a vantagem gera mais vantagem e a partida se decide cedo. Na negativa, o jogo ajuda quem está atrás ou freia quem lidera, e a disputa fica apertada. A maioria dos jogos combina as duas: a positiva para a partida terminar, a negativa para ela não acabar cedo demais."
       },
       {
         "titulo": "Medir e testar",
@@ -153,7 +153,7 @@
       },
       {
         "titulo": "Guiar o olhar",
-        "texto": "O jogador vai para onde o olho vai. Luz, cor, contraste e linhas da arquitetura apontam o caminho. Um marco grande visível de longe, como um castelo no horizonte, diz para onde ir; Totten chama esse recurso de weenie, como nos parques da Disney."
+        "texto": "O jogador vai para onde o olho vai. Luz, cor, contraste e linhas da arquitetura apontam o caminho. Um marco grande visível de longe, como um castelo no horizonte, diz para onde ir; esse recurso é chamado de weenie, como nos parques da Disney."
       },
       {
         "titulo": "Ritmo",

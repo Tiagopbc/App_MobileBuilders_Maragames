@@ -5,7 +5,7 @@
     "bloco": "forma_a",
     "dificuldade": "basico",
     "formato": "multipla_escolha",
-    "enunciado": "Para Jesse Schell, o que é game design?",
+    "enunciado": "O que é game design?",
     "alternativas": [
       {
         "id": "a",
@@ -40,7 +40,7 @@
     "bloco": "forma_a",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "Na definição de Salen e Zimmerman, um jogo é um sistema com conflito artificial, definido por regras, que termina em quê?",
+    "enunciado": "Um jogo é um sistema com conflito artificial, definido por regras, que termina em quê?",
     "alternativas": [
       {
         "id": "a",
@@ -75,7 +75,7 @@
     "bloco": "forma_a",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Para Bernard Suits, jogar é a tentativa voluntária de superar obstáculos desnecessários. No golfe, qual é o obstáculo desnecessário?",
+    "enunciado": "Jogar é a tentativa voluntária de superar obstáculos desnecessários. No golfe, qual é o obstáculo desnecessário?",
     "alternativas": [
       {
         "id": "a",
@@ -145,7 +145,7 @@
     "bloco": "forma_b",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "Por que, para Salen e Zimmerman, o conflito de um jogo é artificial?",
+    "enunciado": "Por que se diz que o conflito de um jogo é artificial?",
     "alternativas": [
       {
         "id": "a",
@@ -180,7 +180,7 @@
     "bloco": "forma_b",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "No xadrez, o objetivo é dar xeque-mate. Pela ideia de Bernard Suits, por que o jogador não pode simplesmente tirar o rei adversário do tabuleiro com a mão?",
+    "enunciado": "No xadrez, o objetivo é dar xeque-mate. Pela ideia de obstáculos desnecessários, por que o jogador não pode simplesmente tirar o rei adversário do tabuleiro com a mão?",
     "alternativas": [
       {
         "id": "a",
@@ -215,7 +215,7 @@
     "bloco": "pratica",
     "dificuldade": "basico",
     "formato": "multipla_escolha",
-    "enunciado": "Qual destes itens é um dos elementos formais de um jogo, segundo Tracy Fullerton?",
+    "enunciado": "Qual destes itens é um dos elementos formais de um jogo?",
     "alternativas": [
       {
         "id": "a",
@@ -320,7 +320,7 @@
     "bloco": "pratica",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Qual destas atividades não termina num resultado quantificável e, por isso, fica fora da definição de jogo de Salen e Zimmerman?",
+    "enunciado": "Qual destas atividades não termina num resultado quantificável e, por isso, fica fora da definição de jogo?",
     "alternativas": [
       {
         "id": "a",
@@ -705,7 +705,7 @@
     "bloco": "forma_a",
     "dificuldade": "basico",
     "formato": "multipla_escolha",
-    "enunciado": "Segundo Salen e Zimmerman, o que é a mecânica central de um jogo?",
+    "enunciado": "O que é a mecânica central de um jogo?",
     "alternativas": [
       {
         "id": "a",
@@ -775,7 +775,7 @@
     "bloco": "forma_a",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Um jogador domina completamente um jogo de quebra-cabeça e passa a achá-lo chato. Pela teoria de Koster, por quê?",
+    "enunciado": "Um jogador domina completamente um jogo de quebra-cabeça e passa a achá-lo chato. Por quê?",
     "alternativas": [
       {
         "id": "a",
@@ -915,7 +915,7 @@
     "bloco": "pratica",
     "dificuldade": "basico",
     "formato": "multipla_escolha",
-    "enunciado": "Um jogador passa horas explorando um mundo aberto só por curiosidade, sem seguir objetivo nenhum. Que chave de diversão de Lazzaro é essa?",
+    "enunciado": "Um jogador passa horas explorando um mundo aberto só por curiosidade, sem seguir objetivo nenhum. Que chave de diversão é essa?",
     "alternativas": [
       {
         "id": "a",
@@ -1020,7 +1020,7 @@
     "bloco": "pratica",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Nos testes, jogadores largam o jogo depois de 20 minutos, quando o combate vira repetição sem novidade. Pela ideia de Koster, que ajuste ataca a causa?",
+    "enunciado": "Nos testes, jogadores largam o jogo depois de 20 minutos, quando o combate vira repetição sem novidade. Que ajuste ataca a causa?",
     "alternativas": [
       {
         "id": "a",
