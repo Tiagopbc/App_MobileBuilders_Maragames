@@ -123,7 +123,6 @@ export const TEXTOS = {
     resultado: 'Resultado',
     xpDoBloco: 'XP do bloco',
     comoVoceRespondeu: 'Como você respondeu',
-    acertoPorTopico: 'Acerto por tópico',
     acertoPorConfianca: 'Acerto por confiança',
     revisarPrimeiro: 'O que revisar primeiro',
     nadaARevisar: 'Nada a revisar: tudo o que você respondeu está firme.',

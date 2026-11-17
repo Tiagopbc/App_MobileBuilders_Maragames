@@ -63,7 +63,7 @@ export function PraticaFeita({ relatorio, rotulo, aoContinuar }: PraticaFeitaPro
     return (
         <>
             <ScrollView contentContainerStyle={styles.conteudo}>
-                <ResultadoDoBloco relatorio={relatorio} medido={false} />
+                <ResultadoDoBloco relatorio={relatorio} />
             </ScrollView>
             <View style={[styles.rodape, { borderTopColor: theme.borda }]}>
                 <BotaoPrincipal rotulo={rotulo} onPress={aoContinuar} />

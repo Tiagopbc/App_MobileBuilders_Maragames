@@ -6,6 +6,8 @@ import { ordemDasAlternativas } from '@/lib/embaralhar';
 import type { RepositorioFalso } from '@/test/repositorio-falso';
 import type { BlocoQuestao, Fase, FormaPre, Question } from '@/types/domain';
 
+import { ResultadoDoBloco } from '@/components/resultado/resultado-do-bloco';
+
 import { TelaDoBloco } from '../tela-do-bloco';
 
 // A tela só enxerga a interface ProgressRepository; aqui ela recebe a versão em memória,
@@ -72,6 +74,8 @@ async function abrir(fase: Fase, opcoes: { formaPre?: FormaPre | null; topicId?:
             aoSair={aoSair}
             aoAbrirRegras={aoAbrirRegras}
             relogio={() => agora}
+            // Na lição, o fim de cada passo é da rota; aqui ele mostra o resultado do bloco.
+            fim={(relatorio) => <ResultadoDoBloco relatorio={relatorio} />}
         />
     );
 }
@@ -584,13 +588,6 @@ describe('o resultado no fim do bloco', () => {
         expect(screen.queryByText('Enunciado de mda_p1')).not.toBeOnTheScreen();
     });
 
-    it('na prática, não mostra acerto por tópico nem por confiança', async () => {
-        await terminarPratica();
-
-        expect(screen.queryByText('Acerto por tópico')).not.toBeOnTheScreen();
-        expect(screen.queryByText('Acerto por confiança')).not.toBeOnTheScreen();
-    });
-
     it('com tudo firme, diz que não há o que revisar', async () => {
         await abrir('pratica');
         await screen.findByText('Enunciado de mda_p1');
@@ -603,49 +600,6 @@ describe('o resultado no fim do bloco', () => {
         expect(await screen.findByText('Nada a revisar: tudo o que você respondeu está firme.')).toBeOnTheScreen();
     });
 
-    describe.each(['pre', 'pos', 'reteste'] as const)('no bloco medido %s', (fase) => {
-        const [primeira, segunda] = fase === 'pre' ? ['mda_a1', 'mda_a2'] : ['mda_b1', 'mda_b2'];
-
-        // Acerto com palpite (Frágil, +1) e erro com certeza (Ponto cego, −4).
-        async function terminar() {
-            await abrir(fase);
-            await screen.findByText(`Enunciado de ${primeira}`);
-            await responder('Certa', 'Palpite');
-            await screen.findByText(`Enunciado de ${segunda}`);
-            await responder('Errada C', 'Tenho certeza');
-            await screen.findByText('Resultado');
-        }
-
-        it('o XP e os quadrantes aparecem agora, no fim', async () => {
-            await terminar();
-
-            expect(screen.getByText('−3 XP')).toBeOnTheScreen();
-            expect(screen.getByLabelText('Ponto cego: 1')).toBeOnTheScreen();
-            expect(screen.getByLabelText('Frágil: 1')).toBeOnTheScreen();
-        });
-
-        it('mostra o acerto por tópico e por nível de confiança', async () => {
-            await terminar();
-
-            expect(screen.getByText('Acerto por tópico')).toBeOnTheScreen();
-            expect(screen.getByLabelText('Framework MDA: 1 de 2')).toBeOnTheScreen();
-            expect(screen.getByText('Acerto por confiança')).toBeOnTheScreen();
-            expect(screen.getByLabelText('Palpite: 1 de 1')).toBeOnTheScreen();
-            expect(screen.getByLabelText('Tenho dúvida: sem respostas')).toBeOnTheScreen();
-            expect(screen.getByLabelText('Tenho certeza: 0 de 1')).toBeOnTheScreen();
-        });
-
-        it('manda revisar por tópico, sem revelar nenhuma questão nem gabarito', async () => {
-            await terminar();
-
-            expect(screen.getByText('O que revisar primeiro')).toBeOnTheScreen();
-            expect(screen.getByText('1 ponto cego · 1 frágil')).toBeOnTheScreen();
-            expect(screen.queryByText(/Enunciado de/)).not.toBeOnTheScreen();
-            expect(screen.queryByText(/Certa de|Errada . de/)).not.toBeOnTheScreen();
-            expect(screen.queryByText(/Por que/)).not.toBeOnTheScreen();
-        });
-    });
-
     it('reabrir um bloco já concluído mostra o mesmo resultado', async () => {
         await terminarPratica();
         await screen.unmount();
@@ -656,14 +610,6 @@ describe('o resultado no fim do bloco', () => {
         expect(screen.getByText('−1 XP')).toBeOnTheScreen();
         expect(screen.getByText('Enunciado de mda_p2')).toBeOnTheScreen();
         expect(repo.respostas).toHaveLength(2);
-    });
-
-    it('"Voltar ao início" sai do resultado', async () => {
-        await terminarPratica();
-
-        await userEvent.setup().press(screen.getByRole('button', { name: 'Voltar ao início' }));
-
-        expect(aoSair).toHaveBeenCalledTimes(1);
     });
 });
 
