@@ -39,7 +39,7 @@ import { gerador, hash, ordemDasAlternativas } from './embaralhar';
 import type { DadosDaExportacao, PerfilDoExport, TentativaDoExport } from './exportacao';
 import { DIAS_ATE_A_REVISAO } from './licao';
 import { modulosDosTopicos } from './perfil';
-import { perfilDeResposta, type PerfilDeResposta } from './perfis-de-resposta';
+import { PERFIS_DE_RESPOSTA, perfilDeResposta, type PerfilDeResposta } from './perfis-de-resposta';
 
 export type TipoDeAluno = 'domina' | 'aluno_do_curso' | 'com_dificuldade' | 'chutador' | 'confiante_demais' | 'inseguro' | 'desiste_cedo';
 
@@ -609,15 +609,8 @@ export function simularTurma(conteudo: { topicos: readonly Topico[]; questoes: r
  * desenhados junto com os perfis, mas os desvios dela mostram onde o classificador confunde.
  */
 export function matrizDeConfusao(turma: Turma): Record<TipoDeAluno, Record<PerfilDeResposta, number>> {
-    const vazia = (): Record<PerfilDeResposta, number> => ({
-        domina: 0,
-        em_progresso: 0,
-        inseguro: 0,
-        com_dificuldade: 0,
-        confiante_demais: 0,
-        chuta: 0,
-        poucas_respostas: 0,
-    });
+    const vazia = () =>
+        Object.fromEntries((Object.keys(PERFIS_DE_RESPOSTA) as PerfilDeResposta[]).map((p) => [p, 0])) as Record<PerfilDeResposta, number>;
     const matriz = Object.fromEntries(TIPOS.map((t) => [t, vazia()])) as Record<TipoDeAluno, Record<PerfilDeResposta, number>>;
     for (const perfil of turma.dados.perfis) {
         const delas = turma.dados.respostas.filter((r) => r.uid === perfil.uid && r.fase !== 'reteste');

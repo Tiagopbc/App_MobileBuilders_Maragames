@@ -1,38 +1,13 @@
 import { CoresDoRelatorio } from '../../constants/cores-do-relatorio';
 import { Colors } from '../../constants/theme';
-import type { Answer, BlocoQuestao, Confianca, Fase, Question, Topico } from '../../types/domain';
+import type { Answer, Confianca, Fase, Question, Topico } from '../../types/domain';
 import { exportarDados, type DadosDaExportacao, type PerfilDoExport } from '../exportacao';
 import { AMOSTRA_MINIMA, MINIMO_DE_PESSOAS_POR_GRUPO, indicadoresDoRelatorio, relatorioHtml, type GrupoDoRelatorio, type Indicadores } from '../relatorio';
+import { em, questao } from '../../test/fabrica';
 
 // O relatório é a página que vai para a Beast Maragames (item 23): só números em conjunto,
 // tirados das mesmas contas da exportação. Estes testes montam três pessoas e conferem as
 // contas, o que a página mostra e o que ela não pode mostrar.
-
-/** Horário de São Luís (UTC−3) em milissegundos. Ex.: em('2026-10-30 20:00'). */
-function em(dataHora: string): number {
-    return Date.parse(`${dataHora.replace(' ', 'T')}:00-03:00`);
-}
-
-function questao(id: string, topicId: string, bloco: BlocoQuestao, order: number): Question {
-    return {
-        id,
-        lessonId: `licao_${topicId}`,
-        topicId,
-        order,
-        bloco,
-        dificuldade: 'basico',
-        formato: 'multipla_escolha',
-        enunciado: `Enunciado de ${id}`,
-        alternativas: [
-            { id: 'a', texto: 'A certa', correta: true, explicacao: '' },
-            { id: 'b', texto: 'O distrator B', correta: false, explicacao: '' },
-            { id: 'c', texto: 'O distrator C', correta: false, explicacao: '' },
-            { id: 'd', texto: 'O distrator D', correta: false, explicacao: '' },
-        ],
-        fonte: null,
-        versaoConteudo: 'v1',
-    };
-}
 
 // Dois tópicos de ciclo completo, cada um num módulo: duas questões por forma e uma de prática.
 const QUESTOES: Question[] = [
