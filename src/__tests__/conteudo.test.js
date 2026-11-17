@@ -56,21 +56,54 @@ describe('o conteúdo do repositório', () => {
         expect(maisLonga.length).toBeLessThanOrEqual(Math.floor(questoes.length * 0.3));
     });
 
-    // O cartão apresenta o conceito e a questão cobra o conceito. De quem é a ideia fica no campo
-    // fonte da questão e, depois da resposta, nas explicações.
+    // O cartão apresenta o conceito e a questão cobra o conceito, para o público geral: de quem é a
+    // ideia fica só no campo fonte da questão.
     const AUTORES =
-        /Schell|Salen|Zimmerman|Fullerton|Suits|Hunicke|LeBlanc|Zubek|Koster|Csikszentmihalyi|Lazzaro|Adams|Dormans|Totten|\bo artigo\b/i;
+        /Schell|Salen|Zimmerman|Fullerton|Suits|Hunicke|LeBlanc|Zubek|Koster|Csikszentmihalyi|Lazzaro|Adams|Dormans|Totten|Nintendo|\bartigo\b|\bautores?\b/i;
+    const JOGADOR = /\bjogador(es)?\b|(?<!pessoas? )\bjogadoras?\b/i;
+    const textosDasQuestoes = (q) => [
+        { onde: 'enunciado', texto: q.enunciado },
+        ...q.alternativas.flatMap((a) => [
+            { onde: `${a.id}/texto`, texto: a.texto },
+            { onde: `${a.id}/explicacao`, texto: a.explicacao },
+        ]),
+    ];
+    const textosDosCartoes = topicos.flatMap((t) =>
+        t.cartao.flatMap((c) => [
+            { onde: `${t.topicId}: ${c.titulo}`, texto: `${c.titulo} ${c.texto}` },
+        ])
+    );
 
     it('nenhum cartão cita autor', () => {
-        const comAutor = topicos.flatMap((t) =>
-            t.cartao.filter((s) => AUTORES.test(`${s.titulo} ${s.texto}`)).map((s) => `${t.topicId}: ${s.titulo}`)
-        );
-
-        expect(comAutor).toEqual([]);
+        expect(textosDosCartoes.filter((c) => AUTORES.test(c.texto)).map((c) => c.onde)).toEqual([]);
     });
 
-    it('nenhum enunciado cita autor', () => {
-        expect(questoes.filter((q) => AUTORES.test(q.enunciado)).map((q) => q.id)).toEqual([]);
+    it('nenhum enunciado, alternativa ou explicação cita autor', () => {
+        const com = questoes.flatMap((q) =>
+            textosDasQuestoes(q).filter((t) => AUTORES.test(t.texto)).map((t) => `${q.id}/${t.onde}`)
+        );
+
+        expect(com).toEqual([]);
+    });
+
+    it('os textos dizem "pessoa jogadora", nunca "jogador"', () => {
+        const comJogador = [
+            ...textosDosCartoes.filter((c) => JOGADOR.test(c.texto)).map((c) => c.onde),
+            ...questoes.flatMap((q) =>
+                textosDasQuestoes(q).filter((t) => JOGADOR.test(t.texto)).map((t) => `${q.id}/${t.onde}`)
+            ),
+        ];
+
+        expect(comJogador).toEqual([]);
+    });
+
+    // O ritmo de quiz: a ideia, um exemplo e, no fim, uma pergunta aberta para a pessoa pensar.
+    it('todo cartão termina com uma linha "Pense: ...?" separada do resto', () => {
+        const sem = topicos.flatMap((t) =>
+            t.cartao.filter((c) => !/\n\nPense: [^\n]+\?$/.test(c.texto)).map((c) => `${t.topicId}: ${c.titulo}`)
+        );
+
+        expect(sem).toEqual([]);
     });
 
     it('toda questão diz de onde veio', () => {

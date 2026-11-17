@@ -5,7 +5,7 @@ import { escolherTema } from '@/lib/tema';
 
 import { CartaDeJogador } from '../carta-de-jogador';
 
-// A carta de jogador: uma carta de jogo com a arte do lobinho sobre dois anéis, a placa com o apelido e o
+// A carta da pessoa jogadora: uma carta de jogo com a arte do lobinho sobre dois anéis, a placa com o apelido e o
 // tipo, e os três números da pessoa. É a mesma carta de jogo do cartão de conceito: fundo do cartão,
 // contorno e relevo embaixo. Ela aparece na boas-vindas e vai aparecer em outros momentos do app.
 
@@ -63,7 +63,7 @@ describe.each([
     });
 });
 
-describe('a carta de jogador', () => {
+describe('a carta da pessoa jogadora', () => {
     it('diz o apelido e o tipo da carta na placa', async () => {
         await render(<CartaDeJogador {...base} />);
 

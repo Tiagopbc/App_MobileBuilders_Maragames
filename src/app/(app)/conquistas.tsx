@@ -5,7 +5,7 @@ import { useVoltarOu } from '@/hooks/use-voltar-ou';
 import { conquistasDoAluno } from '@/lib/conquistas';
 import { useSession } from '@/lib/session';
 
-// As Conquistas: /conquistas, aberta pelo número de medalhas da carta de jogador.
+// As Conquistas: /conquistas, aberta pelo número de medalhas da carta da pessoa jogadora.
 export default function ConquistasScreen() {
     const voltar = useVoltarOu('/');
     const { user, perfil } = useSession();

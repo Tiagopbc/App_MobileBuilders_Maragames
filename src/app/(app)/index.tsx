@@ -12,7 +12,7 @@ export default function BoasVindasScreen() {
     const router = useRouter();
     const { user, perfil } = useSession();
 
-    // A carta de jogador lê a sequência e o XP das mesmas respostas do Progresso.
+    // A carta da pessoa jogadora lê a sequência e o XP das mesmas respostas do Progresso.
     const formaPre = perfil?.formaPre ?? null;
     const { estado, recarregar } = useLicoes({ uid: user?.uid ?? '', formaPre });
 

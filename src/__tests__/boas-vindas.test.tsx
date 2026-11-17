@@ -196,7 +196,7 @@ describe('a tela de boas-vindas', () => {
     });
 });
 
-describe('a carta de jogador', () => {
+describe('a carta da pessoa jogadora', () => {
     it('mostra a pessoa jogadora, pelo apelido, com a sequência e o XP', async () => {
         respondidaHoje();
         await abrirEm('/');

@@ -3,7 +3,7 @@ const { join } = require('path');
 
 const { lerPng } = require('../test/png');
 
-// O lobinho da carta de jogador tem dois dentes. No arquivo original o branco deles estava quase
+// O lobinho da carta da pessoa jogadora tem dois dentes. No arquivo original o branco deles estava quase
 // transparente, e o fundo escuro da carta aparecia por dentro: os dentes saíam escuros. Este teste
 // garante que o interior de cada dente é opaco e branco, como o resto do lobinho que não é vazado.
 

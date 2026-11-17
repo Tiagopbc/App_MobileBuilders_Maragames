@@ -9,23 +9,23 @@
     "cartao": [
       {
         "titulo": "Decidir o que o jogo deve ser",
-        "texto": "Game design é o ato de decidir o que um jogo deve ser: quais são as regras, os objetivos, os desafios e o que o jogador pode fazer. Programar, desenhar e compor são outras áreas; o designer trabalha com todas elas, mas a decisão sobre como o jogo funciona é dele."
+        "texto": "Game design é decidir o que um jogo deve ser: as regras, os objetivos, os desafios e o que a pessoa jogadora pode fazer. Programar, desenhar e compor são outras áreas; a decisão sobre como o jogo funciona é do designer. Exemplo: definir que o personagem começa com 3 vidas é design; desenhar o personagem é arte.\n\nPense: quem decide quanto tempo dura uma partida?"
       },
       {
         "titulo": "O que é um jogo",
-        "texto": "Um jogo é um sistema em que jogadores entram num conflito artificial, definido por regras, que termina num resultado quantificável. Artificial quer dizer separado da vida comum: o conflito existe dentro do jogo. Quantificável quer dizer que, no fim, dá para dizer quem ganhou, quem perdeu ou quantos pontos cada um fez."
+        "texto": "Um jogo é um sistema em que pessoas jogadoras entram num conflito artificial, definido por regras, que termina num resultado quantificável. Artificial é separado da vida comum; quantificável é poder dizer quem ganhou, quem perdeu ou quantos pontos cada um fez. Exemplo: no futebol, o conflito só existe dentro do campo e termina num placar.\n\nPense: que resultado quantificável tem o seu jogo favorito?"
       },
       {
         "titulo": "Os elementos formais",
-        "texto": "Todo jogo é formado pelos mesmos elementos formais: jogadores, objetivos, procedimentos (as ações e a ordem em que acontecem), regras, recursos, conflito, limites e resultado. Tirar um deles costuma desmontar o jogo. Eles são o vocabulário do designer para descrever e comparar jogos."
+        "texto": "Todo jogo é formado pelos mesmos elementos formais: pessoas jogadoras, objetivos, procedimentos (as ações e a ordem em que acontecem), regras, recursos, conflito, limites e resultado. Tirar um deles costuma desmontar o jogo. Exemplo: no jogo da velha, as casas do tabuleiro são os recursos e marcar uma casa por vez é o procedimento.\n\nPense: que elemento você tiraria do futebol para ele deixar de funcionar?"
       },
       {
         "titulo": "Obstáculos desnecessários",
-        "texto": "Jogar é a tentativa voluntária de superar obstáculos desnecessários. No golfe, o objetivo é pôr a bola no buraco, e o jeito mais fácil seria levá-la com a mão. A regra proíbe esse caminho e obriga a usar o taco. Aceitar essa ineficiência de propósito é o que faz o jogo existir."
+        "texto": "Jogar é a tentativa voluntária de superar obstáculos desnecessários. A regra proíbe o caminho mais fácil, e aceitar essa ineficiência de propósito é o que faz o jogo existir. Exemplo: no golfe, o objetivo é pôr a bola no buraco, e o jeito mais fácil seria levá-la com a mão; a regra obriga a usar o taco.\n\nPense: que outro jogo só funciona porque proíbe o caminho mais fácil?"
       },
       {
         "titulo": "O jogo não é a experiência",
-        "texto": "O designer não controla diretamente o que o jogador sente. Ele controla o jogo: regras, desafios, recursos e ritmo. A experiência acontece na cabeça de quem joga, e muda de pessoa para pessoa. Por isso o trabalho do designer é criar as condições para uma experiência e testar com gente de verdade se ela aparece."
+        "texto": "O designer não controla diretamente o que a pessoa jogadora sente. Ele controla o jogo: regras, desafios, recursos e ritmo. A experiência acontece na cabeça de quem joga e muda de pessoa para pessoa; por isso ele cria as condições e testa com gente de verdade se ela aparece.\n\nPense: o mesmo susto diverte uma pessoa e irrita outra; o que o designer faz com isso?"
       }
     ]
   },
@@ -39,27 +39,27 @@
     "cartao": [
       {
         "titulo": "Três camadas de um jogo",
-        "texto": "O MDA é um modelo que divide um jogo em três camadas: Mecânica, Dinâmica e Estética. Ele serve para pensar como uma regra escrita pelo designer vira, no fim, algo que o jogador sente."
+        "texto": "O MDA divide um jogo em três camadas: Mecânica, Dinâmica e Estética. Ele mostra como uma regra escrita pelo designer vira, no fim, algo que a pessoa jogadora sente. Exemplo: a regra de munição limitada acaba virando tensão durante a partida.\n\nPense: de onde vem a emoção que você sente ao jogar?"
       },
       {
         "titulo": "Mecânica",
-        "texto": "São as regras e os dados do jogo, definidos antes da partida: quanto custa um item, quantos pulos o personagem tem, quanto tempo dura uma rodada. É a única camada que o designer controla diretamente."
+        "texto": "Mecânica são as regras e os dados do jogo, definidos antes da partida. É a única camada que o designer controla diretamente. Exemplo: quanto custa um item, quantos pulos o personagem tem, quanto tempo dura uma rodada.\n\nPense: qual é a mecânica mais importante do último jogo que você jogou?"
       },
       {
         "titulo": "Dinâmica",
-        "texto": "É o comportamento que surge quando as mecânicas entram em ação com as escolhas dos jogadores, ao longo da partida. Ninguém escreve uma dinâmica: ela aparece. Exemplo: num jogo de tiro, se a regra dá vantagem a quem fica parado, surgem jogadores escondidos esperando os outros. Uma cadeia completa: a regra de munição limitada (mecânica) faz o jogador economizar tiros e evitar combates (dinâmica), o que gera tensão e desafio (estética)."
+        "texto": "Dinâmica é o comportamento que surge quando as mecânicas entram em ação com as escolhas das pessoas jogadoras, ao longo da partida. Ninguém escreve uma dinâmica: ela aparece. Exemplo: a regra de munição limitada (mecânica) faz a pessoa economizar tiros e evitar combates (dinâmica), o que gera tensão e desafio (estética).\n\nPense: que comportamento inesperado já apareceu numa partida sua sem nenhuma regra mandar?"
       },
       {
         "titulo": "Estética",
-        "texto": "É a resposta emocional do jogador. São oito tipos: Sensação (prazer de ver e ouvir), Fantasia (faz de conta), Narrativa (drama), Desafio (superar obstáculos), Companheirismo (estar com outros), Descoberta (explorar o desconhecido), Expressão (criar, personalizar, se expressar) e Submissão (jogo como passatempo relaxado)."
+        "texto": "Estética é a resposta emocional da pessoa jogadora. São oito tipos: Sensação (prazer de ver e ouvir), Fantasia (faz de conta), Narrativa (drama), Desafio (superar obstáculos), Companheirismo (estar com outros), Descoberta (explorar o desconhecido), Expressão (criar, personalizar, se expressar) e Submissão (jogo como passatempo relaxado).\n\nPense: qual desses tipos mais prende você num jogo?"
       },
       {
         "titulo": "Duas direções",
-        "texto": "O designer constrói na ordem Mecânica → Dinâmica → Estética. O jogador percebe ao contrário: sente primeiro a emoção, depois nota os padrões da partida e só por último entende as regras. Para mudar o que o jogador sente, o designer ajusta mecânicas e observa as dinâmicas que elas geram."
+        "texto": "O designer constrói na ordem Mecânica, Dinâmica, Estética. A pessoa jogadora percebe ao contrário: sente primeiro a emoção, depois nota os padrões da partida e só por último entende as regras. Para mudar o que ela sente, o designer ajusta as mecânicas e observa as dinâmicas que elas geram.\n\nPense: por que o designer não consegue mexer direto na emoção?"
       },
       {
         "titulo": "Realimentação",
-        "texto": "Algumas combinações de regras criam bola de neve: quem ganha recebe recursos que o fazem ganhar mais, e a disputa perde a tensão. Esse efeito não está escrito em nenhuma regra: é uma dinâmica. Para equilibrar, o designer cria mecânicas que ajudam quem está atrás ou freiam quem lidera. Do mesmo jeito, regras que fazem um jogador precisar do outro tendem a gerar companheirismo."
+        "texto": "Algumas combinações de regras criam bola de neve: quem ganha recebe recursos que o fazem ganhar mais, e a disputa perde a tensão. Isso não está escrito em nenhuma regra: é uma dinâmica. Para equilibrar, o designer cria mecânicas que ajudam quem está atrás ou freiam quem lidera. Já regras que fazem uma pessoa precisar da outra tendem a gerar companheirismo.\n\nPense: que ajuda você daria a quem está perdendo, sem tirar a graça de quem está ganhando?"
       }
     ]
   },
@@ -73,27 +73,27 @@
     "cartao": [
       {
         "titulo": "A mecânica central",
-        "texto": "A mecânica central é a atividade que o jogador repete várias vezes ao longo do jogo. Em Super Mario é pular; em Tetris, girar e encaixar peças. Se a mecânica central não for boa de repetir, nada em volta dela salva o jogo."
+        "texto": "A mecânica central é a atividade que a pessoa jogadora repete várias vezes ao longo do jogo. Se ela não for boa de repetir, nada em volta dela salva o jogo. Exemplo: em Super Mario é pular; em Tetris, girar e encaixar peças.\n\nPense: qual é a ação que você mais repete no seu jogo favorito?"
       },
       {
         "titulo": "O core loop",
-        "texto": "O core loop é o ciclo que se fecha em volta da mecânica central: agir, ver o resultado, ganhar algo e usar o que ganhou para agir de novo. Em Stardew Valley: plantar, colher, vender e comprar sementes melhores. Cada volta alimenta a próxima."
+        "texto": "O core loop é o ciclo que se fecha em volta da mecânica central: agir, ver o resultado, ganhar algo e usar o que ganhou para agir de novo. Cada volta alimenta a próxima. Exemplo: em Stardew Valley, plantar, colher, vender e comprar sementes melhores.\n\nPense: o que faz você querer dar mais uma volta num jogo?"
       },
       {
         "titulo": "Loops de vários tamanhos",
-        "texto": "Um jogo tem loops dentro de loops. O de segundos é a ação (mirar e atirar). O de minutos é a partida ou a fase. O de dias e semanas é a progressão (subir de nível, desbloquear personagens). Se um deles quebra, o jogador sente que algo perdeu o sentido."
+        "texto": "Um jogo tem loops dentro de loops. O de segundos é a ação (mirar e atirar). O de minutos é a partida ou a fase. O de dias e semanas é a progressão (subir de nível, desbloquear personagens). Se um deles quebra, a pessoa sente que algo perdeu o sentido.\n\nPense: em qual tamanho de loop você mais se perde num jogo?"
       },
       {
         "titulo": "Diversão é aprender",
-        "texto": "A diversão vem de aprender: o cérebro gosta de reconhecer e dominar padrões. Quando o jogador já domina tudo, o jogo fica chato; quando não consegue aprender nada, fica frustrante. O designer mantém padrões novos chegando."
+        "texto": "A diversão vem de aprender: o cérebro gosta de reconhecer e dominar padrões. Quando a pessoa já domina tudo, o jogo fica chato; quando não consegue aprender nada, fica frustrante. O designer mantém padrões novos chegando.\n\nPense: em que momento um jogo que você amava ficou repetitivo?"
       },
       {
         "titulo": "O canal do fluxo",
-        "texto": "Fluxo é o estado de concentração total em que o desafio está à altura da habilidade. Desafio demais para a habilidade gera ansiedade; de menos, tédio. Bons jogos sobem o desafio junto com a habilidade de quem joga."
+        "texto": "Fluxo é o estado de concentração total em que o desafio está à altura da habilidade. Desafio demais para a habilidade gera ansiedade; de menos, tédio. Bons jogos sobem o desafio junto com a habilidade de quem joga.\n\nPense: já houve um jogo em que o tempo passou sem você perceber?"
       },
       {
         "titulo": "Quatro tipos de diversão",
-        "texto": "A diversão tem quatro chaves: diversão difícil (superar desafios), diversão fácil (explorar por curiosidade), estado alterado (jogar para mudar como se sente) e diversão com pessoas (competir, cooperar, conviver). Jogos diferentes apostam em chaves diferentes."
+        "texto": "A diversão tem quatro chaves: diversão difícil (superar desafios), diversão fácil (explorar por curiosidade), estado alterado (jogar para mudar como se sente) e diversão com pessoas (competir, cooperar, conviver). Jogos diferentes apostam em chaves diferentes.\n\nPense: qual chave pesa mais no jogo que você mais joga?"
       }
     ]
   },
@@ -107,27 +107,27 @@
     "cartao": [
       {
         "titulo": "Para que serve balancear",
-        "texto": "Balancear é ajustar números e regras para que o jogo seja justo, desafiador na medida certa e cheio de escolhas que valem a pena. Um jogo desbalanceado não precisa ter bug: basta uma opção valer tanto mais que as outras que ninguém escolhe mais nada."
+        "texto": "Balancear é ajustar números e regras para que o jogo seja justo, desafiador na medida certa e cheio de escolhas que valem a pena. Exemplo: um jogo sem nenhum bug pode estar desbalanceado, se uma opção vale tanto mais que as outras que ninguém escolhe mais nada.\n\nPense: o que faz uma escolha ser de verdade num jogo?"
       },
       {
         "titulo": "Simétrico e assimétrico",
-        "texto": "No balanceamento simétrico, todos começam com os mesmos recursos e as mesmas regras, como no xadrez. No assimétrico, os lados são diferentes, como as raças de StarCraft. A assimetria é mais rica, mas exige que as diferenças se compensem nas chances de vencer."
+        "texto": "No balanceamento simétrico, todos começam com os mesmos recursos e as mesmas regras, como no xadrez. No assimétrico, os lados são diferentes, como as raças de StarCraft. A assimetria é mais rica, mas as diferenças precisam se compensar nas chances de vencer.\n\nPense: como você mediria se dois lados diferentes são justos?"
       },
       {
         "titulo": "Estratégia dominante",
-        "texto": "Uma estratégia dominante é uma opção melhor que as outras em qualquer situação. Quando ela existe, a escolha morre: todo mundo faz a mesma coisa. Por isso o designer caça e elimina estratégias dominantes: o que mantém o jogo vivo são escolhas com prós e contras."
+        "texto": "Uma estratégia dominante é uma opção melhor que as outras em qualquer situação. Quando ela existe, a escolha morre: todo mundo faz a mesma coisa. Por isso o designer caça e elimina essas estratégias: o que mantém o jogo vivo são escolhas com prós e contras.\n\nPense: qual opção de um jogo seu você escolhe sempre, sem pensar?"
       },
       {
         "titulo": "Pedra, papel e tesoura",
-        "texto": "Um jeito clássico de evitar a opção dominante é o balanceamento intransitivo: cada opção vence uma e perde para outra, como pedra, papel e tesoura. Os tipos de Pokémon funcionam assim: fogo vence planta, planta vence água, água vence fogo."
+        "texto": "Um jeito clássico de evitar a opção dominante é o balanceamento intransitivo: cada opção vence uma e perde para outra. Exemplo: pedra, papel e tesoura; ou os tipos de Pokémon, em que fogo vence planta, planta vence água e água vence fogo.\n\nPense: que trio de opções você montaria para um jogo de luta?"
       },
       {
         "titulo": "Realimentação positiva e negativa",
-        "texto": "Na realimentação positiva, a vantagem gera mais vantagem e a partida se decide cedo. Na negativa, o jogo ajuda quem está atrás ou freia quem lidera, e a disputa fica apertada. A maioria dos jogos combina as duas: a positiva para a partida terminar, a negativa para ela não acabar cedo demais."
+        "texto": "Na realimentação positiva, a vantagem gera mais vantagem e a partida se decide cedo. Na negativa, o jogo ajuda quem está atrás ou freia quem lidera, e a disputa fica apertada. A maioria dos jogos combina as duas: a positiva para a partida terminar, a negativa para ela não acabar cedo demais.\n\nPense: em que jogo você já virou uma partida que parecia perdida?"
       },
       {
         "titulo": "Medir e testar",
-        "texto": "Balanceamento se faz com números e teste. O designer acompanha dados como a taxa de vitória de cada personagem e quanto cada opção é escolhida, ajusta um valor por vez e testa de novo. Uma opção que vence muito e é muito escolhida costuma estar forte demais."
+        "texto": "Balanceamento se faz com números e testes. O designer acompanha dados, como a taxa de vitória de cada personagem e quanto cada opção é escolhida, ajusta um valor por vez e testa de novo. Uma opção que vence muito e é muito escolhida costuma estar forte demais.\n\nPense: por que ajustar um valor por vez, e não vários de uma vez?"
       }
     ]
   },
@@ -141,27 +141,27 @@
     "cartao": [
       {
         "titulo": "O que é level design",
-        "texto": "Level design é montar os espaços e os desafios onde as mecânicas acontecem. Uma boa fase faz três coisas: ensina uma ideia, testa se o jogador aprendeu e, de vez em quando, surpreende. O mesmo pulo pode ser fácil ou dramático dependendo de onde o designer põe o abismo."
+        "texto": "Level design é montar os espaços e os desafios onde as mecânicas acontecem. Uma boa fase faz três coisas: ensina uma ideia, testa se a pessoa aprendeu e, de vez em quando, surpreende. Exemplo: o mesmo pulo pode ser fácil ou dramático, dependendo de onde o designer põe o abismo.\n\nPense: o que muda num pulo quando o abismo fica mais largo?"
       },
       {
         "titulo": "Ensinar sem texto",
-        "texto": "A fase 1-1 de Super Mario Bros. é o exemplo clássico. O primeiro Goomba vem andando num trecho aberto, e o jogador aprende a pular por cima dele. O primeiro cogumelo sai de um bloco e rola até o jogador. Nada disso precisa de texto: o espaço ensina."
+        "texto": "O espaço pode ensinar sem texto. Exemplo clássico, a fase 1-1 de Super Mario Bros.: o primeiro Goomba vem andando num trecho aberto, e a pessoa aprende a pular por cima dele; o primeiro cogumelo sai de um bloco e rola até ela.\n\nPense: o que você aprenderia num jogo só olhando o cenário?"
       },
       {
         "titulo": "Apresentar, desenvolver, virar, concluir",
-        "texto": "Nas fases de Super Mario 3D Land, a Nintendo usou uma estrutura em quatro tempos, inspirada no kishōtenketsu: apresentar uma mecânica num lugar seguro, desenvolvê-la com desafios maiores, dar uma reviravolta que muda o que o jogador sabia e concluir. Cada fase gira em torno de uma ideia."
+        "texto": "Uma estrutura em quatro tempos, inspirada no kishōtenketsu, organiza fases como as de Super Mario 3D Land: apresentar uma mecânica num lugar seguro, desenvolvê-la com desafios maiores, dar uma reviravolta que muda o que a pessoa sabia e concluir. Cada fase gira em torno de uma ideia.\n\nPense: qual seria a reviravolta de uma fase só de portas e chaves?"
       },
       {
         "titulo": "Guiar o olhar",
-        "texto": "O jogador vai para onde o olho vai. Luz, cor, contraste e linhas da arquitetura apontam o caminho. Um marco grande visível de longe, como um castelo no horizonte, diz para onde ir; esse recurso é chamado de weenie, como nos parques da Disney."
+        "texto": "A pessoa vai para onde o olho vai. Luz, cor, contraste e linhas da arquitetura apontam o caminho. Um marco grande, visível de longe, diz para onde ir; esse recurso é chamado de weenie, como nos parques da Disney. Exemplo: um castelo no horizonte.\n\nPense: o que, no último jogo que você jogou, mostrou o caminho sem dizer nada?"
       },
       {
         "titulo": "Ritmo",
-        "texto": "Uma fase boa alterna tensão e alívio. Depois de um combate difícil, uma área calma deixa o jogador respirar, explorar e se preparar. Sem pausas, a tensão vira cansaço; sem tensão, a fase vira passeio."
+        "texto": "Uma fase boa alterna tensão e alívio. Depois de um combate difícil, uma área calma deixa a pessoa respirar, explorar e se preparar. Sem pausas, a tensão vira cansaço; sem tensão, a fase vira passeio.\n\nPense: o que você sente ao jogar uma fase sem nenhuma pausa?"
       },
       {
         "titulo": "Caminho crítico e portões",
-        "texto": "O caminho crítico é o trajeto mínimo para terminar a fase; em volta dele ficam áreas opcionais, com segredos e recompensas. Portões, como uma porta trancada ou uma parede que só quebra com uma habilidade nova, controlam a ordem em que o jogador explora e dão motivo para voltar."
+        "texto": "O caminho crítico é o trajeto mínimo para terminar a fase; em volta dele ficam áreas opcionais, com segredos e recompensas. Portões, como uma porta trancada ou uma parede que só quebra com uma habilidade nova, controlam a ordem em que a pessoa explora e dão motivo para voltar.\n\nPense: o que levaria você a voltar a uma área que não conseguiu abrir?"
       }
     ]
   }
