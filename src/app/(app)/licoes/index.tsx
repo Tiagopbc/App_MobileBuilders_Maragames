@@ -1,37 +1,28 @@
-import { Redirect, useFocusEffect, useRouter } from 'expo-router';
-import { useCallback } from 'react';
+import { Redirect, useRouter } from 'expo-router';
 
 import { TelaDasLicoes } from '@/components/licao/tela-das-licoes';
 import { MODULOS_EM_BREVE } from '@/constants/em-breve';
 import { useAoVoltarAoApp } from '@/hooks/use-ao-voltar-ao-app';
 import { useLicoes } from '@/hooks/use-licoes';
-import { participanteDoRoteiro } from '@/lib/participante';
+import { useRecarregarAoFocar } from '@/hooks/use-recarregar-ao-focar';
+import { useVoltarOu } from '@/hooks/use-voltar-ou';
 import { useSession } from '@/lib/session';
 
 // A lista de lições (item 30): /licoes. O aluno escolhe o assunto e a ordem.
 export default function LicoesScreen() {
     const { user, perfil } = useSession();
     const router = useRouter();
+    const sair = useVoltarOu('/home');
 
-    const { formaPre } = participanteDoRoteiro(perfil);
+    const formaPre = perfil?.formaPre ?? null;
     const { estado, recarregar } = useLicoes({ uid: user?.uid ?? '', formaPre });
 
     // Roda quando a lista ganha foco, inclusive na volta de uma lição.
-    useFocusEffect(
-        useCallback(() => {
-            recarregar();
-        }, [recarregar])
-    );
+    useRecarregarAoFocar(recarregar);
     // E quando o app volta do segundo plano: a situação das revisões muda com o dia.
     useAoVoltarAoApp(recarregar);
 
     if (!user) return <Redirect href="/home" />;
-
-    function sair() {
-        // Na web, quem abre a URL direto não tem para onde voltar.
-        if (router.canGoBack()) router.back();
-        else router.replace('/home');
-    }
 
     return (
         <TelaDasLicoes

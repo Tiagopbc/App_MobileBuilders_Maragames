@@ -1,11 +1,10 @@
-import { useFocusEffect, useRouter } from 'expo-router';
-import { useCallback } from 'react';
+import { useRouter } from 'expo-router';
 
 import { TelaDeBoasVindas } from '@/components/boas-vindas/tela-de-boas-vindas';
 import { useLicoes } from '@/hooks/use-licoes';
+import { useRecarregarAoFocar } from '@/hooks/use-recarregar-ao-focar';
 import { conquistasDoAluno, medalhasGanhas } from '@/lib/conquistas';
 import { licaoFeita } from '@/lib/licao';
-import { participanteDoRoteiro } from '@/lib/participante';
 import { useSession } from '@/lib/session';
 
 // A primeira tela de quem já entrou: /. A home, com o "Olá" e o Para hoje, ficou em /home.
@@ -14,15 +13,11 @@ export default function BoasVindasScreen() {
     const { user, perfil } = useSession();
 
     // A carta de jogador lê a sequência e o XP das mesmas respostas do Progresso.
-    const { formaPre } = participanteDoRoteiro(perfil);
+    const formaPre = perfil?.formaPre ?? null;
     const { estado, recarregar } = useLicoes({ uid: user?.uid ?? '', formaPre });
 
     // Roda quando a tela ganha foco, inclusive na volta de uma lição.
-    useFocusEffect(
-        useCallback(() => {
-            recarregar();
-        }, [recarregar])
-    );
+    useRecarregarAoFocar(recarregar);
 
     const conquistas =
         estado.tipo === 'pronto'
