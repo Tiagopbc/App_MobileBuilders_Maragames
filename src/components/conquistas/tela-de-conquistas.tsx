@@ -26,7 +26,7 @@ type TelaDeConquistasProps = {
     aoTentarDeNovo: () => void;
 };
 
-// As Conquistas, que o terceiro número da carta de jogador abre: as medalhas só da pessoa, sem
+// As Conquistas, que o terceiro número da carta da pessoa jogadora abre: as medalhas só da pessoa, sem
 // comparação. As ganhas mostram o dia; as bloqueadas, o cadeado e, quando contam lições, o quanto falta.
 export function TelaDeConquistas({ estado, aoVoltar, aoTentarDeNovo }: TelaDeConquistasProps) {
     const conquistas = estado.tipo === 'pronto' ? estado.conquistas : null;

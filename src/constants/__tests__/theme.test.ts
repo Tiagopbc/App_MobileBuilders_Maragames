@@ -55,7 +55,7 @@ const PARES_DE_TEXTO: [ThemeColor, ThemeColor][] = [
     ['text', 'placaDaCarta'],
     ['text', 'caixaDaCarta'],
     ['textoDoPe', 'cartao'],
-    // A carta de jogador da boas-vindas: o tipo na placa e a legenda dos números sobre o card.
+    // A carta da pessoa jogadora da boas-vindas: o tipo na placa e a legenda dos números sobre o card.
     ['textoDoPe', 'placaDaCarta'],
     ['textSecondary', 'cartao'],
     // A home: a sequência da semana, a carta selada e os selos.

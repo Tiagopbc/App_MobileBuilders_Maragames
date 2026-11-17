@@ -17,7 +17,7 @@
         "id": "b",
         "texto": "O ato de decidir o que um jogo deve ser",
         "correta": true,
-        "explicacao": "É a definição de Schell: decidir regras, objetivos, desafios e o que o jogador pode fazer."
+        "explicacao": "É a definição de game design: decidir regras, objetivos, desafios e o que a pessoa jogadora pode fazer."
       },
       {
         "id": "c",
@@ -56,7 +56,7 @@
       },
       {
         "id": "c",
-        "texto": "Uma emoção igual para todos os jogadores",
+        "texto": "Uma emoção igual para todas as pessoas jogadoras",
         "correta": false,
         "explicacao": "A emoção muda de pessoa para pessoa e não entra na definição."
       },
@@ -99,7 +99,7 @@
         "id": "d",
         "texto": "O adversário, que tenta acertar o buraco antes de você",
         "correta": false,
-        "explicacao": "O adversário cria competição, mas o exemplo de Suits é a regra que proíbe levar a bola com a mão."
+        "explicacao": "O adversário cria competição, mas o obstáculo desnecessário do golfe é a regra que proíbe levar a bola com a mão."
       }
     ],
     "fonte": "Suits (1978), The Grasshopper: Games, Life and Utopia"
@@ -114,7 +114,7 @@
     "alternativas": [
       {
         "id": "a",
-        "texto": "Definir quantas vidas o jogador tem",
+        "texto": "Definir quantas vidas a pessoa jogadora tem",
         "correta": true,
         "explicacao": "Decidir uma regra do jogo, como o número de vidas, é exatamente o que o design faz."
       },
@@ -167,7 +167,7 @@
       },
       {
         "id": "d",
-        "texto": "Porque os jogadores nunca competem entre si de verdade",
+        "texto": "Porque as pessoas jogadoras nunca competem entre si de verdade",
         "correta": false,
         "explicacao": "A competição é real dentro do jogo; o que é separado da vida comum é o conflito."
       }
@@ -180,7 +180,7 @@
     "bloco": "forma_b",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "No xadrez, o objetivo é dar xeque-mate. Pela ideia de obstáculos desnecessários, por que o jogador não pode simplesmente tirar o rei adversário do tabuleiro com a mão?",
+    "enunciado": "No xadrez, o objetivo é dar xeque-mate. Pela ideia de obstáculos desnecessários, por que a pessoa jogadora não pode simplesmente tirar o rei adversário do tabuleiro com a mão?",
     "alternativas": [
       {
         "id": "a",
@@ -192,7 +192,7 @@
         "id": "b",
         "texto": "Porque aceitar regras que proíbem o meio mais fácil é o que faz o jogo existir",
         "correta": true,
-        "explicacao": "As regras proíbem o caminho mais eficiente, e o jogador aceita isso de propósito: é a atitude que torna o jogo possível."
+        "explicacao": "As regras proíbem o caminho mais eficiente, e a pessoa jogadora aceita isso de propósito: é a atitude que torna o jogo possível."
       },
       {
         "id": "c",
@@ -204,7 +204,7 @@
         "id": "d",
         "texto": "Porque o xadrez premia a sorte, e não o planejamento",
         "correta": false,
-        "explicacao": "O xadrez quase não tem sorte; a explicação de Suits é a aceitação voluntária das regras."
+        "explicacao": "O xadrez quase não tem sorte; o que explica a regra é a aceitação voluntária de obstáculos."
       }
     ],
     "fonte": "Suits (1978), The Grasshopper: Games, Life and Utopia"
@@ -239,7 +239,7 @@
         "id": "d",
         "texto": "Os objetivos",
         "correta": true,
-        "explicacao": "Objetivos são um dos oito elementos formais, ao lado de jogadores, procedimentos, regras, recursos, conflito, limites e resultado."
+        "explicacao": "Objetivos são um dos oito elementos formais, ao lado de pessoas jogadoras, procedimentos, regras, recursos, conflito, limites e resultado."
       }
     ],
     "fonte": "Fullerton (2008), Game Design Workshop, 2ª edição"
@@ -250,7 +250,7 @@
     "bloco": "pratica",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "Num jogo de cartas, cada jogador começa com 5 cartas e compra 1 a cada turno. Qual elemento formal isso descreve?",
+    "enunciado": "Num jogo de cartas, cada pessoa jogadora começa com 5 cartas e compra 1 a cada turno. Qual elemento formal isso descreve?",
     "alternativas": [
       {
         "id": "a",
@@ -274,7 +274,7 @@
         "id": "d",
         "texto": "Objetivos",
         "correta": false,
-        "explicacao": "Objetivo é o que o jogador tenta alcançar, não a sequência de ações do turno."
+        "explicacao": "Objetivo é o que a pessoa jogadora tenta alcançar, não a sequência de ações do turno."
       }
     ],
     "fonte": "Fullerton (2008), Game Design Workshop, 2ª edição"
@@ -285,11 +285,11 @@
     "bloco": "pratica",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "Um designer quer que o jogador sinta tensão na fase final. O que ele controla diretamente?",
+    "enunciado": "Um designer quer que a pessoa jogadora sinta tensão na fase final. O que ele controla diretamente?",
     "alternativas": [
       {
         "id": "a",
-        "texto": "A emoção que cada jogador vai sentir",
+        "texto": "A emoção que cada pessoa jogadora vai sentir",
         "correta": false,
         "explicacao": "A emoção acontece em quem joga e muda de pessoa para pessoa; o designer só cria as condições para ela."
       },
@@ -301,7 +301,7 @@
       },
       {
         "id": "c",
-        "texto": "A experiência, que será igual para todo jogador",
+        "texto": "A experiência, que será igual para toda pessoa jogadora",
         "correta": false,
         "explicacao": "A experiência não é igual para todos; por isso o designer testa com pessoas de verdade."
       },
@@ -365,13 +365,13 @@
       },
       {
         "id": "b",
-        "texto": "A tensão que o jogador sente no chefe final",
+        "texto": "A tensão que a pessoa jogadora sente no chefe final",
         "correta": false,
-        "explicacao": "Isso é estética: a resposta emocional do jogador."
+        "explicacao": "Isso é estética: a resposta emocional da pessoa jogadora."
       },
       {
         "id": "c",
-        "texto": "Jogadores que ficam parados num ponto do mapa esperando adversários",
+        "texto": "Pessoas jogadoras que ficam parados num ponto do mapa esperando adversários",
         "correta": false,
         "explicacao": "Isso é dinâmica: um comportamento que surge das regras durante a partida."
       },
@@ -402,7 +402,7 @@
         "id": "b",
         "texto": "O sentimento de desafio ao vencer uma fase difícil",
         "correta": true,
-        "explicacao": "Estética é a resposta emocional que o jogo provoca no jogador."
+        "explicacao": "Estética é a resposta emocional que o jogo provoca na pessoa jogadora."
       },
       {
         "id": "c",
@@ -412,7 +412,7 @@
       },
       {
         "id": "d",
-        "texto": "Jogadores que se aliam por um tempo para derrubar o líder",
+        "texto": "Pessoas jogadoras que se aliam por um tempo para derrubar o líder",
         "correta": false,
         "explicacao": "Isso é dinâmica: um padrão que surge durante a partida."
       }
@@ -443,13 +443,13 @@
         "id": "c",
         "texto": "Uma dinâmica",
         "correta": true,
-        "explicacao": "É comportamento que emerge das regras ao longo da partida. O artigo do MDA usa o Banco Imobiliário como exemplo."
+        "explicacao": "É comportamento que emerge das regras ao longo da partida. O Banco Imobiliário é um exemplo clássico."
       },
       {
         "id": "d",
         "texto": "Uma estratégia de quem joga melhor",
         "correta": false,
-        "explicacao": "Não é a escolha de um jogador só: o padrão aparece em quase toda partida, porque nasce das regras."
+        "explicacao": "Não é a escolha de uma pessoa jogadora só: o padrão aparece em quase toda partida, porque nasce das regras."
       }
     ],
     "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
@@ -470,9 +470,9 @@
       },
       {
         "id": "b",
-        "texto": "O cronômetro já é a estética, porque o jogador o vê",
+        "texto": "O cronômetro já é a estética, porque a pessoa jogadora o vê",
         "correta": false,
-        "explicacao": "O cronômetro é mecânica. A estética é o que o jogador sente por causa dele."
+        "explicacao": "O cronômetro é mecânica. A estética é o que a pessoa jogadora sente por causa dele."
       },
       {
         "id": "c",
@@ -484,7 +484,7 @@
         "id": "d",
         "texto": "Pressão de tempo nas decisões, gerando desafio",
         "correta": true,
-        "explicacao": "O artigo do MDA cita a pressão de tempo como dinâmica típica para produzir desafio."
+        "explicacao": "A pressão de tempo é uma dinâmica típica para produzir desafio."
       }
     ],
     "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
@@ -495,7 +495,7 @@
     "bloco": "forma_a",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Em testes, jogadores dizem que um jogo de terror \"não dá medo\". Seguindo o MDA, qual é o caminho do designer para corrigir isso?",
+    "enunciado": "Em testes, pessoas jogadoras dizem que um jogo de terror \"não dá medo\". Seguindo o MDA, qual é o caminho do designer para corrigir isso?",
     "alternativas": [
       {
         "id": "a",
@@ -542,7 +542,7 @@
         "id": "b",
         "texto": "Gráficos mais detalhados nos personagens do time",
         "correta": false,
-        "explicacao": "Isso pode reforçar sensação, mas não muda como os jogadores interagem."
+        "explicacao": "Isso pode reforçar sensação, mas não muda como as pessoas jogadoras interagem."
       },
       {
         "id": "c",
@@ -589,7 +589,7 @@
         "id": "d",
         "texto": "O comportamento que surge das regras durante a partida",
         "correta": true,
-        "explicacao": "É a definição do artigo: comportamento em tempo de execução das mecânicas."
+        "explicacao": "É a definição de dinâmica: comportamento em tempo de execução das mecânicas."
       }
     ],
     "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
@@ -618,7 +618,7 @@
         "id": "c",
         "texto": "Companheirismo",
         "correta": false,
-        "explicacao": "A descrição não envolve outros jogadores."
+        "explicacao": "A descrição não envolve outras pessoas jogadoras."
       },
       {
         "id": "d",
@@ -635,7 +635,7 @@
     "bloco": "pratica",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "O designer constrói um jogo em uma ordem, e o jogador o experimenta na ordem inversa. Qual sequência descreve a experiência de quem joga?",
+    "enunciado": "O designer constrói um jogo em uma ordem, e a pessoa jogadora o experimenta na ordem inversa. Qual sequência descreve a experiência de quem joga?",
     "alternativas": [
       {
         "id": "a",
@@ -653,7 +653,7 @@
         "id": "c",
         "texto": "Estética → Dinâmica → Mecânica",
         "correta": true,
-        "explicacao": "O jogador sente primeiro a emoção, depois percebe os padrões de jogo que a causam e só então entende as regras."
+        "explicacao": "A pessoa jogadora sente primeiro a emoção, depois percebe os padrões de jogo que a causam e só então entende as regras."
       },
       {
         "id": "d",
@@ -694,7 +694,7 @@
         "id": "d",
         "texto": "Dar itens melhores a quem está atrás",
         "correta": true,
-        "explicacao": "Cria uma realimentação que equilibra a disputa e devolve a tensão, como o artigo do MDA sugere para o Banco Imobiliário."
+        "explicacao": "Cria uma realimentação que equilibra a disputa e devolve a tensão."
       }
     ],
     "fonte": "Hunicke, LeBlanc e Zubek (2004), MDA: A Formal Approach to Game Design and Game Research"
@@ -721,15 +721,15 @@
       },
       {
         "id": "c",
-        "texto": "A atividade que o jogador repete várias vezes",
+        "texto": "A atividade que a pessoa jogadora repete várias vezes",
         "correta": true,
-        "explicacao": "É a definição dos autores: a ação essencial, repetida ao longo do jogo."
+        "explicacao": "É a definição de mecânica central: a ação essencial, repetida ao longo do jogo."
       },
       {
         "id": "d",
         "texto": "O recurso mais raro do jogo",
         "correta": false,
-        "explicacao": "Um recurso raro é um objeto do jogo, não a atividade que o jogador repete."
+        "explicacao": "Um recurso raro é um objeto do jogo, não a atividade que a pessoa jogadora repete."
       }
     ],
     "fonte": "Salen e Zimmerman (2004), Rules of Play: Game Design Fundamentals"
@@ -740,7 +740,7 @@
     "bloco": "forma_a",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "Em Stardew Valley, o jogador planta, colhe, vende a colheita e compra sementes melhores. Por que isso é um core loop?",
+    "enunciado": "Em Stardew Valley, a pessoa jogadora planta, colhe, vende a colheita e compra sementes melhores. Por que isso é um core loop?",
     "alternativas": [
       {
         "id": "a",
@@ -762,9 +762,9 @@
       },
       {
         "id": "d",
-        "texto": "Porque o jogador não precisa tomar decisões",
+        "texto": "Porque a pessoa jogadora não precisa tomar decisões",
         "correta": false,
-        "explicacao": "O jogador decide o que plantar e o que comprar; sem decisões, o ciclo perderia o interesse."
+        "explicacao": "A pessoa jogadora decide o que plantar e o que comprar; sem decisões, o ciclo perderia o interesse."
       }
     ],
     "fonte": "Salen e Zimmerman (2004), Rules of Play: Game Design Fundamentals"
@@ -775,7 +775,7 @@
     "bloco": "forma_a",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Um jogador domina completamente um jogo de quebra-cabeça e passa a achá-lo chato. Por quê?",
+    "enunciado": "Uma pessoa jogadora domina completamente um jogo de quebra-cabeça e passa a achá-lo chato. Por quê?",
     "alternativas": [
       {
         "id": "a",
@@ -787,7 +787,7 @@
         "id": "b",
         "texto": "Porque não sobrou padrão novo para aprender",
         "correta": true,
-        "explicacao": "Para Koster, diversão é aprender padrões; dominado o último, vem o tédio."
+        "explicacao": "A diversão vem de aprender padrões; dominado o último, vem o tédio."
       },
       {
         "id": "c",
@@ -816,13 +816,13 @@
         "id": "a",
         "texto": "A música tema que toca durante a partida",
         "correta": false,
-        "explicacao": "A música é marcante, mas não é uma ação do jogador."
+        "explicacao": "A música é marcante, mas não é uma ação da pessoa jogadora."
       },
       {
         "id": "b",
         "texto": "O placar com a maior pontuação",
         "correta": false,
-        "explicacao": "O placar registra o resultado; não é o que o jogador faz o tempo todo."
+        "explicacao": "O placar registra o resultado; não é o que a pessoa jogadora faz o tempo todo."
       },
       {
         "id": "c",
@@ -834,7 +834,7 @@
         "id": "d",
         "texto": "Girar e encaixar as peças que caem",
         "correta": true,
-        "explicacao": "É a ação que o jogador repete do começo ao fim de toda partida."
+        "explicacao": "É a ação que a pessoa jogadora repete do começo ao fim de toda partida."
       }
     ],
     "fonte": "Salen e Zimmerman (2004), Rules of Play: Game Design Fundamentals"
@@ -869,7 +869,7 @@
         "id": "d",
         "texto": "Os inimigos ficam mais fracos sozinhos",
         "correta": false,
-        "explicacao": "Tirar a loja não muda os inimigos; muda a capacidade do jogador de acompanhá-los."
+        "explicacao": "Tirar a loja não muda os inimigos; muda a capacidade da pessoa jogadora de acompanhá-los."
       }
     ],
     "fonte": "Salen e Zimmerman (2004), Rules of Play: Game Design Fundamentals"
@@ -880,13 +880,13 @@
     "bloco": "forma_b",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Pela teoria do fluxo, um jogador muito habilidoso só enfrenta desafios fáceis. O que ele tende a sentir, e o que o designer deve fazer?",
+    "enunciado": "Pela teoria do fluxo, uma pessoa jogadora muito habilidosa só enfrenta desafios fáceis. O que ela tende a sentir, e o que o designer deve fazer?",
     "alternativas": [
       {
         "id": "a",
         "texto": "Tédio; subir o desafio conforme a habilidade cresce",
         "correta": true,
-        "explicacao": "Desafio abaixo da habilidade gera tédio; para voltar ao fluxo, o desafio precisa acompanhar o jogador."
+        "explicacao": "Desafio abaixo da habilidade gera tédio; para voltar ao fluxo, o desafio precisa acompanhar a pessoa jogadora."
       },
       {
         "id": "b",
@@ -915,7 +915,7 @@
     "bloco": "pratica",
     "dificuldade": "basico",
     "formato": "multipla_escolha",
-    "enunciado": "Um jogador passa horas explorando um mundo aberto só por curiosidade, sem seguir objetivo nenhum. Que chave de diversão é essa?",
+    "enunciado": "Uma pessoa jogadora passa horas explorando um mundo aberto só por curiosidade, sem seguir objetivo nenhum. Que chave de diversão é essa?",
     "alternativas": [
       {
         "id": "a",
@@ -933,7 +933,7 @@
         "id": "c",
         "texto": "Diversão com pessoas, a de conviver",
         "correta": false,
-        "explicacao": "A cena não envolve outros jogadores."
+        "explicacao": "A cena não envolve outras pessoas jogadoras."
       },
       {
         "id": "d",
@@ -950,7 +950,7 @@
     "bloco": "pratica",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "Um jogador iniciante enfrenta, logo na primeira fase, um chefe muito acima da habilidade dele. Pela teoria do fluxo, o que ele tende a sentir?",
+    "enunciado": "Uma pessoa jogadora iniciante enfrenta, logo na primeira fase, um chefe muito acima da habilidade dela. Pela teoria do fluxo, o que ela tende a sentir?",
     "alternativas": [
       {
         "id": "a",
@@ -1020,7 +1020,7 @@
     "bloco": "pratica",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Nos testes, jogadores largam o jogo depois de 20 minutos, quando o combate vira repetição sem novidade. Que ajuste ataca a causa?",
+    "enunciado": "Nos testes, pessoas jogadoras largam o jogo depois de 20 minutos, quando o combate vira repetição sem novidade. Que ajuste ataca a causa?",
     "alternativas": [
       {
         "id": "a",
@@ -1038,7 +1038,7 @@
         "id": "c",
         "texto": "Pôr uma trilha sonora mais animada nas lutas",
         "correta": false,
-        "explicacao": "A música muda a sensação, mas não dá ao jogador algo novo para dominar."
+        "explicacao": "A música muda a sensação, mas não dá à pessoa jogadora algo novo para dominar."
       },
       {
         "id": "d",
@@ -1170,7 +1170,7 @@
       },
       {
         "id": "b",
-        "texto": "Ela cria realimentação negativa entre os jogadores",
+        "texto": "Ela cria realimentação negativa entre as pessoas jogadoras",
         "correta": false,
         "explicacao": "Realimentação negativa ajuda quem está atrás; a carta forte ajuda quem já a tem."
       },
@@ -1265,7 +1265,7 @@
     "bloco": "pratica",
     "dificuldade": "basico",
     "formato": "multipla_escolha",
-    "enunciado": "Num jogo, os dois jogadores começam com as mesmas peças e seguem as mesmas regras. Que tipo de balanceamento é esse?",
+    "enunciado": "Num jogo, as duas pessoas jogadoras começam com as mesmas peças e seguem as mesmas regras. Que tipo de balanceamento é esse?",
     "alternativas": [
       {
         "id": "a",
@@ -1283,7 +1283,7 @@
         "id": "c",
         "texto": "Intransitivo",
         "correta": false,
-        "explicacao": "Intransitivo descreve opções que vencem umas e perdem para outras, não o ponto de partida dos jogadores."
+        "explicacao": "Intransitivo descreve opções que vencem umas e perdem para outras, não o ponto de partida das pessoas jogadoras."
       },
       {
         "id": "d",
@@ -1345,7 +1345,7 @@
       },
       {
         "id": "b",
-        "texto": "Fica mais interessante para o jogador",
+        "texto": "Fica mais interessante para a pessoa jogadora",
         "correta": false,
         "explicacao": "Escolha interessante tem prós e contras; aqui só há prós de um lado."
       },
@@ -1392,9 +1392,9 @@
       },
       {
         "id": "d",
-        "texto": "O problema é dos outros jogadores, que precisam treinar mais",
+        "texto": "O problema é das outras pessoas jogadoras, que precisam treinar mais",
         "correta": false,
-        "explicacao": "Com dados de muitas partidas, a diferença vem do personagem, não de alguns jogadores."
+        "explicacao": "Com dados de muitas partidas, a diferença vem do personagem, não de algumas pessoas jogadoras."
       }
     ],
     "fonte": "Schreiber e Romero (2021), Game Balance"
@@ -1409,7 +1409,7 @@
     "alternativas": [
       {
         "id": "a",
-        "texto": "Para o jogador perder uma vida logo no começo",
+        "texto": "Para a pessoa jogadora perder uma vida logo no começo",
         "correta": false,
         "explicacao": "O trecho aberto dá espaço para reagir: a intenção é ensinar, não punir."
       },
@@ -1423,7 +1423,7 @@
         "id": "c",
         "texto": "Para ensinar a lidar com inimigos sem usar texto",
         "correta": true,
-        "explicacao": "O espaço aberto e o inimigo lento convidam o jogador a descobrir o pulo sozinho."
+        "explicacao": "O espaço aberto e o inimigo lento convidam a pessoa jogadora a descobrir o pulo sozinho."
       },
       {
         "id": "d",
@@ -1440,7 +1440,7 @@
     "bloco": "forma_a",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "Na estrutura que a Nintendo usou nas fases de Super Mario 3D Land, inspirada no kishōtenketsu, qual é a ordem?",
+    "enunciado": "Na estrutura de fases inspirada no kishōtenketsu, usada em Super Mario 3D Land, qual é a ordem?",
     "alternativas": [
       {
         "id": "a",
@@ -1458,7 +1458,7 @@
         "id": "c",
         "texto": "Virar, apresentar, concluir e desenvolver",
         "correta": false,
-        "explicacao": "Uma reviravolta só funciona depois que o jogador conhece a mecânica."
+        "explicacao": "Uma reviravolta só funciona depois que a pessoa jogadora conhece a mecânica."
       },
       {
         "id": "d",
@@ -1475,7 +1475,7 @@
     "bloco": "forma_a",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Os testes mostram que jogadores chegam exaustos ao fim de uma fase com combates seguidos, sem pausa nenhuma. Qual ajuste segue a ideia de ritmo?",
+    "enunciado": "Os testes mostram que pessoas jogadoras chegam exaustas ao fim de uma fase com combates seguidos, sem pausa nenhuma. Qual ajuste segue a ideia de ritmo?",
     "alternativas": [
       {
         "id": "a",
@@ -1491,7 +1491,7 @@
       },
       {
         "id": "c",
-        "texto": "Dar mais vida ao jogador no começo da fase",
+        "texto": "Dar mais vida à pessoa jogadora no começo da fase",
         "correta": false,
         "explicacao": "Mais vida ajuda a sobreviver, mas não cria o alívio entre os picos de tensão."
       },
@@ -1499,7 +1499,7 @@
         "id": "d",
         "texto": "Intercalar áreas calmas entre os combates",
         "correta": true,
-        "explicacao": "Alternar tensão e alívio deixa o jogador respirar e chegar ao próximo combate com energia."
+        "explicacao": "Alternar tensão e alívio deixa a pessoa jogadora respirar e chegar ao próximo combate com energia."
       }
     ],
     "fonte": "Kremers (2009), Level Design: Concept, Theory, and Practice"
@@ -1510,13 +1510,13 @@
     "bloco": "forma_b",
     "dificuldade": "basico",
     "formato": "multipla_escolha",
-    "enunciado": "Qual destes recursos guia o jogador pela fase sem usar texto?",
+    "enunciado": "Qual destes recursos guia a pessoa jogadora pela fase sem usar texto?",
     "alternativas": [
       {
         "id": "a",
         "texto": "Uma luz forte sobre a porta que leva adiante",
         "correta": true,
-        "explicacao": "O olho vai para o ponto mais iluminado, e o jogador segue para lá sem precisar de instrução."
+        "explicacao": "O olho vai para o ponto mais iluminado, e a pessoa jogadora segue para lá sem precisar de instrução."
       },
       {
         "id": "b",
@@ -1545,13 +1545,13 @@
     "bloco": "forma_b",
     "dificuldade": "intermediario",
     "formato": "multipla_escolha",
-    "enunciado": "Uma fase apresenta plataformas que somem, depois as combina com pulos mais longos e, no fim, acrescenta um vento que empurra o jogador. Na estrutura em quatro tempos da Nintendo, a que etapa corresponde o vento?",
+    "enunciado": "Uma fase apresenta plataformas que somem, depois as combina com pulos mais longos e, no fim, acrescenta um vento que empurra a pessoa jogadora. Na estrutura em quatro tempos, a que etapa corresponde o vento?",
     "alternativas": [
       {
         "id": "a",
         "texto": "À apresentação, porque é a primeira vez que o vento aparece",
         "correta": false,
-        "explicacao": "A apresentação é das plataformas que somem; o vento entra depois, para mudar o que o jogador já sabia."
+        "explicacao": "A apresentação é das plataformas que somem; o vento entra depois, para mudar o que a pessoa jogadora já sabia."
       },
       {
         "id": "b",
@@ -1561,9 +1561,9 @@
       },
       {
         "id": "c",
-        "texto": "À reviravolta, que muda o que o jogador já sabia",
+        "texto": "À reviravolta, que muda o que a pessoa jogadora já sabia",
         "correta": true,
-        "explicacao": "O vento transforma a mecânica já dominada e obriga o jogador a pensar de novo."
+        "explicacao": "O vento transforma a mecânica já dominada e obriga a pessoa jogadora a pensar de novo."
       },
       {
         "id": "d",
@@ -1580,7 +1580,7 @@
     "bloco": "forma_b",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Num metroidvania, uma parede só quebra com uma habilidade que o jogador ganha mais tarde. Para que serve isso no level design?",
+    "enunciado": "Num metroidvania, uma parede só quebra com uma habilidade que a pessoa jogadora ganha mais tarde. Para que serve isso no level design?",
     "alternativas": [
       {
         "id": "a",
@@ -1592,11 +1592,11 @@
         "id": "b",
         "texto": "Para controlar a ordem da exploração e dar motivo para voltar",
         "correta": true,
-        "explicacao": "O portão segura o jogador num trecho e transforma a área já vista num lugar com algo novo a descobrir."
+        "explicacao": "O portão segura a pessoa jogadora num trecho e transforma a área já vista num lugar com algo novo a descobrir."
       },
       {
         "id": "c",
-        "texto": "Para obrigar o jogador a recomeçar a fase do zero",
+        "texto": "Para obrigar a pessoa jogadora a recomeçar a fase do zero",
         "correta": false,
         "explicacao": "O portão não reinicia nada: ele marca um lugar para onde vale voltar."
       },
@@ -1621,7 +1621,7 @@
         "id": "a",
         "texto": "Decoração de fundo, sem efeito no jogo",
         "correta": false,
-        "explicacao": "Um marco visível o tempo todo influencia para onde o jogador anda."
+        "explicacao": "Um marco visível o tempo todo influencia para onde a pessoa jogadora anda."
       },
       {
         "id": "b",
@@ -1639,7 +1639,7 @@
         "id": "d",
         "texto": "Um marco que mostra para onde ir",
         "correta": true,
-        "explicacao": "Um ponto grande e visível de longe orienta o jogador; é o que Totten chama de weenie."
+        "explicacao": "Um ponto grande e visível de longe orienta a pessoa jogadora; esse recurso é chamado de weenie."
       }
     ],
     "fonte": "Totten (2019), An Architectural Approach to Level Design, 2ª edição"
@@ -1660,7 +1660,7 @@
       },
       {
         "id": "b",
-        "texto": "O trecho mais difícil, onde o jogador mais morre",
+        "texto": "O trecho mais difícil, onde a pessoa jogadora mais morre",
         "correta": false,
         "explicacao": "Dificuldade não define o caminho crítico; ele é o trajeto obrigatório."
       },
@@ -1689,7 +1689,7 @@
     "alternativas": [
       {
         "id": "a",
-        "texto": "No próprio abismo, para o jogador aprender na pressão",
+        "texto": "No próprio abismo, para a pessoa jogadora aprender na pressão",
         "correta": false,
         "explicacao": "Aprender onde errar custa caro gera frustração antes de gerar domínio."
       },
@@ -1720,7 +1720,7 @@
     "bloco": "pratica",
     "dificuldade": "avancado",
     "formato": "multipla_escolha",
-    "enunciado": "Num teste, metade dos jogadores se perde numa caverna escura e desiste. Qual ajuste resolve sem pôr setas nem texto na tela?",
+    "enunciado": "Num teste, metade das pessoas jogadoras se perde numa caverna escura e desiste. Qual ajuste resolve sem pôr setas nem texto na tela?",
     "alternativas": [
       {
         "id": "a",
@@ -1732,7 +1732,7 @@
         "id": "b",
         "texto": "Iluminar a saída e pôr marcas de cor no caminho certo",
         "correta": true,
-        "explicacao": "Luz e cor atraem o olhar e guiam o jogador sem quebrar a imersão."
+        "explicacao": "Luz e cor atraem o olhar e guiam a pessoa jogadora sem quebrar a imersão."
       },
       {
         "id": "c",

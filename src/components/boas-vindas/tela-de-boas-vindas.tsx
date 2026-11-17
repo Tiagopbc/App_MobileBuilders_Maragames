@@ -26,7 +26,7 @@ type TelaDeBoasVindasProps = {
     aoAbrirConquistas: () => void;
 };
 
-// A primeira tela de quem já entrou. No alto, a logo e o nome; embaixo, a chamada, a carta de jogador (o
+// A primeira tela de quem já entrou. No alto, a logo e o nome; embaixo, a chamada, a carta da pessoa jogadora (o
 // lobinho sobre dois anéis, o apelido e os números), o convite para o Como jogar e o Jogar, o único botão.
 // A saudação ("Olá") é da home; a Configuração não existe aqui: o tema é do Perfil.
 export function TelaDeBoasVindas({

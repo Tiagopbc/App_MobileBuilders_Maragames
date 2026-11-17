@@ -32,7 +32,7 @@ const LARGURA_DO_LOBINHO = 224;
 const ALTURA_DO_LOBINHO = Math.round((LARGURA_DO_LOBINHO * 815) / 615);
 const ALTURA_DA_ARTE = 420;
 
-// A carta de jogador: uma carta de jogo com a arte do lobinho sobre dois anéis, a placa com o apelido e o
+// A carta da pessoa jogadora: uma carta de jogo com a arte do lobinho sobre dois anéis, a placa com o apelido e o
 // tipo, e os números da pessoa: dias seguidos, XP e medalhas. Aparece na boas-vindas e vai aparecer em
 // outros momentos do app. As medalhas são o único número que leva a outra tela. Só desenha: os números
 // chegam prontos.

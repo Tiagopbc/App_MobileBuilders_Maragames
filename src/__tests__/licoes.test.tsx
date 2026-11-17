@@ -256,7 +256,7 @@ describe('uma lição de ciclo completo, do começo à espera da revisão', () =
         expect(screen.getByText('XP da lição: +2 XP')).toBeOnTheScreen();
         expect(screen.getByTestId('matriz-de-quadrantes')).toBeOnTheScreen();
         expect(screen.getByText(/^A revisão abre n[ao] .+, \d\d\/\d\d\. É 1 questão para ver o quanto ficou\.$/)).toBeOnTheScreen();
-        // A sequência de dias é da carta de jogador, não do fim da lição.
+        // A sequência de dias é da carta da pessoa jogadora, não do fim da lição.
         expect(screen.queryByLabelText('1 dia seguido')).toBeNull();
         expect(screen.queryByText('Enunciado de mda_b1')).toBeNull();
 

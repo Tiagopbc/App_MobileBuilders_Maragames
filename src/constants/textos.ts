@@ -714,15 +714,15 @@ export const TEXTOS_DE_BOAS_VINDAS = {
     regras: 'Como jogar',
     convite: 'Primeira vez por aqui?',
     conviteApoio: 'Veja como o jogo funciona',
-    pessoaJogadora: 'Pessoa jogadora', // o tipo da carta de jogador, na placa
+    pessoaJogadora: 'Pessoa jogadora', // o tipo da carta da pessoa jogadora, na placa
 } as const;
 
-/** O XP em número grande, na carta de jogador: "+18"; sem XP, "0". */
+/** O XP em número grande, na carta da pessoa jogadora: "+18"; sem XP, "0". */
 export function xpNaCarta(xp: number): string {
     return xp > 0 ? `+${xp}` : '0';
 }
 
-// --- Conquistas: as medalhas, que a carta de jogador abre. ---
+// --- Conquistas: as medalhas, que a carta da pessoa jogadora abre. ---
 // Nenhuma frase fala em certeza, acerto ou comparação: a medalha mostra o que a pessoa fez.
 
 export const TEXTOS_DAS_CONQUISTAS = {
