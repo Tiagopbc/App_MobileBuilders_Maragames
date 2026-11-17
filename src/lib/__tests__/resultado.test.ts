@@ -24,7 +24,6 @@ describe('resultadoDoBloco', () => {
                 3: { acertos: 0, total: 0 },
             },
             questoesARevisar: [],
-            topicosARevisar: [],
         });
     });
 
@@ -79,30 +78,10 @@ describe('resultadoDoBloco', () => {
         ]);
     });
 
-    it('ordena os tópicos a revisar pelo número de pontos cegos', () => {
-        expect(resultadoDoBloco(respostas, QUESTOES).topicosARevisar).toEqual(['engine', 'mda']);
-    });
-
-    it('sem ponto cego, desempata os tópicos pelas lacunas e depois pelos frágeis', () => {
-        const semPontoCego = [
-            r('mda_1', true, 1), // frágil
-            r('mda_2', true, 2), // frágil
-            r('engine_1', false, 1), // lacuna
-        ];
-
-        expect(resultadoDoBloco(semPontoCego, QUESTOES).topicosARevisar).toEqual(['engine', 'mda']);
-    });
-
-    it('tópico em que tudo está firme não entra na revisão', () => {
-        const mdaFirme = [r('mda_1', true, 3), r('mda_2', true, 3), r('engine_1', false, 2)];
-
-        expect(resultadoDoBloco(mdaFirme, QUESTOES).topicosARevisar).toEqual(['engine']);
-    });
-
     it('com tudo firme, não há o que revisar', () => {
         const tudoFirme = [r('mda_1', true, 3), r('engine_1', true, 3)];
 
-        expect(resultadoDoBloco(tudoFirme, QUESTOES)).toMatchObject({ questoesARevisar: [], topicosARevisar: [] });
+        expect(resultadoDoBloco(tudoFirme, QUESTOES)).toMatchObject({ questoesARevisar: [] });
     });
 
     it('questão respondida duas vezes conta uma vez, pela resposta mais recente', () => {

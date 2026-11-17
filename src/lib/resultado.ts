@@ -34,7 +34,6 @@ export interface ResultadoDoBloco extends Taxa {
     porTopico: ResultadoDoTopico[]; // na ordem do bloco; só tópicos com resposta
     porConfianca: Record<Confianca, Taxa>;
     questoesARevisar: QuestaoARevisar[];
-    topicosARevisar: string[]; // ids, do mais urgente ao menos
 }
 
 // Ponto cego é o equívoco a corrigir primeiro; lacuna é o que falta aprender; frágil é o
@@ -63,7 +62,6 @@ export function resultadoDoBloco(
         porTopico: [],
         porConfianca: { 1: { acertos: 0, total: 0 }, 2: { acertos: 0, total: 0 }, 3: { acertos: 0, total: 0 } },
         questoesARevisar: [],
-        topicosARevisar: [],
     };
     const topicos = new Map<string, ResultadoDoTopico>();
 
@@ -98,17 +96,6 @@ export function resultadoDoBloco(
     resultado.questoesARevisar.sort(
         (a, b) => ORDEM_DE_REVISAO.indexOf(a.quadrante) - ORDEM_DE_REVISAO.indexOf(b.quadrante)
     );
-
-    // Tópico com mais pontos cegos vem primeiro; no empate, mais lacunas; depois, mais frágeis.
-    resultado.topicosARevisar = resultado.porTopico
-        .filter((t) => ORDEM_DE_REVISAO.some((q) => t.quadrantes[q] > 0))
-        .sort((a, b) => {
-            for (const q of ORDEM_DE_REVISAO) {
-                if (a.quadrantes[q] !== b.quadrantes[q]) return b.quadrantes[q] - a.quadrantes[q];
-            }
-            return 0;
-        })
-        .map((t) => t.topicId);
 
     return resultado;
 }

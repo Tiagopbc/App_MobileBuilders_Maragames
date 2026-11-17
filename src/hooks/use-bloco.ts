@@ -39,7 +39,6 @@ export interface PerguntaAtual {
 export interface Relatorio {
     resultado: ResultadoDoBloco;
     enunciados: Record<string, string>; // por id de questão
-    nomesDosTopicos: Record<string, string>; // por id de tópico
 }
 
 export type EstadoDoBloco =
@@ -57,7 +56,6 @@ interface Sessao {
     total: number; // todas as questões do bloco, respondidas ou não
     bloco: Question[]; // o bloco inteiro, para o resultado do fim
     respostas: RespostaDoResultado[]; // as desta fase: as já gravadas antes mais as desta sessão
-    nomesDosTopicos: Record<string, string>;
 }
 
 interface Controle {
@@ -85,11 +83,10 @@ function perguntaDe(s: Sessao, uid: string, fase: Fase): PerguntaAtual {
 }
 
 // O resultado sai das respostas que a tela já tem em mãos, sem ler o banco de novo.
-function relatorioDe(s: Pick<Sessao, 'bloco' | 'respostas' | 'nomesDosTopicos'>): Relatorio {
+function relatorioDe(s: Pick<Sessao, 'bloco' | 'respostas'>): Relatorio {
     return {
         resultado: resultadoDoBloco(s.respostas, s.bloco),
         enunciados: Object.fromEntries(s.bloco.map((q) => [q.id, q.enunciado])),
-        nomesDosTopicos: s.nomesDosTopicos,
     };
 }
 
@@ -131,7 +128,6 @@ export function useBloco({ uid, fase, topicId, formaPre, relogio = Date.now }: E
             const base = {
                 bloco: doBloco,
                 respostas: respostas.filter((r) => r.fase === fase) as RespostaDoResultado[],
-                nomesDosTopicos: Object.fromEntries(topicos.map((t) => [t.id, t.titulo])),
             };
 
             // Bloco já concluído: reabrir mostra o resultado, recalculado das respostas.

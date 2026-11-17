@@ -6,7 +6,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { BarraDeProgresso } from '@/components/barra-de-progresso';
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { FundoDaMarca } from '@/components/fundo-da-marca';
-import { ResultadoDoBloco } from '@/components/resultado/resultado-do-bloco';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
 import { MaxContentWidth, Raio, Spacing } from '@/constants/theme';
@@ -32,9 +31,9 @@ const LETRAS = 'ABCD';
 type TelaDoBlocoProps = EntradaDoBloco & {
     aoSair: () => void; // fecha a tela; quem navega é a rota
     aoAbrirRegras: () => void; // o link "Como funcionam os pontos"; também é da rota
-    // O fim de um passo de lição (item 30): entra no lugar do resultado do bloco. Quem o monta é
-    // a rota, que sabe qual é o passo e para onde ele leva.
-    fim?: (relatorio: Relatorio) => ReactNode;
+    // O fim de um passo de lição (item 30). Quem o monta é a rota, que sabe qual é o passo e
+    // para onde ele leva.
+    fim: (relatorio: Relatorio) => ReactNode;
 };
 
 // A tela inteira de um bloco: cabeçalho, a pergunta da vez e o fim. Não sabe de onde os dados
@@ -99,19 +98,7 @@ export function TelaDoBloco({ aoSair, aoAbrirRegras, fim, ...entrada }: TelaDoBl
                     </View>
                 )}
 
-                {estado.tipo === 'concluido' && fim && fim(estado.relatorio)}
-
-                {/* Fim do bloco: o resultado, calculado das respostas (M4). */}
-                {estado.tipo === 'concluido' && !fim && (
-                    <>
-                        <ScrollView contentContainerStyle={styles.conteudo}>
-                            <ResultadoDoBloco relatorio={estado.relatorio} medido={!faseTemFeedback(entrada.fase)} />
-                        </ScrollView>
-                        <View style={[styles.rodape, { borderTopColor: theme.borda }]}>
-                            <BotaoPrincipal rotulo={TEXTOS.voltarAoInicio} onPress={aoSair} />
-                        </View>
-                    </>
-                )}
+                {estado.tipo === 'concluido' && fim(estado.relatorio)}
 
                 {naQuestao && (
                     // A `key` troca o componente a cada questão, e com ele as seleções: nada fica marcado.
