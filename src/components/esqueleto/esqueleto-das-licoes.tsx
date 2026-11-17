@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Esqueleto, Pulsar } from '@/components/esqueleto/esqueleto';
-import { Raio, Spacing } from '@/constants/theme';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 // O esqueleto da lista de lições: a barra do módulo e quatro cards, com a forma real do card de
@@ -38,6 +38,6 @@ function CardDeLicao({ titulo, detalhe }: { titulo: number; detalhe: number }) {
 
 const styles = StyleSheet.create({
     lista: { gap: Spacing.two, paddingHorizontal: Spacing.four },
-    card: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, padding: Spacing.three, borderRadius: Raio.card, borderWidth: 1.5 },
+    card: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, padding: Spacing.three, borderRadius: Raio.card, borderWidth: Borda },
     textos: { flex: 1, gap: 6 },
 });

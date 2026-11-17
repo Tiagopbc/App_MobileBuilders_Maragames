@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { TEXTOS } from '@/constants/textos';
-import { Raio, Spacing } from '@/constants/theme';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 // A faixa do alto da pergunta quando o aparelho perde a rede. Só diz o que é verdade: as escolhas
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 12,
         borderRadius: Raio.medio,
-        borderWidth: 1.5,
+        borderWidth: Borda,
     },
     texto: { flex: 1 },
 });

@@ -1,12 +1,11 @@
 import type { ReactNode } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { CabecalhoDaTela } from '@/components/boas-vindas/cabecalho-da-tela';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
+import { MolduraDaTela } from '@/components/moldura-da-tela';
 import {
     NIVEIS_DE_CONFIANCA,
     ROTULO_CONFIANCA,
@@ -14,7 +13,7 @@ import {
     TEXTOS_DE_BOAS_VINDAS,
     formatarPontos,
 } from '@/constants/textos';
-import { LarguraDoFormulario, Raio, Spacing } from '@/constants/theme';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { xpDaResposta } from '@/lib/xp';
 
@@ -24,41 +23,39 @@ export function TelaDeRegras({ aoVoltar }: { aoVoltar: () => void }) {
     const { jogo, certeza, pontos, resultado, licao, sequencia } = TEXTOS_DAS_REGRAS;
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <CabecalhoDaTela titulo={TEXTOS_DE_BOAS_VINDAS.regras} aoVoltar={aoVoltar} />
-                <ScrollView contentContainerStyle={styles.conteudo}>
-                    <CardDaRegra titulo={jogo.titulo}>
-                        <ThemedText>{jogo.texto}</ThemedText>
-                        <ThemedText themeColor="textoDeApoio">{jogo.apoio}</ThemedText>
-                    </CardDaRegra>
+        <MolduraDaTela largura="formulario">
+            <CabecalhoDaTela titulo={TEXTOS_DE_BOAS_VINDAS.regras} aoVoltar={aoVoltar} />
+            <ScrollView contentContainerStyle={styles.conteudo}>
+                <CardDaRegra titulo={jogo.titulo}>
+                    <ThemedText>{jogo.texto}</ThemedText>
+                    <ThemedText themeColor="textoDeApoio">{jogo.apoio}</ThemedText>
+                </CardDaRegra>
 
-                    <CardDaRegra titulo={certeza.titulo}>
-                        <ThemedText>{certeza.texto}</ThemedText>
-                        <NiveisDeCerteza />
-                    </CardDaRegra>
+                <CardDaRegra titulo={certeza.titulo}>
+                    <ThemedText>{certeza.texto}</ThemedText>
+                    <NiveisDeCerteza />
+                </CardDaRegra>
 
-                    <CardDaRegra titulo={pontos.titulo}>
-                        <TabelaDePontos />
-                        <ThemedText themeColor="textoDeApoio">{pontos.apoio}</ThemedText>
-                    </CardDaRegra>
+                <CardDaRegra titulo={pontos.titulo}>
+                    <TabelaDePontos />
+                    <ThemedText themeColor="textoDeApoio">{pontos.apoio}</ThemedText>
+                </CardDaRegra>
 
-                    <CardDaRegra titulo={resultado.titulo}>
-                        <ThemedText>{resultado.texto}</ThemedText>
-                        <MatrizDeQuadrantes />
-                    </CardDaRegra>
+                <CardDaRegra titulo={resultado.titulo}>
+                    <ThemedText>{resultado.texto}</ThemedText>
+                    <MatrizDeQuadrantes />
+                </CardDaRegra>
 
-                    <CardDaRegra titulo={licao.titulo}>
-                        <ThemedText>{licao.etapas}</ThemedText>
-                        <ThemedText themeColor="textoDeApoio">{licao.medido}</ThemedText>
-                    </CardDaRegra>
+                <CardDaRegra titulo={licao.titulo}>
+                    <ThemedText>{licao.etapas}</ThemedText>
+                    <ThemedText themeColor="textoDeApoio">{licao.medido}</ThemedText>
+                </CardDaRegra>
 
-                    <CardDaRegra titulo={sequencia.titulo}>
-                        <ThemedText>{sequencia.texto}</ThemedText>
-                    </CardDaRegra>
-                </ScrollView>
-            </SafeAreaView>
-        </FundoDaMarca>
+                <CardDaRegra titulo={sequencia.titulo}>
+                    <ThemedText>{sequencia.texto}</ThemedText>
+                </CardDaRegra>
+            </ScrollView>
+        </MolduraDaTela>
     );
 }
 
@@ -122,13 +119,11 @@ function TabelaDePontos() {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: LarguraDoFormulario },
     conteudo: { gap: Spacing.three, paddingHorizontal: Spacing.four, paddingBottom: Spacing.five },
     card: { gap: Spacing.two, padding: Spacing.three },
     titulo: { textTransform: 'uppercase', letterSpacing: 0.8 },
     niveis: { flexDirection: 'row', gap: Spacing.two },
-    nivel: { flex: 1, borderWidth: 1.5, borderRadius: Raio.medio, paddingVertical: Spacing.two, paddingHorizontal: Spacing.one },
+    nivel: { flex: 1, borderWidth: Borda, borderRadius: Raio.medio, paddingVertical: Spacing.two, paddingHorizontal: Spacing.one },
     centro: { textAlign: 'center' },
     tabela: { gap: 0 },
     linhaDaTabela: { flexDirection: 'row', alignItems: 'center', paddingVertical: Spacing.two },

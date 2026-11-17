@@ -1,17 +1,15 @@
-import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { BarraDeProgresso } from '@/components/barra-de-progresso';
 import { BotaoPrincipal } from '@/components/botao-principal';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { Superficie, SuperficieQueLevaToque } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
-import { MaxContentWidth, Raio, Spacing } from '@/constants/theme';
+import { CabecalhoComFechar, MolduraDaTela } from '@/components/moldura-da-tela';
+import { Carregando, ErroAoCarregar } from '@/components/estado-da-carga';
+import { AcertoPorConfianca } from '@/components/progresso/acerto-por-confianca';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import {
-    NIVEIS_DE_CONFIANCA,
-    ROTULO_CONFIANCA,
     TEXTOS,
     antesEDepois,
     comecarLicao,
@@ -62,217 +60,174 @@ export function TelaDoProgresso({ estado, aoAbrir, aoComecar, aoTentarDeNovo, ao
     const aRevisar = porRevisao.filter((l) => ORDEM_DE_REVISAO.some((q) => l.quadrantes[q] > 0)).slice(0, QUANTAS_A_REVISAR);
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <View style={styles.cabecalho}>
-                    <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={TEXTOS.voltarAoInicio}
-                        hitSlop={Spacing.three}
-                        onPress={aoSair}>
-                        <Ionicons name="close" size={28} color={theme.text} />
-                    </Pressable>
-                    <ThemedText type="subtitle" style={styles.titulo}>
-                        {TEXTOS.progresso}
-                    </ThemedText>
-                </View>
+        <MolduraDaTela largura="conteudo">
+            <CabecalhoComFechar rotulo={TEXTOS.voltarAoInicio} aoFechar={aoSair}>
+                <ThemedText type="subtitle" style={styles.titulo}>
+                    {TEXTOS.progresso}
+                </ThemedText>
+            </CabecalhoComFechar>
 
-                {estado.tipo === 'carregando' && (
-                    <View style={styles.centro}>
-                        <ActivityIndicator />
-                    </View>
-                )}
+            {estado.tipo === 'carregando' && <Carregando />}
 
-                {estado.tipo === 'erro' && (
-                    <View style={styles.centro}>
-                        <ThemedText style={styles.textoCentral}>{TEXTOS.erroAoCarregarLicoes}</ThemedText>
-                        <BotaoPrincipal rotulo={TEXTOS.tentarDeNovo} onPress={aoTentarDeNovo} />
-                    </View>
-                )}
+            {estado.tipo === 'erro' && <ErroAoCarregar mensagem={TEXTOS.erroAoCarregarLicoes} aoTentarDeNovo={aoTentarDeNovo} />}
 
-                {pronto && pronto.aVista.length === 0 && (
-                    <ScrollView contentContainerStyle={styles.conteudo}>
-                        <View style={styles.vazio}>
-                            <ThemedText type="subtitle" style={styles.textoCentral}>
-                                {TEXTOS.semRespostasAVista}
-                            </ThemedText>
-                            <ThemedText themeColor="textSecondary" style={styles.textoCentral}>
-                                {TEXTOS.cadaRespostaCai}
-                            </ThemedText>
-                        </View>
-                        <MatrizDeQuadrantes />
-                        <ThemedText type="small" themeColor="textSecondary" style={styles.textoCentral}>
-                            {TEXTOS.quandoOsNumerosAparecem}
+            {pronto && pronto.aVista.length === 0 && (
+                <ScrollView contentContainerStyle={styles.conteudo}>
+                    <View style={styles.vazio}>
+                        <ThemedText type="subtitle" style={styles.textoCentral}>
+                            {TEXTOS.semRespostasAVista}
                         </ThemedText>
-                        {primeiraLicao && (
-                            <BotaoPrincipal
-                                rotulo={comecarLicao(primeiraLicao.titulo)}
-                                onPress={() => aoComecar(primeiraLicao.topicId)}
-                            />
-                        )}
-                    </ScrollView>
-                )}
+                        <ThemedText themeColor="textSecondary" style={styles.textoCentral}>
+                            {TEXTOS.cadaRespostaCai}
+                        </ThemedText>
+                    </View>
+                    <MatrizDeQuadrantes />
+                    <ThemedText type="small" themeColor="textSecondary" style={styles.textoCentral}>
+                        {TEXTOS.quandoOsNumerosAparecem}
+                    </ThemedText>
+                    {primeiraLicao && (
+                        <BotaoPrincipal
+                            rotulo={comecarLicao(primeiraLicao.titulo)}
+                            onPress={() => aoComecar(primeiraLicao.topicId)}
+                        />
+                    )}
+                </ScrollView>
+            )}
 
-                {pronto && resumo && pronto.aVista.length > 0 && (
-                    <ScrollView contentContainerStyle={styles.conteudo}>
-                        {veredito && (
-                            <Superficie style={styles.cartao}>
-                                <ThemedText style={styles.frase}>
-                                    {partesDoResumo(veredito.total, veredito.firmes, veredito.pontosCegos).map((parte, i) => (
-                                        <ThemedText key={i} themeColor={parte.cor} style={parte.cor ? styles.numeroDaFrase : styles.frase}>
-                                            {parte.texto}
-                                        </ThemedText>
-                                    ))}
-                                </ThemedText>
-                                {veredito.poucas && (
-                                    <View style={[styles.aviso, { backgroundColor: theme.fundoFragil, borderColor: theme.aviso }]}>
-                                        <ThemedText type="small">
-                                            <ThemedText type="smallBold" themeColor="aviso">
-                                                {TEXTOS.poucasRespostas}
-                                            </ThemedText>{' '}
-                                            {leituraMaisFirme(AMOSTRA_MINIMA)}
-                                        </ThemedText>
-                                        <BarraDeProgresso
-                                            rotulo={TEXTOS.respostasAteALeituraFirme}
-                                            feitas={veredito.total}
-                                            total={AMOSTRA_MINIMA}
-                                        />
-                                        <ThemedText type="small" themeColor="textoDeApoio">
-                                            {respostasDeMinimas(veredito.total, AMOSTRA_MINIMA)}
+            {pronto && resumo && pronto.aVista.length > 0 && (
+                <ScrollView contentContainerStyle={styles.conteudo}>
+                    {veredito && (
+                        <Superficie style={styles.cartao}>
+                            <ThemedText style={styles.frase}>
+                                {partesDoResumo(veredito.total, veredito.firmes, veredito.pontosCegos).map((parte, i) => (
+                                    <ThemedText key={i} themeColor={parte.cor} style={parte.cor ? styles.numeroDaFrase : styles.frase}>
+                                        {parte.texto}
+                                    </ThemedText>
+                                ))}
+                            </ThemedText>
+                            {veredito.poucas && (
+                                <View style={[styles.aviso, { backgroundColor: theme.fundoFragil, borderColor: theme.aviso }]}>
+                                    <ThemedText type="small">
+                                        <ThemedText type="smallBold" themeColor="aviso">
+                                            {TEXTOS.poucasRespostas}
+                                        </ThemedText>{' '}
+                                        {leituraMaisFirme(AMOSTRA_MINIMA)}
+                                    </ThemedText>
+                                    <BarraDeProgresso
+                                        rotulo={TEXTOS.respostasAteALeituraFirme}
+                                        feitas={veredito.total}
+                                        total={AMOSTRA_MINIMA}
+                                    />
+                                    <ThemedText type="small" themeColor="textoDeApoio">
+                                        {respostasDeMinimas(veredito.total, AMOSTRA_MINIMA)}
+                                    </ThemedText>
+                                </View>
+                            )}
+                        </Superficie>
+                    )}
+
+                    <View style={styles.secao}>
+                        <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
+                        <MatrizDeQuadrantes
+                            quadrantes={resumo.quadrantes}
+                            destaque={resumo.quadrantes.ponto_cego > 0 ? 'ponto_cego' : undefined}
+                        />
+                    </View>
+
+                    {/* Depois da matriz: ela diz como a pessoa respondeu; aqui, em que assunto agir primeiro. */}
+                    <View style={styles.secao}>
+                        <ThemedText type="smallBold">{TEXTOS.revisarPrimeiro}</ThemedText>
+                        {aRevisar.length === 0 && (
+                            <ThemedText themeColor="textSecondary">{TEXTOS.nadaARevisar}</ThemedText>
+                        )}
+                        {aRevisar.map(({ licao, dominio, quadrantes }) => {
+                            const oQueHa = resumirQuadrantes(quadrantes);
+                            return (
+                                <SuperficieQueLevaToque
+                                    key={licao.topicId}
+                                    accessibilityRole="button"
+                                    accessibilityLabel={`Revisar ${licao.titulo}, ${oQueHa}`}
+                                    onPress={() => aoAbrir(licao.topicId)}
+                                    style={styles.cartao}>
+                                    <View style={styles.par}>
+                                        <ThemedText style={[styles.cresce, styles.nome]}>{licao.titulo}</ThemedText>
+                                        <ThemedText type="smallBold" themeColor="primaria">
+                                            {formatarTaxa(dominio.acertos, dominio.total)}
                                         </ThemedText>
                                     </View>
-                                )}
-                            </Superficie>
-                        )}
+                                    <ThemedText type="small" themeColor="textSecondary">
+                                        {oQueHa}
+                                    </ThemedText>
+                                </SuperficieQueLevaToque>
+                            );
+                        })}
+                    </View>
 
-                        <View style={styles.secao}>
-                            <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
-                            <MatrizDeQuadrantes
-                                quadrantes={resumo.quadrantes}
-                                destaque={resumo.quadrantes.ponto_cego > 0 ? 'ponto_cego' : undefined}
-                            />
-                        </View>
+                    <View style={styles.linha}>
+                        <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
+                            <ThemedText type="small" themeColor="textSecondary">
+                                {TEXTOS.xpTotal}
+                            </ThemedText>
+                            {/* O total tem piso em 0 (item 14). */}
+                            <ThemedText style={styles.numero}>{formatarXp(pronto.xp ?? 0)}</ThemedText>
+                        </Superficie>
+                        <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
+                            <ThemedText type="small" themeColor="textSecondary">
+                                {TEXTOS.sequencia}
+                            </ThemedText>
+                            <ThemedText style={styles.numero}>{contarDias(pronto.sequencia)}</ThemedText>
+                        </Superficie>
+                    </View>
 
-                        {/* Depois da matriz: ela diz como a pessoa respondeu; aqui, em que assunto agir primeiro. */}
-                        <View style={styles.secao}>
-                            <ThemedText type="smallBold">{TEXTOS.revisarPrimeiro}</ThemedText>
-                            {aRevisar.length === 0 && (
-                                <ThemedText themeColor="textSecondary">{TEXTOS.nadaARevisar}</ThemedText>
-                            )}
-                            {aRevisar.map(({ licao, dominio, quadrantes }) => {
-                                const oQueHa = resumirQuadrantes(quadrantes);
-                                return (
-                                    <SuperficieQueLevaToque
-                                        key={licao.topicId}
-                                        accessibilityRole="button"
-                                        accessibilityLabel={`Revisar ${licao.titulo}, ${oQueHa}`}
-                                        onPress={() => aoAbrir(licao.topicId)}
-                                        style={styles.cartao}>
-                                        <View style={styles.par}>
-                                            <ThemedText style={[styles.cresce, styles.nome]}>{licao.titulo}</ThemedText>
-                                            <ThemedText type="smallBold" themeColor="primaria">
-                                                {formatarTaxa(dominio.acertos, dominio.total)}
-                                            </ThemedText>
-                                        </View>
+                    <AcertoPorConfianca porConfianca={resumo.porConfianca} />
+
+                    <View style={styles.secao}>
+                        <ThemedText type="smallBold">{TEXTOS.meuDominio}</ThemedText>
+                        {porRevisao.map(({ licao, dominio, quadrantes }) => {
+                            const oQueHa = resumirQuadrantes(quadrantes);
+                            const { resultado } = licao;
+                            return (
+                                <SuperficieQueLevaToque
+                                    key={licao.topicId}
+                                    accessibilityRole="button"
+                                    accessibilityLabel={`${licao.titulo}, ${dominioEmContagem(dominio)}`}
+                                    onPress={() => aoAbrir(licao.topicId)}
+                                    style={styles.cartao}>
+                                    <View style={styles.par}>
+                                        <ThemedText style={[styles.cresce, styles.nome]}>{licao.titulo}</ThemedText>
+                                        <ThemedText type="smallBold" themeColor="primaria">
+                                            {formatarTaxa(dominio.acertos, dominio.total)}
+                                        </ThemedText>
+                                    </View>
+                                    <BarraDeProgresso
+                                        rotulo={TEXTOS.progressoDaLicao}
+                                        feitas={dominio.acertos}
+                                        total={dominio.total}
+                                    />
+                                    {resultado?.ciclo === 'completo' && (
+                                        <ThemedText type="small" themeColor="textSecondary">
+                                            {resultado.revisao
+                                                ? verificacaoEHoje(resultado.depois, resultado.revisao)
+                                                : antesEDepois(resultado.antes, resultado.depois)}
+                                        </ThemedText>
+                                    )}
+                                    {oQueHa !== '' && (
                                         <ThemedText type="small" themeColor="textSecondary">
                                             {oQueHa}
                                         </ThemedText>
-                                    </SuperficieQueLevaToque>
-                                );
-                            })}
-                        </View>
-
-                        <View style={styles.linha}>
-                            <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
-                                <ThemedText type="small" themeColor="textSecondary">
-                                    {TEXTOS.xpTotal}
-                                </ThemedText>
-                                {/* O total tem piso em 0 (item 14). */}
-                                <ThemedText style={styles.numero}>{formatarXp(pronto.xp ?? 0)}</ThemedText>
-                            </Superficie>
-                            <Superficie style={[styles.cartao, styles.numeroDoTopo]}>
-                                <ThemedText type="small" themeColor="textSecondary">
-                                    {TEXTOS.sequencia}
-                                </ThemedText>
-                                <ThemedText style={styles.numero}>{contarDias(pronto.sequencia)}</ThemedText>
-                            </Superficie>
-                        </View>
-
-                        <View style={styles.secao}>
-                            <ThemedText type="smallBold">{TEXTOS.acertoPorConfianca}</ThemedText>
-                            {NIVEIS_DE_CONFIANCA.map((nivel) => {
-                                const valor = formatarTaxa(resumo.porConfianca[nivel].acertos, resumo.porConfianca[nivel].total);
-                                return (
-                                    <View
-                                        key={nivel}
-                                        accessible
-                                        accessibilityLabel={`${ROTULO_CONFIANCA[nivel]}: ${valor}`}
-                                        style={styles.par}>
-                                        <ThemedText style={styles.cresce}>{ROTULO_CONFIANCA[nivel]}</ThemedText>
-                                        <ThemedText themeColor="textSecondary">{valor}</ThemedText>
-                                    </View>
-                                );
-                            })}
-                        </View>
-
-                        <View style={styles.secao}>
-                            <ThemedText type="smallBold">{TEXTOS.meuDominio}</ThemedText>
-                            {porRevisao.map(({ licao, dominio, quadrantes }) => {
-                                const oQueHa = resumirQuadrantes(quadrantes);
-                                const { resultado } = licao;
-                                return (
-                                    <SuperficieQueLevaToque
-                                        key={licao.topicId}
-                                        accessibilityRole="button"
-                                        accessibilityLabel={`${licao.titulo}, ${dominioEmContagem(dominio)}`}
-                                        onPress={() => aoAbrir(licao.topicId)}
-                                        style={styles.cartao}>
-                                        <View style={styles.par}>
-                                            <ThemedText style={[styles.cresce, styles.nome]}>{licao.titulo}</ThemedText>
-                                            <ThemedText type="smallBold" themeColor="primaria">
-                                                {formatarTaxa(dominio.acertos, dominio.total)}
-                                            </ThemedText>
-                                        </View>
-                                        <BarraDeProgresso
-                                            rotulo={TEXTOS.progressoDaLicao}
-                                            feitas={dominio.acertos}
-                                            total={dominio.total}
-                                        />
-                                        {resultado?.ciclo === 'completo' && (
-                                            <ThemedText type="small" themeColor="textSecondary">
-                                                {resultado.revisao
-                                                    ? verificacaoEHoje(resultado.depois, resultado.revisao)
-                                                    : antesEDepois(resultado.antes, resultado.depois)}
-                                            </ThemedText>
-                                        )}
-                                        {oQueHa !== '' && (
-                                            <ThemedText type="small" themeColor="textSecondary">
-                                                {oQueHa}
-                                            </ThemedText>
-                                        )}
-                                    </SuperficieQueLevaToque>
-                                );
-                            })}
-                        </View>
-                    </ScrollView>
-                )}
-            </SafeAreaView>
-        </FundoDaMarca>
+                                    )}
+                                </SuperficieQueLevaToque>
+                            );
+                        })}
+                    </View>
+                </ScrollView>
+            )}
+        </MolduraDaTela>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: MaxContentWidth },
-    cabecalho: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: Spacing.three,
-        paddingHorizontal: Spacing.four,
-        paddingVertical: Spacing.three,
-    },
     titulo: { flex: 1 },
-    centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.three, padding: Spacing.four },
     textoCentral: { textAlign: 'center' },
     conteudo: { gap: Spacing.four, paddingHorizontal: Spacing.four, paddingBottom: Spacing.five },
     linha: { flexDirection: 'row', gap: Spacing.two },
@@ -282,7 +237,7 @@ const styles = StyleSheet.create({
     vazio: { gap: Spacing.two, paddingTop: Spacing.two },
     frase: { fontSize: 17, lineHeight: 25, fontWeight: 600 },
     numeroDaFrase: { fontSize: 20, lineHeight: 25, fontWeight: 700 },
-    aviso: { gap: Spacing.two, padding: Spacing.three, borderRadius: Raio.medio, borderWidth: 1.5 },
+    aviso: { gap: Spacing.two, padding: Spacing.three, borderRadius: Raio.medio, borderWidth: Borda },
     numero: { fontSize: 22, lineHeight: 28, fontWeight: 700 },
     par: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three, minHeight: 32 },
     cresce: { flex: 1 },

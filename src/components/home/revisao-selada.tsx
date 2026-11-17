@@ -3,7 +3,7 @@ import { StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { diasAbreviados, emQuantosDias } from '@/constants/textos';
-import { Raio, Spacing } from '@/constants/theme';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type RevisaoSeladaProps = {
@@ -50,10 +50,10 @@ const styles = StyleSheet.create({
         paddingVertical: 12,
         paddingHorizontal: 14,
         borderRadius: Raio.card,
-        borderWidth: 1.5,
+        borderWidth: Borda,
         borderStyle: 'dashed',
     },
-    cadeado: { width: 40, height: 52, borderRadius: 8, borderWidth: 1.5, alignItems: 'center', justifyContent: 'center' },
+    cadeado: { width: 40, height: 52, borderRadius: 8, borderWidth: Borda, alignItems: 'center', justifyContent: 'center' },
     texto: { flex: 1, gap: 2 },
     titulo: { fontSize: 15, lineHeight: 20, fontWeight: 600 },
 });

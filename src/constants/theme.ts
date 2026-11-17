@@ -121,6 +121,9 @@ export const Colors = {
   },
 } as const;
 
+// A espessura do contorno de cards, botões, campos e selos.
+export const Borda = 1.5;
+
 // O relevo dos cards: a espessura que a borda de baixo ganha a mais (1,5 + 3,5 = 5 no escuro e
 // 1,5 + 2,5 = 4 no claro) e quanto o card desce quando fica apertado (selecionado).
 export const Relevo = {

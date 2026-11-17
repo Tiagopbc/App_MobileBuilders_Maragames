@@ -2,6 +2,7 @@ import { Pressable, StyleSheet } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { useRelevo, useTheme } from '@/hooks/use-theme';
+import { Borda } from '@/constants/theme';
 
 type BotaoSecundarioProps = {
     rotulo: string;
@@ -40,8 +41,8 @@ export function useRelevoDoSecundario() {
     const relevo = useRelevo();
 
     return {
-        borderWidth: 1.5,
-        borderBottomWidth: 1.5 + relevo.espessura,
+        borderWidth: Borda,
+        borderBottomWidth: Borda + relevo.espessura,
         borderColor: theme.bordaDoSecundario,
         borderBottomColor: theme.relevoDoSecundario,
         backgroundColor: theme.cartao,

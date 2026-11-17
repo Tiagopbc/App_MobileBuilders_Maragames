@@ -1,12 +1,11 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { ICONE_DA_MEDALHA } from '@/components/conquistas/icone-da-medalha';
 import { CabecalhoDaTela } from '@/components/boas-vindas/cabecalho-da-tela';
-import { BotaoPrincipal } from '@/components/botao-principal';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { ThemedText } from '@/components/themed-text';
+import { MolduraDaTela } from '@/components/moldura-da-tela';
+import { Carregando, ErroAoCarregar } from '@/components/estado-da-carga';
 import {
     MEDALHAS_DO_APP,
     TEXTOS,
@@ -14,7 +13,7 @@ import {
     contagemDeMedalhas,
     estadoDaMedalha,
 } from '@/constants/textos';
-import { LarguraDoFormulario, Raio, Spacing } from '@/constants/theme';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { medalhasGanhas, type Conquista } from '@/lib/conquistas';
 
@@ -32,39 +31,28 @@ export function TelaDeConquistas({ estado, aoVoltar, aoTentarDeNovo }: TelaDeCon
     const conquistas = estado.tipo === 'pronto' ? estado.conquistas : null;
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <CabecalhoDaTela
-                    titulo={TEXTOS_DAS_CONQUISTAS.titulo}
-                    aoVoltar={aoVoltar}
-                    detalhe={conquistas ? contagemDeMedalhas(medalhasGanhas(conquistas), conquistas.length) : undefined}
-                />
+        <MolduraDaTela largura="formulario">
+            <CabecalhoDaTela
+                titulo={TEXTOS_DAS_CONQUISTAS.titulo}
+                aoVoltar={aoVoltar}
+                detalhe={conquistas ? contagemDeMedalhas(medalhasGanhas(conquistas), conquistas.length) : undefined}
+            />
 
-                {estado.tipo === 'carregando' && (
-                    <View style={styles.centro}>
-                        <ActivityIndicator />
+            {estado.tipo === 'carregando' && <Carregando />}
+
+            {estado.tipo === 'erro' && <ErroAoCarregar mensagem={TEXTOS.erroAoCarregarLicoes} aoTentarDeNovo={aoTentarDeNovo} />}
+
+            {conquistas && (
+                <ScrollView contentContainerStyle={styles.conteudo}>
+                    <ThemedText themeColor="textoDeApoio">{TEXTOS_DAS_CONQUISTAS.apoio}</ThemedText>
+                    <View style={styles.grade}>
+                        {conquistas.map((conquista) => (
+                            <Medalha key={conquista.id} conquista={conquista} />
+                        ))}
                     </View>
-                )}
-
-                {estado.tipo === 'erro' && (
-                    <View style={styles.centro}>
-                        <ThemedText style={styles.textoCentral}>{TEXTOS.erroAoCarregarLicoes}</ThemedText>
-                        <BotaoPrincipal rotulo={TEXTOS.tentarDeNovo} onPress={aoTentarDeNovo} />
-                    </View>
-                )}
-
-                {conquistas && (
-                    <ScrollView contentContainerStyle={styles.conteudo}>
-                        <ThemedText themeColor="textoDeApoio">{TEXTOS_DAS_CONQUISTAS.apoio}</ThemedText>
-                        <View style={styles.grade}>
-                            {conquistas.map((conquista) => (
-                                <Medalha key={conquista.id} conquista={conquista} />
-                            ))}
-                        </View>
-                    </ScrollView>
-                )}
-            </SafeAreaView>
-        </FundoDaMarca>
+                </ScrollView>
+            )}
+        </MolduraDaTela>
     );
 }
 
@@ -114,10 +102,6 @@ function Medalha({ conquista }: { conquista: Conquista }) {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: LarguraDoFormulario },
-    centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.three, padding: Spacing.four },
-    textoCentral: { textAlign: 'center' },
     conteudo: { gap: Spacing.three, paddingHorizontal: Spacing.four, paddingBottom: Spacing.five },
     grade: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
     medalha: {
@@ -127,7 +111,7 @@ const styles = StyleSheet.create({
         gap: Spacing.one,
         padding: 12,
         borderRadius: Raio.card,
-        borderWidth: 1.5,
+        borderWidth: Borda,
     },
     disco: {
         width: 48,

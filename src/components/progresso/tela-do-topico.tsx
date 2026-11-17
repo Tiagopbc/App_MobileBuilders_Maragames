@@ -1,18 +1,17 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { MatrizDeQuadrantes } from '@/components/resultado/matriz-de-quadrantes';
 import { SeloQuadrante } from '@/components/selo-quadrante';
 import { Superficie } from '@/components/superficie';
 import { TextoComCodigo } from '@/components/texto-com-codigo';
 import { ThemedText } from '@/components/themed-text';
-import { MaxContentWidth, Spacing } from '@/constants/theme';
+import { CabecalhoComFechar, MolduraDaTela } from '@/components/moldura-da-tela';
+import { Carregando, ErroAoCarregar } from '@/components/estado-da-carga';
+import { AcertoPorConfianca } from '@/components/progresso/acerto-por-confianca';
+import { Spacing } from '@/constants/theme';
 import {
-    NIVEIS_DE_CONFIANCA,
-    ROTULO_CONFIANCA,
     TEXTOS,
     antesEDepois,
     formatarTaxa,
@@ -55,150 +54,107 @@ export function TelaDoTopico({ estado, topicId, aoAbrirLicao, aoTentarDeNovo, ao
     const enunciadoDe = (id: string) => pronto?.questoes.find((q) => q.id === id)?.enunciado ?? '';
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <View style={styles.cabecalho}>
-                    <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={TEXTOS.voltar}
-                        hitSlop={Spacing.three}
-                        onPress={aoSair}>
-                        <Ionicons name="close" size={28} color={theme.text} />
-                    </Pressable>
-                    <ThemedText type="smallBold" themeColor="textSecondary" style={styles.cresce} numberOfLines={1}>
-                        {TEXTOS.progresso}
-                    </ThemedText>
+        <MolduraDaTela largura="conteudo">
+            <CabecalhoComFechar rotulo={TEXTOS.voltar} aoFechar={aoSair}>
+                <ThemedText type="smallBold" themeColor="textSecondary" style={styles.cresce} numberOfLines={1}>
+                    {TEXTOS.progresso}
+                </ThemedText>
+            </CabecalhoComFechar>
+
+            {estado.tipo === 'carregando' && <Carregando />}
+
+            {estado.tipo === 'erro' && <ErroAoCarregar mensagem={TEXTOS.erroAoCarregarLicoes} aoTentarDeNovo={aoTentarDeNovo} />}
+
+            {pronto && !licao && (
+                <View style={styles.centro}>
+                    <ThemedText style={styles.textoCentral}>{TEXTOS.licaoNaoExiste}</ThemedText>
+                    <BotaoPrincipal rotulo={TEXTOS.voltar} onPress={aoSair} />
                 </View>
+            )}
 
-                {estado.tipo === 'carregando' && (
-                    <View style={styles.centro}>
-                        <ActivityIndicator />
-                    </View>
-                )}
+            {pronto && licao && (
+                <>
+                    <ScrollView contentContainerStyle={styles.conteudo}>
+                        <ThemedText type="subtitle">{licao.titulo}</ThemedText>
 
-                {estado.tipo === 'erro' && (
-                    <View style={styles.centro}>
-                        <ThemedText style={styles.textoCentral}>{TEXTOS.erroAoCarregarLicoes}</ThemedText>
-                        <BotaoPrincipal rotulo={TEXTOS.tentarDeNovo} onPress={aoTentarDeNovo} />
-                    </View>
-                )}
-
-                {pronto && !licao && (
-                    <View style={styles.centro}>
-                        <ThemedText style={styles.textoCentral}>{TEXTOS.licaoNaoExiste}</ThemedText>
-                        <BotaoPrincipal rotulo={TEXTOS.voltar} onPress={aoSair} />
-                    </View>
-                )}
-
-                {pronto && licao && (
-                    <>
-                        <ScrollView contentContainerStyle={styles.conteudo}>
-                            <ThemedText type="subtitle">{licao.titulo}</ThemedText>
-
-                            {aVista.length === 0 ? (
+                        {aVista.length === 0 ? (
+                            <Superficie style={styles.cartao}>
+                                <ThemedText>{TEXTOS.semRespostasAVista}</ThemedText>
+                                <ThemedText type="small" themeColor="textSecondary">
+                                    {TEXTOS.quandoOsNumerosAparecem}
+                                </ThemedText>
+                            </Superficie>
+                        ) : (
+                            <>
                                 <Superficie style={styles.cartao}>
-                                    <ThemedText>{TEXTOS.semRespostasAVista}</ThemedText>
-                                    <ThemedText type="small" themeColor="textSecondary">
-                                        {TEXTOS.quandoOsNumerosAparecem}
-                                    </ThemedText>
-                                </Superficie>
-                            ) : (
-                                <>
-                                    <Superficie style={styles.cartao}>
-                                        {licao.dominio && (
-                                            <ThemedText style={styles.numero}>
-                                                {`Domínio ${formatarTaxa(licao.dominio.acertos, licao.dominio.total)}`}
+                                    {licao.dominio && (
+                                        <ThemedText style={styles.numero}>
+                                            {`Domínio ${formatarTaxa(licao.dominio.acertos, licao.dominio.total)}`}
+                                        </ThemedText>
+                                    )}
+                                    {licao.resultado?.ciclo === 'completo' && (
+                                        <>
+                                            <ThemedText>
+                                                {antesEDepois(licao.resultado.antes, licao.resultado.depois)}
                                             </ThemedText>
-                                        )}
-                                        {licao.resultado?.ciclo === 'completo' && (
-                                            <>
+                                            {licao.resultado.revisao && (
                                                 <ThemedText>
-                                                    {antesEDepois(licao.resultado.antes, licao.resultado.depois)}
+                                                    {verificacaoEHoje(licao.resultado.depois, licao.resultado.revisao)}
                                                 </ThemedText>
-                                                {licao.resultado.revisao && (
-                                                    <ThemedText>
-                                                        {verificacaoEHoje(licao.resultado.depois, licao.resultado.revisao)}
-                                                    </ThemedText>
-                                                )}
-                                            </>
-                                        )}
-                                        {licao.resultado && (
-                                            <ThemedText type="small" themeColor="textSecondary">
-                                                {`${TEXTOS.xpDaLicao}: ${formatarXp(licao.resultado.xp)}`}
-                                            </ThemedText>
-                                        )}
+                                            )}
+                                        </>
+                                    )}
+                                    {licao.resultado && (
+                                        <ThemedText type="small" themeColor="textSecondary">
+                                            {`${TEXTOS.xpDaLicao}: ${formatarXp(licao.resultado.xp)}`}
+                                        </ThemedText>
+                                    )}
+                                </Superficie>
+
+                                <View style={styles.secao}>
+                                    <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
+                                    <MatrizDeQuadrantes quadrantes={resumo.quadrantes} />
+                                </View>
+
+                                <AcertoPorConfianca porConfianca={resumo.porConfianca} espaco={Spacing.two} />
+                            </>
+                        )}
+
+                        {aRevisar.length > 0 && (
+                            <View style={styles.secao}>
+                                <ThemedText type="smallBold">{TEXTOS.revisarNaPratica}</ThemedText>
+                                {aRevisar.map((questao) => (
+                                    <Superficie key={questao.questionId} style={styles.cartao}>
+                                        <SeloQuadrante quadrante={questao.quadrante} />
+                                        <TextoComCodigo type="small">{enunciadoDe(questao.questionId)}</TextoComCodigo>
                                     </Superficie>
+                                ))}
+                            </View>
+                        )}
 
-                                    <View style={styles.secao}>
-                                        <ThemedText type="smallBold">{TEXTOS.comoVoceRespondeu}</ThemedText>
-                                        <MatrizDeQuadrantes quadrantes={resumo.quadrantes} />
+                        {historico.length > 0 && (
+                            <View style={styles.secao}>
+                                <ThemedText type="smallBold">{TEXTOS.historico}</ThemedText>
+                                {historico.map((passo) => (
+                                    <View key={passo.fase} style={styles.par}>
+                                        <Ionicons name="checkmark-circle" size={18} color={theme.sucesso} />
+                                        <ThemedText style={styles.cresce}>{passoFeitoEm(passo.fase, passo.em)}</ThemedText>
                                     </View>
+                                ))}
+                            </View>
+                        )}
+                    </ScrollView>
 
-                                    <View style={styles.secao}>
-                                        <ThemedText type="smallBold">{TEXTOS.acertoPorConfianca}</ThemedText>
-                                        {NIVEIS_DE_CONFIANCA.map((nivel) => {
-                                            const { acertos, total } = resumo.porConfianca[nivel];
-                                            const valor = formatarTaxa(acertos, total);
-                                            return (
-                                                <View
-                                                    key={nivel}
-                                                    accessible
-                                                    accessibilityLabel={`${ROTULO_CONFIANCA[nivel]}: ${valor}`}
-                                                    style={styles.par}>
-                                                    <ThemedText style={styles.cresce}>{ROTULO_CONFIANCA[nivel]}</ThemedText>
-                                                    <ThemedText themeColor="textSecondary">{valor}</ThemedText>
-                                                </View>
-                                            );
-                                        })}
-                                    </View>
-                                </>
-                            )}
-
-                            {aRevisar.length > 0 && (
-                                <View style={styles.secao}>
-                                    <ThemedText type="smallBold">{TEXTOS.revisarNaPratica}</ThemedText>
-                                    {aRevisar.map((questao) => (
-                                        <Superficie key={questao.questionId} style={styles.cartao}>
-                                            <SeloQuadrante quadrante={questao.quadrante} />
-                                            <TextoComCodigo type="small">{enunciadoDe(questao.questionId)}</TextoComCodigo>
-                                        </Superficie>
-                                    ))}
-                                </View>
-                            )}
-
-                            {historico.length > 0 && (
-                                <View style={styles.secao}>
-                                    <ThemedText type="smallBold">{TEXTOS.historico}</ThemedText>
-                                    {historico.map((passo) => (
-                                        <View key={passo.fase} style={styles.par}>
-                                            <Ionicons name="checkmark-circle" size={18} color={theme.sucesso} />
-                                            <ThemedText style={styles.cresce}>{passoFeitoEm(passo.fase, passo.em)}</ThemedText>
-                                        </View>
-                                    ))}
-                                </View>
-                            )}
-                        </ScrollView>
-
-                        <View style={[styles.rodape, { borderTopColor: theme.borda }]}>
-                            <BotaoPrincipal rotulo={TEXTOS.abrirALicao} onPress={aoAbrirLicao} />
-                        </View>
-                    </>
-                )}
-            </SafeAreaView>
-        </FundoDaMarca>
+                    <View style={[styles.rodape, { borderTopColor: theme.borda }]}>
+                        <BotaoPrincipal rotulo={TEXTOS.abrirALicao} onPress={aoAbrirLicao} />
+                    </View>
+                </>
+            )}
+        </MolduraDaTela>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: MaxContentWidth },
-    cabecalho: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: Spacing.three,
-        paddingHorizontal: Spacing.four,
-        paddingVertical: Spacing.three,
-    },
     centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.three, padding: Spacing.four },
     textoCentral: { textAlign: 'center' },
     conteudo: { gap: Spacing.four, paddingHorizontal: Spacing.four, paddingBottom: Spacing.four },

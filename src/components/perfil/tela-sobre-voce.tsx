@@ -1,13 +1,11 @@
-import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { Opcoes, OpcoesMultiplas, type Opcao } from '@/components/opcoes';
 import { ThemedText } from '@/components/themed-text';
-import { LarguraDoFormulario, Spacing } from '@/constants/theme';
+import { CabecalhoComFechar, MolduraDaTela } from '@/components/moldura-da-tela';
+import { Spacing } from '@/constants/theme';
 import {
     ROTULO_DA_ENGINE,
     ROTULO_DA_LINGUAGEM,
@@ -21,7 +19,6 @@ import {
     TEXTOS_DO_PERFIL,
     extrasRespondidosDe,
 } from '@/constants/textos';
-import { useTheme } from '@/hooks/use-theme';
 import {
     COMO_CONHECEU,
     ENGINES,
@@ -64,7 +61,6 @@ const semVazias = (e: ExtrasDoPerfil): ExtrasDoPerfil =>
 // As perguntas opcionais do perfil (item 34), numa tela própria aberta pelo Perfil. Nenhuma é
 // obrigatória, toda resposta pode ser desfeita, e nada daqui barra o uso do app.
 export function TelaSobreVoce({ inicial, aoSalvar, aoSair }: TelaSobreVoceProps) {
-    const theme = useTheme();
     const [respostas, setRespostas] = useState<ExtrasDoPerfil>(() => extrasDe(inicial));
     const [salvas, setSalvas] = useState<ExtrasDoPerfil>(() => extrasDe(inicial));
     const [salvando, setSalvando] = useState(false);
@@ -99,145 +95,127 @@ export function TelaSobreVoce({ inicial, aoSalvar, aoSair }: TelaSobreVoceProps)
         respostas.alunoDoSite === undefined ? null : respostas.alunoDoSite ? 'sim' : 'nao';
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <View style={styles.cabecalho}>
-                    <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={TEXTOS.voltarAoInicio}
-                        hitSlop={Spacing.three}
-                        onPress={aoSair}>
-                        <Ionicons name="close" size={28} color={theme.text} />
-                    </Pressable>
-                    <ThemedText type="subtitle" style={styles.titulo}>
-                        {TEXTOS_DO_PERFIL.sobreVoceEOsJogos}
+        <MolduraDaTela largura="formulario">
+            <CabecalhoComFechar rotulo={TEXTOS.voltarAoInicio} aoFechar={aoSair}>
+                <ThemedText type="subtitle" style={styles.titulo}>
+                    {TEXTOS_DO_PERFIL.sobreVoceEOsJogos}
+                </ThemedText>
+            </CabecalhoComFechar>
+
+            <ScrollView contentContainerStyle={styles.conteudo}>
+                <View style={styles.introducao}>
+                    <ThemedText type="small" themeColor="textSecondary">
+                        {TEXTOS_DO_PERFIL.sobreAsOpcionais}
+                    </ThemedText>
+                    <ThemedText type="smallBold">
+                        {extrasRespondidosDe(extrasRespondidos(atuais), TOTAL_DE_EXTRAS)}
                     </ThemedText>
                 </View>
 
-                <ScrollView contentContainerStyle={styles.conteudo}>
-                    <View style={styles.introducao}>
-                        <ThemedText type="small" themeColor="textSecondary">
-                            {TEXTOS_DO_PERFIL.sobreAsOpcionais}
-                        </ThemedText>
-                        <ThemedText type="smallBold">
-                            {extrasRespondidosDe(extrasRespondidos(atuais), TOTAL_DE_EXTRAS)}
-                        </ThemedText>
-                    </View>
+                <Opcoes
+                    rotulo={TEXTOS_DO_PERFIL.ocupacao}
+                    opcoes={opcoes(OCUPACOES, ROTULO_DA_OCUPACAO)}
+                    valor={respostas.ocupacao ?? null}
+                    aoEscolher={(v) => responder('ocupacao', v ?? undefined)}
+                    podeDesmarcar
+                    desabilitado={salvando}
+                />
 
-                    <Opcoes
-                        rotulo={TEXTOS_DO_PERFIL.ocupacao}
-                        opcoes={opcoes(OCUPACOES, ROTULO_DA_OCUPACAO)}
-                        valor={respostas.ocupacao ?? null}
-                        aoEscolher={(v) => responder('ocupacao', v ?? undefined)}
-                        podeDesmarcar
-                        desabilitado={salvando}
-                    />
+                <OpcoesMultiplas
+                    rotulo={TEXTOS_DO_PERFIL.engines}
+                    dica={TEXTOS_DO_PERFIL.variasOpcoes}
+                    opcoes={opcoes(ENGINES, ROTULO_DA_ENGINE)}
+                    valores={respostas.engines ?? []}
+                    aoMudar={(v) => responder('engines', v)}
+                    desabilitado={salvando}
+                />
 
-                    <OpcoesMultiplas
-                        rotulo={TEXTOS_DO_PERFIL.engines}
-                        dica={TEXTOS_DO_PERFIL.variasOpcoes}
-                        opcoes={opcoes(ENGINES, ROTULO_DA_ENGINE)}
-                        valores={respostas.engines ?? []}
-                        aoMudar={(v) => responder('engines', v)}
-                        desabilitado={salvando}
-                    />
+                <OpcoesMultiplas
+                    rotulo={TEXTOS_DO_PERFIL.linguagens}
+                    dica={TEXTOS_DO_PERFIL.variasOpcoes}
+                    opcoes={opcoes(LINGUAGENS, ROTULO_DA_LINGUAGEM)}
+                    valores={respostas.linguagens ?? []}
+                    aoMudar={(v) => responder('linguagens', v)}
+                    desabilitado={salvando}
+                />
 
-                    <OpcoesMultiplas
-                        rotulo={TEXTOS_DO_PERFIL.linguagens}
-                        dica={TEXTOS_DO_PERFIL.variasOpcoes}
-                        opcoes={opcoes(LINGUAGENS, ROTULO_DA_LINGUAGEM)}
-                        valores={respostas.linguagens ?? []}
-                        aoMudar={(v) => responder('linguagens', v)}
-                        desabilitado={salvando}
-                    />
+                <Opcoes
+                    rotulo={TEXTOS_DO_PERFIL.estudoDeGameDesign}
+                    opcoes={opcoes(ESTUDOS_DE_GAME_DESIGN, ROTULO_DO_ESTUDO_DE_GAME_DESIGN)}
+                    valor={respostas.estudoDeGameDesign ?? null}
+                    aoEscolher={(v) => responder('estudoDeGameDesign', v ?? undefined)}
+                    podeDesmarcar
+                    desabilitado={salvando}
+                />
 
-                    <Opcoes
-                        rotulo={TEXTOS_DO_PERFIL.estudoDeGameDesign}
-                        opcoes={opcoes(ESTUDOS_DE_GAME_DESIGN, ROTULO_DO_ESTUDO_DE_GAME_DESIGN)}
-                        valor={respostas.estudoDeGameDesign ?? null}
-                        aoEscolher={(v) => responder('estudoDeGameDesign', v ?? undefined)}
-                        podeDesmarcar
-                        desabilitado={salvando}
-                    />
+                <OpcoesMultiplas
+                    rotulo={TEXTOS_DO_PERFIL.interesses}
+                    dica={TEXTOS_DO_PERFIL.variasOpcoes}
+                    opcoes={opcoes(INTERESSES, ROTULO_DO_INTERESSE)}
+                    valores={respostas.interesses ?? []}
+                    aoMudar={(v) => responder('interesses', v)}
+                    desabilitado={salvando}
+                />
 
-                    <OpcoesMultiplas
-                        rotulo={TEXTOS_DO_PERFIL.interesses}
-                        dica={TEXTOS_DO_PERFIL.variasOpcoes}
-                        opcoes={opcoes(INTERESSES, ROTULO_DO_INTERESSE)}
-                        valores={respostas.interesses ?? []}
-                        aoMudar={(v) => responder('interesses', v)}
-                        desabilitado={salvando}
-                    />
+                <Opcoes
+                    rotulo={TEXTOS_DO_PERFIL.objetivo}
+                    opcoes={opcoes(OBJETIVOS, ROTULO_DO_OBJETIVO)}
+                    valor={respostas.objetivo ?? null}
+                    aoEscolher={(v) => responder('objetivo', v ?? undefined)}
+                    podeDesmarcar
+                    desabilitado={salvando}
+                />
 
-                    <Opcoes
-                        rotulo={TEXTOS_DO_PERFIL.objetivo}
-                        opcoes={opcoes(OBJETIVOS, ROTULO_DO_OBJETIVO)}
-                        valor={respostas.objetivo ?? null}
-                        aoEscolher={(v) => responder('objetivo', v ?? undefined)}
-                        podeDesmarcar
-                        desabilitado={salvando}
-                    />
+                <Opcoes
+                    rotulo={TEXTOS_DO_PERFIL.tempoPorSemana}
+                    opcoes={opcoes(TEMPOS_POR_SEMANA, ROTULO_DO_TEMPO_POR_SEMANA)}
+                    valor={respostas.tempoPorSemana ?? null}
+                    aoEscolher={(v) => responder('tempoPorSemana', v ?? undefined)}
+                    podeDesmarcar
+                    desabilitado={salvando}
+                />
 
-                    <Opcoes
-                        rotulo={TEXTOS_DO_PERFIL.tempoPorSemana}
-                        opcoes={opcoes(TEMPOS_POR_SEMANA, ROTULO_DO_TEMPO_POR_SEMANA)}
-                        valor={respostas.tempoPorSemana ?? null}
-                        aoEscolher={(v) => responder('tempoPorSemana', v ?? undefined)}
-                        podeDesmarcar
-                        desabilitado={salvando}
-                    />
+                <Opcoes
+                    rotulo={TEXTOS_DO_PERFIL.comoConheceu}
+                    opcoes={opcoes(COMO_CONHECEU, ROTULO_DE_COMO_CONHECEU)}
+                    valor={respostas.comoConheceu ?? null}
+                    aoEscolher={(v) => responder('comoConheceu', v ?? undefined)}
+                    podeDesmarcar
+                    desabilitado={salvando}
+                />
 
-                    <Opcoes
-                        rotulo={TEXTOS_DO_PERFIL.comoConheceu}
-                        opcoes={opcoes(COMO_CONHECEU, ROTULO_DE_COMO_CONHECEU)}
-                        valor={respostas.comoConheceu ?? null}
-                        aoEscolher={(v) => responder('comoConheceu', v ?? undefined)}
-                        podeDesmarcar
-                        desabilitado={salvando}
-                    />
+                <Opcoes
+                    rotulo={TEXTOS_DO_PERFIL.alunoDoSite}
+                    opcoes={SIM_OU_NAO}
+                    valor={alunoDoSite}
+                    aoEscolher={(v) => responder('alunoDoSite', v === null ? undefined : v === 'sim')}
+                    podeDesmarcar
+                    desabilitado={salvando}
+                />
 
-                    <Opcoes
-                        rotulo={TEXTOS_DO_PERFIL.alunoDoSite}
-                        opcoes={SIM_OU_NAO}
-                        valor={alunoDoSite}
-                        aoEscolher={(v) => responder('alunoDoSite', v === null ? undefined : v === 'sim')}
-                        podeDesmarcar
-                        desabilitado={salvando}
-                    />
+                {erro && (
+                    <ThemedText type="small" themeColor="erro" aria-live="polite">
+                        {TEXTOS_DO_PERFIL.erroAoSalvar}
+                    </ThemedText>
+                )}
+                {deuCerto && (
+                    <ThemedText type="small" themeColor="sucesso" aria-live="polite">
+                        {TEXTOS_DO_PERFIL.respostasSalvas}
+                    </ThemedText>
+                )}
 
-                    {erro && (
-                        <ThemedText type="small" themeColor="erro" aria-live="polite">
-                            {TEXTOS_DO_PERFIL.erroAoSalvar}
-                        </ThemedText>
-                    )}
-                    {deuCerto && (
-                        <ThemedText type="small" themeColor="sucesso" aria-live="polite">
-                            {TEXTOS_DO_PERFIL.respostasSalvas}
-                        </ThemedText>
-                    )}
-
-                    <BotaoPrincipal
-                        rotulo={TEXTOS_DO_PERFIL.salvarRespostas}
-                        carregando={salvando}
-                        desabilitado={!mudou}
-                        onPress={salvar}
-                    />
-                </ScrollView>
-            </SafeAreaView>
-        </FundoDaMarca>
+                <BotaoPrincipal
+                    rotulo={TEXTOS_DO_PERFIL.salvarRespostas}
+                    carregando={salvando}
+                    desabilitado={!mudou}
+                    onPress={salvar}
+                />
+            </ScrollView>
+        </MolduraDaTela>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: LarguraDoFormulario },
-    cabecalho: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: Spacing.three,
-        paddingHorizontal: Spacing.four,
-        paddingVertical: Spacing.three,
-    },
     titulo: { flex: 1 },
     conteudo: { gap: Spacing.four, paddingHorizontal: Spacing.four, paddingBottom: Spacing.five },
     introducao: { gap: Spacing.one },

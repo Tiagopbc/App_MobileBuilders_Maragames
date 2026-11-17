@@ -11,7 +11,7 @@ import {
     formatarXpTotal,
     xpNaCarta,
 } from '@/constants/textos';
-import { Raio, Spacing } from '@/constants/theme';
+import { Borda, Raio, Spacing } from '@/constants/theme';
 import { useRelevo, useTheme } from '@/hooks/use-theme';
 
 export type NumerosDaCarta = {
@@ -49,7 +49,7 @@ export function CartaDeJogador({ apelido, numeros, aoAbrirConquistas }: CartaDeJ
                     backgroundColor: theme.cartao,
                     borderColor: theme.bordaDoCartao,
                     borderBottomColor: theme.relevoDoCartao,
-                    borderBottomWidth: 1.5 + relevo.espessura,
+                    borderBottomWidth: Borda + relevo.espessura,
                 },
             ]}>
             <View
@@ -141,7 +141,7 @@ export function CartaDeJogador({ apelido, numeros, aoAbrirConquistas }: CartaDeJ
 }
 
 const styles = StyleSheet.create({
-    carta: { gap: Spacing.two + 2, padding: Spacing.two + 2, paddingBottom: Spacing.three - 4, borderRadius: Raio.folha, borderWidth: 1.5 },
+    carta: { gap: Spacing.two + 2, padding: Spacing.two + 2, paddingBottom: Spacing.three - 4, borderRadius: Raio.folha, borderWidth: Borda },
     arte: {
         height: ALTURA_DA_ARTE,
         borderRadius: Raio.card,

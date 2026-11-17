@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
 import { LETRAS_DA_SEMANA, TEXTOS_DA_SEQUENCIA, rotuloDoDiaDaSemana, tituloDaSequencia } from '@/constants/textos';
-import { Spacing } from '@/constants/theme';
+import { Borda, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { DiaDaSemana } from '@/lib/sequencia';
 
@@ -54,7 +54,7 @@ export function CartaoDaSequencia({ sequencia, semana }: CartaoDaSequenciaProps)
                                     ? { backgroundColor: theme.aviso }
                                     : dia.hoje
                                       ? { borderWidth: 2, borderColor: theme.aviso }
-                                      : { borderWidth: 1.5, borderColor: theme.relevoDoCartao, borderStyle: 'dashed' },
+                                      : { borderWidth: Borda, borderColor: theme.relevoDoCartao, borderStyle: 'dashed' },
                             ]}>
                             {dia.feito && <Ionicons name="checkmark" size={16} color={theme.cartao} />}
                         </View>

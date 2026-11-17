@@ -1,13 +1,13 @@
 import { Ionicons } from '@expo/vector-icons';
-import { ActivityIndicator, Pressable, ScrollView, StyleSheet, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { ScrollView, StyleSheet, View } from 'react-native';
 
 import { BotaoPrincipal } from '@/components/botao-principal';
 import { BotaoSecundario } from '@/components/botao-secundario';
-import { FundoDaMarca } from '@/components/fundo-da-marca';
 import { Superficie } from '@/components/superficie';
 import { ThemedText } from '@/components/themed-text';
-import { MaxContentWidth, Spacing, type ThemeColor } from '@/constants/theme';
+import { CabecalhoComFechar, MolduraDaTela } from '@/components/moldura-da-tela';
+import { Carregando, ErroAoCarregar } from '@/components/estado-da-carga';
+import { Spacing, type ThemeColor } from '@/constants/theme';
 import {
     SITUACAO_DA_ETAPA,
     TEXTOS,
@@ -61,150 +61,123 @@ export function TelaDaLicao({ estado, temForma, aoAbrir, aoTentarDeNovo, aoSair 
         pronto !== null && pronto.licao.estado.tipo === 'concluida' && podeAbrirNaLicao(pronto.licao, 'pratica', temForma);
 
     return (
-        <FundoDaMarca style={styles.container}>
-            <SafeAreaView style={styles.safeArea}>
-                <View style={styles.cabecalho}>
-                    <Pressable
-                        accessibilityRole="button"
-                        accessibilityLabel={TEXTOS.fecharLicao}
-                        hitSlop={Spacing.three}
-                        onPress={aoSair}>
-                        <Ionicons name="close" size={28} color={theme.text} />
-                    </Pressable>
-                    <ThemedText type="smallBold" themeColor="textSecondary" style={styles.modulo} numberOfLines={1}>
-                        {pronto?.modulo}
-                    </ThemedText>
+        <MolduraDaTela largura="conteudo">
+            <CabecalhoComFechar rotulo={TEXTOS.fecharLicao} aoFechar={aoSair}>
+                <ThemedText type="smallBold" themeColor="textSecondary" style={styles.modulo} numberOfLines={1}>
+                    {pronto?.modulo}
+                </ThemedText>
+            </CabecalhoComFechar>
+
+            {estado.tipo === 'carregando' && <Carregando />}
+
+            {estado.tipo === 'erro' && <ErroAoCarregar mensagem={TEXTOS.erroAoCarregarLicao} aoTentarDeNovo={aoTentarDeNovo} />}
+
+            {estado.tipo === 'inexistente' && (
+                <View style={styles.centro}>
+                    <ThemedText style={styles.textoCentral}>{TEXTOS.licaoNaoExiste}</ThemedText>
+                    <BotaoPrincipal rotulo={TEXTOS.voltarAoInicio} onPress={aoSair} />
                 </View>
+            )}
 
-                {estado.tipo === 'carregando' && (
-                    <View style={styles.centro}>
-                        <ActivityIndicator />
-                    </View>
-                )}
+            {pronto && (
+                <>
+                    <ScrollView contentContainerStyle={styles.conteudo}>
+                        <ThemedText type="subtitle">{pronto.titulo}</ThemedText>
 
-                {estado.tipo === 'erro' && (
-                    <View style={styles.centro}>
-                        <ThemedText style={styles.textoCentral}>{TEXTOS.erroAoCarregarLicao}</ThemedText>
-                        <BotaoPrincipal rotulo={TEXTOS.tentarDeNovo} onPress={aoTentarDeNovo} />
-                    </View>
-                )}
-
-                {estado.tipo === 'inexistente' && (
-                    <View style={styles.centro}>
-                        <ThemedText style={styles.textoCentral}>{TEXTOS.licaoNaoExiste}</ThemedText>
-                        <BotaoPrincipal rotulo={TEXTOS.voltarAoInicio} onPress={aoSair} />
-                    </View>
-                )}
-
-                {pronto && (
-                    <>
-                        <ScrollView contentContainerStyle={styles.conteudo}>
-                            <ThemedText type="subtitle">{pronto.titulo}</ThemedText>
-
-                            <Superficie style={styles.cartao}>
-                                {etapasDaLicao(pronto.licao).map(({ etapa, situacao }) => {
-                                    const detalhe = detalheDaEtapa(etapa, pronto.questoesPorEtapa[etapa], pronto.licao.estado);
-                                    const icone = ICONE_DA_SITUACAO[situacao];
-                                    return (
-                                        <View
-                                            key={etapa}
-                                            accessible
-                                            accessibilityLabel={`${TITULO_DA_ETAPA[etapa]}, ${SITUACAO_DA_ETAPA[situacao]}, ${detalhe}`}
-                                            style={styles.etapa}>
-                                            <Ionicons name={icone.nome} size={22} color={theme[icone.cor]} />
-                                            <ThemedText
-                                                type={situacao === 'agora' ? 'smallBold' : 'default'}
-                                                themeColor={situacao === 'depois' ? 'textSecondary' : 'text'}
-                                                style={styles.nomeDaEtapa}>
-                                                {TITULO_DA_ETAPA[etapa]}
-                                            </ThemedText>
-                                            <ThemedText type="small" themeColor="textSecondary">
-                                                {detalhe}
-                                            </ThemedText>
-                                        </View>
-                                    );
-                                })}
-                            </Superficie>
-
-                            {pronto.resultado && (
-                                <Superficie style={styles.cartao}>
-                                    {pronto.resultado.ciclo === 'curto' ? (
-                                        <ThemedText>
-                                            {acertosDoTopico(
-                                                pronto.resultado.pratica.acertos,
-                                                pronto.resultado.pratica.total,
-                                                pronto.titulo,
-                                                pronto.resultado.xp
-                                            )}
+                        <Superficie style={styles.cartao}>
+                            {etapasDaLicao(pronto.licao).map(({ etapa, situacao }) => {
+                                const detalhe = detalheDaEtapa(etapa, pronto.questoesPorEtapa[etapa], pronto.licao.estado);
+                                const icone = ICONE_DA_SITUACAO[situacao];
+                                return (
+                                    <View
+                                        key={etapa}
+                                        accessible
+                                        accessibilityLabel={`${TITULO_DA_ETAPA[etapa]}, ${SITUACAO_DA_ETAPA[situacao]}, ${detalhe}`}
+                                        style={styles.etapa}>
+                                        <Ionicons name={icone.nome} size={22} color={theme[icone.cor]} />
+                                        <ThemedText
+                                            type={situacao === 'agora' ? 'smallBold' : 'default'}
+                                            themeColor={situacao === 'depois' ? 'textSecondary' : 'text'}
+                                            style={styles.nomeDaEtapa}>
+                                            {TITULO_DA_ETAPA[etapa]}
                                         </ThemedText>
-                                    ) : (
-                                        <>
-                                            <ThemedText type="small" themeColor="textSecondary">
-                                                {TEXTOS.xpDaLicao}
-                                            </ThemedText>
-                                            {/* O saldo aparece como é, inclusive negativo (item 14). */}
-                                            <ThemedText style={styles.numero}>{formatarXp(pronto.resultado.xp)}</ThemedText>
-                                            <ThemedText>{antesEDepois(pronto.resultado.antes, pronto.resultado.depois)}</ThemedText>
-                                            {pronto.resultado.revisao && (
-                                                <ThemedText>
-                                                    {verificacaoEHoje(pronto.resultado.depois, pronto.resultado.revisao)}
-                                                </ThemedText>
-                                            )}
-                                        </>
-                                    )}
-                                    {pronto.licao.estado.tipo === 'aguardando_revisao' && (
                                         <ThemedText type="small" themeColor="textSecondary">
-                                            {quandoARevisaoAbre(pronto.licao.estado.liberaEm)}
+                                            {detalhe}
                                         </ThemedText>
-                                    )}
-                                </Superficie>
-                            )}
-                        </ScrollView>
+                                    </View>
+                                );
+                            })}
+                        </Superficie>
 
-                        {(destino || podeReverCartao || podeVerPratica) && (
-                            <View style={[styles.rodape, { borderTopColor: theme.borda }]}>
-                                {destino?.tipo === 'termo' && (
+                        {pronto.resultado && (
+                            <Superficie style={styles.cartao}>
+                                {pronto.resultado.ciclo === 'curto' ? (
+                                    <ThemedText>
+                                        {acertosDoTopico(
+                                            pronto.resultado.pratica.acertos,
+                                            pronto.resultado.pratica.total,
+                                            pronto.titulo,
+                                            pronto.resultado.xp
+                                        )}
+                                    </ThemedText>
+                                ) : (
+                                    <>
+                                        <ThemedText type="small" themeColor="textSecondary">
+                                            {TEXTOS.xpDaLicao}
+                                        </ThemedText>
+                                        {/* O saldo aparece como é, inclusive negativo (item 14). */}
+                                        <ThemedText style={styles.numero}>{formatarXp(pronto.resultado.xp)}</ThemedText>
+                                        <ThemedText>{antesEDepois(pronto.resultado.antes, pronto.resultado.depois)}</ThemedText>
+                                        {pronto.resultado.revisao && (
+                                            <ThemedText>
+                                                {verificacaoEHoje(pronto.resultado.depois, pronto.resultado.revisao)}
+                                            </ThemedText>
+                                        )}
+                                    </>
+                                )}
+                                {pronto.licao.estado.tipo === 'aguardando_revisao' && (
                                     <ThemedText type="small" themeColor="textSecondary">
-                                        {TEXTOS.termoAntesDoDiagnostico}
+                                        {quandoARevisaoAbre(pronto.licao.estado.liberaEm)}
                                     </ThemedText>
                                 )}
-                                {destino && (
-                                    <BotaoPrincipal
-                                        rotulo={rotuloDoBotaoDaLicao(pronto.licao.estado)}
-                                        onPress={() => aoAbrir(destino)}
-                                    />
-                                )}
-                                {podeReverCartao && (
-                                    <BotaoSecundario
-                                        rotulo={TEXTOS.reverCartao}
-                                        onPress={() => aoAbrir({ tipo: 'passo', passo: 'cartao' })}
-                                    />
-                                )}
-                                {podeVerPratica && (
-                                    <BotaoSecundario
-                                        rotulo={TEXTOS.verPratica}
-                                        onPress={() => aoAbrir({ tipo: 'passo', passo: 'pratica' })}
-                                    />
-                                )}
-                            </View>
+                            </Superficie>
                         )}
-                    </>
-                )}
-            </SafeAreaView>
-        </FundoDaMarca>
+                    </ScrollView>
+
+                    {(destino || podeReverCartao || podeVerPratica) && (
+                        <View style={[styles.rodape, { borderTopColor: theme.borda }]}>
+                            {destino?.tipo === 'termo' && (
+                                <ThemedText type="small" themeColor="textSecondary">
+                                    {TEXTOS.termoAntesDoDiagnostico}
+                                </ThemedText>
+                            )}
+                            {destino && (
+                                <BotaoPrincipal
+                                    rotulo={rotuloDoBotaoDaLicao(pronto.licao.estado)}
+                                    onPress={() => aoAbrir(destino)}
+                                />
+                            )}
+                            {podeReverCartao && (
+                                <BotaoSecundario
+                                    rotulo={TEXTOS.reverCartao}
+                                    onPress={() => aoAbrir({ tipo: 'passo', passo: 'cartao' })}
+                                />
+                            )}
+                            {podeVerPratica && (
+                                <BotaoSecundario
+                                    rotulo={TEXTOS.verPratica}
+                                    onPress={() => aoAbrir({ tipo: 'passo', passo: 'pratica' })}
+                                />
+                            )}
+                        </View>
+                    )}
+                </>
+            )}
+        </MolduraDaTela>
     );
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, flexDirection: 'row', justifyContent: 'center' },
-    safeArea: { flex: 1, maxWidth: MaxContentWidth },
-    cabecalho: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: Spacing.three,
-        paddingHorizontal: Spacing.four,
-        paddingVertical: Spacing.three,
-    },
     modulo: { flex: 1 },
     centro: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.three, padding: Spacing.four },
     textoCentral: { textAlign: 'center' },

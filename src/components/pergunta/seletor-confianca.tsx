@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Spacing } from '@/constants/theme';
+import { Borda, Spacing } from '@/constants/theme';
 import { NIVEIS_DE_CONFIANCA, ROTULO_CONFIANCA, TEXTOS } from '@/constants/textos';
 import { useRelevo, useTheme } from '@/hooks/use-theme';
 import type { Confianca } from '@/types/domain';
@@ -60,12 +60,12 @@ export function SeletorConfianca({ valor, onChange, desabilitado, aoAbrirRegras 
                                 // O marcado fica "apertado", como a alternativa escolhida.
                                 marcado
                                     ? {
-                                          borderBottomWidth: 1.5,
+                                          borderBottomWidth: Borda,
                                           marginTop: relevo.afunda,
                                           marginBottom: relevo.espessura - relevo.afunda,
                                       }
                                     : {
-                                          borderBottomWidth: 1.5 + relevo.espessura,
+                                          borderBottomWidth: Borda + relevo.espessura,
                                           borderBottomColor: theme.relevoDoCartao,
                                           marginTop: 0,
                                           marginBottom: 0,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         paddingVertical: Spacing.two,
         paddingHorizontal: Spacing.one,
         borderRadius: 12,
-        borderWidth: 1.5,
+        borderWidth: Borda,
     },
     rotulo: { textAlign: 'center' },
 });
