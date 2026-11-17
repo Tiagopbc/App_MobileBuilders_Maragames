@@ -3,8 +3,9 @@
 // sem estado. Nada aqui é gravado.
 
 import type { Answer, Confianca, Fase } from '../types/domain';
-import { quadranteDe, type Quadrante } from './quadrante';
-import { ORDEM_DE_REVISAO, type Taxa } from './resultado';
+import { maisRecentePor } from './dominio';
+import { quadranteDe, semQuadrantes, type Quadrante } from './quadrante';
+import { ORDEM_DE_REVISAO, semAcertoPorConfianca, type Taxa } from './resultado';
 
 /** Com menos respostas que isto, um percentual engana: o Progresso avisa e o relatório mostra só a contagem. */
 export const AMOSTRA_MINIMA = 10;
@@ -23,22 +24,13 @@ export interface ResumoDasRespostas {
  * em que o aluno disse quanto confiava. Dentro da mesma fase, vale a resposta mais recente.
  */
 export function resumoDasRespostas(respostas: readonly RespostaDoResumo[]): ResumoDasRespostas {
-    const maisRecente = (chave: (r: RespostaDoResumo) => string) => {
-        const ultimas = new Map<string, RespostaDoResumo>();
-        for (const r of respostas) {
-            const atual = ultimas.get(chave(r));
-            if (!atual || r.respondidaEm >= atual.respondidaEm) ultimas.set(chave(r), r);
-        }
-        return [...ultimas.values()];
-    };
-
     const resumo: ResumoDasRespostas = {
-        quadrantes: { firme: 0, fragil: 0, lacuna: 0, ponto_cego: 0 },
-        porConfianca: { 1: { acertos: 0, total: 0 }, 2: { acertos: 0, total: 0 }, 3: { acertos: 0, total: 0 } },
+        quadrantes: semQuadrantes(),
+        porConfianca: semAcertoPorConfianca(),
     };
 
-    for (const r of maisRecente((x) => x.questionId)) resumo.quadrantes[quadranteDe(r.correta, r.confianca)] += 1;
-    for (const r of maisRecente((x) => `${x.fase}|${x.questionId}`)) {
+    for (const r of maisRecentePor(respostas, (x) => x.questionId)) resumo.quadrantes[quadranteDe(r.correta, r.confianca)] += 1;
+    for (const r of maisRecentePor(respostas, (x) => `${x.fase}|${x.questionId}`)) {
         resumo.porConfianca[r.confianca].total += 1;
         if (r.correta) resumo.porConfianca[r.confianca].acertos += 1;
     }

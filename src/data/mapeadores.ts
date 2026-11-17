@@ -2,6 +2,7 @@
 // Funções puras: recebem o id e os dados já lidos, sem importar Firebase, então a mesma
 // conversão serve a outra implementação do repositório e roda em teste sem emulador.
 
+import { CAMPOS_EXTRAS } from '../lib/perfil';
 import type { Answer, Lesson, Perfil, Question, Topico } from '../types/domain';
 
 type Dados = Record<string, any>;
@@ -54,20 +55,7 @@ export function paraAnswer(id: string, d: Dados): Answer {
     };
 }
 
-const CAMPOS_OPCIONAIS_DO_PERFIL = [
-    'instituicao',
-    'curso',
-    'aceitaContato',
-    'ocupacao',
-    'engines',
-    'linguagens',
-    'estudoDeGameDesign',
-    'interesses',
-    'objetivo',
-    'tempoPorSemana',
-    'comoConheceu',
-    'alunoDoSite',
-] as const;
+const CAMPOS_OPCIONAIS_DO_PERFIL = ['instituicao', 'curso', 'aceitaContato', ...CAMPOS_EXTRAS] as const;
 
 // `criadoEm` e `atualizadoEm` são números gravados pelo aparelho; `consentiuEm` é Timestamp do
 // servidor e vira ms. Forma e consentimento só entram no objeto quando existem no documento.

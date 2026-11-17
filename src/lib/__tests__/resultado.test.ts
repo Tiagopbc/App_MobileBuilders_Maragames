@@ -1,5 +1,5 @@
 import type { Confianca } from '../../types/domain';
-import { resultadoDoBloco } from '../resultado';
+import { resultadoDoBloco, semAcertoPorConfianca } from '../resultado';
 
 // Bloco medido de dois tópicos, três questões cada, já na ordem do roteiro.
 const QUESTOES = ['mda', 'engine'].flatMap((topicId) =>
@@ -104,5 +104,22 @@ describe('resultadoDoBloco', () => {
             'engine_1',
             'engine_2',
         ]);
+    });
+});
+
+describe('semAcertoPorConfianca', () => {
+    it('começa com os três níveis de confiança sem resposta', () => {
+        expect(semAcertoPorConfianca()).toEqual({
+            1: { acertos: 0, total: 0 },
+            2: { acertos: 0, total: 0 },
+            3: { acertos: 0, total: 0 },
+        });
+    });
+
+    it('cada chamada devolve uma contagem nova: somar numa não muda a outra', () => {
+        const uma = semAcertoPorConfianca();
+        uma[3].total += 1;
+
+        expect(semAcertoPorConfianca()[3].total).toBe(0);
     });
 });

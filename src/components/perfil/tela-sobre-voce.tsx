@@ -32,6 +32,7 @@ import {
     OCUPACOES,
     TEMPOS_POR_SEMANA,
     TOTAL_DE_EXTRAS,
+    comTodasAsChaves,
     extrasDe,
     extrasRespondidos,
 } from '@/lib/perfil';
@@ -83,17 +84,7 @@ export function TelaSobreVoce({ inicial, aoSalvar, aoSair }: TelaSobreVoceProps)
         setSalvando(true);
         try {
             // Todas as chaves vão: a que não tem valor diz à sessão para apagar o campo.
-            await aoSalvar({
-                ocupacao: atuais.ocupacao,
-                engines: atuais.engines,
-                linguagens: atuais.linguagens,
-                estudoDeGameDesign: atuais.estudoDeGameDesign,
-                interesses: atuais.interesses,
-                objetivo: atuais.objetivo,
-                tempoPorSemana: atuais.tempoPorSemana,
-                comoConheceu: atuais.comoConheceu,
-                alunoDoSite: atuais.alunoDoSite,
-            });
+            await aoSalvar(comTodasAsChaves(atuais));
             setSalvas(atuais);
             setDeuCerto(true);
         } catch (e) {

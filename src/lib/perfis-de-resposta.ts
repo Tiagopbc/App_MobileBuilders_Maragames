@@ -6,6 +6,7 @@
 // perfil, como ele foi reconhecido.
 
 import type { Confianca } from '../types/domain';
+import { percentil } from './estatistica';
 
 export type PerfilDeResposta =
     | 'domina'
@@ -41,12 +42,6 @@ export const PERFIS_DE_RESPOSTA: Record<PerfilDeResposta, { rotulo: string; crit
     poucas_respostas: { rotulo: 'Poucas respostas', criterio: `menos de ${MINIMO_DE_RESPOSTAS} respostas: ainda não dá para dizer` },
 };
 
-function mediana(valores: readonly number[]): number {
-    const ordem = [...valores].sort((a, b) => a - b);
-    const meio = Math.floor(ordem.length / 2);
-    return ordem.length % 2 === 1 ? ordem[meio] : (ordem[meio - 1] + ordem[meio]) / 2;
-}
-
 /** O perfil de resposta de uma pessoa, pelas respostas dela. */
 export function perfilDeResposta(respostas: readonly RespostaDoPerfil[]): PerfilDeResposta {
     const n = respostas.length;
@@ -59,7 +54,7 @@ export function perfilDeResposta(respostas: readonly RespostaDoPerfil[]): Perfil
     const pontoCego = fracao((r) => !r.correta && r.confianca === 3);
 
     // O chute vem primeiro: quem responde sem ler pode marcar qualquer confiança.
-    if (mediana(respostas.map((r) => r.tempoMs)) < CHUTE_ATE_O_TEMPO_MS && acerto <= CHUTE_ATE_O_ACERTO) return 'chuta';
+    if (percentil(respostas.map((r) => r.tempoMs), 0.5) < CHUTE_ATE_O_TEMPO_MS && acerto <= CHUTE_ATE_O_ACERTO) return 'chuta';
     if (pontoCego >= PONTO_CEGO_A_PARTIR_DE) return 'confiante_demais';
     if (acerto >= DOMINA_A_PARTIR_DO_ACERTO && acertoFirme >= DOMINA_A_PARTIR_DO_ACERTO_FIRME) return 'domina';
     if (acerto >= INSEGURO_A_PARTIR_DO_ACERTO && certeza < INSEGURO_ATE_A_CERTEZA) return 'inseguro';

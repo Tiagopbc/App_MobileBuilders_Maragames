@@ -10,7 +10,7 @@ import { questoesDaPratica, questoesDoBlocoMedido } from './bloco';
 import { FUSO_MS, diaDeCalendario } from './calendario';
 import { DIAS_ATE_A_REVISAO, licoesDoAluno } from './licao';
 import { idDoModulo } from './perfil';
-import { quadranteDe, type Quadrante } from './quadrante';
+import { quadranteDe, semQuadrantes, type Quadrante } from './quadrante';
 import { resultadoDoBloco, type Taxa } from './resultado';
 import { retencao } from './retencao';
 import { xpDaResposta } from './xp';
@@ -173,7 +173,7 @@ export function exportarDados(dados: DadosDaExportacao, opcoes: OpcoesDaExportac
         firmes: zero(),
         frageis: zero(),
         porConfianca: { 1: zero(), 2: zero(), 3: zero() },
-        quadrantesNoPos: { firme: 0, fragil: 0, lacuna: 0, ponto_cego: 0 } as Record<Quadrante, number>,
+        quadrantesNoPos: semQuadrantes(),
         pontosCegosNoPos: 0,
         verificadas: 0,
         revisadas: 0,
