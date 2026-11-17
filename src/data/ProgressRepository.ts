@@ -16,13 +16,12 @@ export interface ProgressRepository {
     getLicoes(): Promise<Lesson[]>; // pela ordem da lição
     getTopicos(): Promise<Topico[]>; // um por lição, na ordem das lições
     getQuestoes(): Promise<Question[]>; // agrupadas por tópico e, dentro dele, pela ordem
-    getQuestoesDoTopico(topicId: string): Promise<Question[]>;
 
     // Todas as respostas do aluno, de todas as fases, da mais antiga para a mais recente.
-    // É a entrada das funções puras de src/lib (domínio, quadrante, XP, roteiro).
+    // É a entrada das funções puras de src/lib (domínio, quadrante, XP, lição).
     getRespostas(uid: string): Promise<Answer[]>;
 
-    // lessonId é null nos blocos pré, pós e reteste, que não pertencem a uma lição só.
+    // lessonId é a lição do tópico do bloco, em qualquer fase (item 30).
     getAttemptEmAndamento(uid: string, fase: Fase, lessonId: string | null): Promise<Attempt | null>;
     // `origem` diz de onde a tentativa foi feita (plataforma e versão do app), sem perguntar nada.
     criarAttempt(uid: string, fase: Fase, lessonId: string | null, origem?: OrigemDaTentativa): Promise<Attempt>;

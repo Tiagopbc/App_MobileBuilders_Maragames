@@ -1,4 +1,4 @@
-import { contarQuadrantes, quadranteDe } from '../quadrante';
+import { quadranteDe } from '../quadrante';
 
 describe('quadranteDe', () => {
     it('acerto com certeza é firme', () => {
@@ -23,24 +23,5 @@ describe('quadranteDe', () => {
 
     it('erro com certeza é ponto cego', () => {
         expect(quadranteDe(false, 3)).toBe('ponto_cego');
-    });
-});
-
-describe('contarQuadrantes', () => {
-    it('devolve os quatro quadrantes zerados quando não há respostas', () => {
-        expect(contarQuadrantes([])).toEqual({ firme: 0, fragil: 0, lacuna: 0, ponto_cego: 0 });
-    });
-
-    it('conta cada resposta no seu quadrante', () => {
-        const respostas = [
-            { correta: true, confianca: 3 },
-            { correta: true, confianca: 3 },
-            { correta: true, confianca: 2 },
-            { correta: false, confianca: 1 },
-            { correta: false, confianca: 2 },
-            { correta: false, confianca: 3 },
-        ] as const;
-
-        expect(contarQuadrantes(respostas)).toEqual({ firme: 2, fragil: 1, lacuna: 2, ponto_cego: 1 });
     });
 });
