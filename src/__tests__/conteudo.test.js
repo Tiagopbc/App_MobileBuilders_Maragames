@@ -56,6 +56,23 @@ describe('o conteúdo do repositório', () => {
         expect(maisLonga.length).toBeLessThanOrEqual(Math.floor(questoes.length * 0.3));
     });
 
+    // O cartão apresenta o conceito e a questão cobra o conceito. De quem é a ideia fica no campo
+    // fonte da questão e, depois da resposta, nas explicações.
+    const AUTORES =
+        /Schell|Salen|Zimmerman|Fullerton|Suits|Hunicke|LeBlanc|Zubek|Koster|Csikszentmihalyi|Lazzaro|Adams|Dormans|Totten|\bo artigo\b/i;
+
+    it('nenhum cartão cita autor', () => {
+        const comAutor = topicos.flatMap((t) =>
+            t.cartao.filter((s) => AUTORES.test(`${s.titulo} ${s.texto}`)).map((s) => `${t.topicId}: ${s.titulo}`)
+        );
+
+        expect(comAutor).toEqual([]);
+    });
+
+    it('nenhum enunciado cita autor', () => {
+        expect(questoes.filter((q) => AUTORES.test(q.enunciado)).map((q) => q.id)).toEqual([]);
+    });
+
     it('toda questão diz de onde veio', () => {
         expect(questoes.filter((q) => typeof q.fonte !== 'string' || q.fonte.trim() === '').map((q) => q.id)).toEqual([]);
     });
